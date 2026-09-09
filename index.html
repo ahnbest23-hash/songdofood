@@ -218,7 +218,7 @@
     <div id="legend" class="legend"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1516</div>
+  <div class="version">ver20260909-1531</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -376,6 +376,7 @@
 
 <div id="loadingCover" class="loading-cover"><div class="spinner"></div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
 
@@ -499,6 +500,49 @@ async function rpc(name, payload={}){
   if(!res.ok){ throw new Error(data?.message || data?.hint || data?.details || `요청 실패 (${res.status})`); }
   return data;
 }
+
+
+let realtimeClient=null;
+let realtimeChannel=null;
+let realtimeRefreshTimer=null;
+
+function scheduleRealtimeRefresh(){
+  if(!state.me || document.hidden) return;
+  if(realtimeRefreshTimer) clearTimeout(realtimeRefreshTimer);
+  realtimeRefreshTimer=setTimeout(async()=>{
+    realtimeRefreshTimer=null;
+    if(!state.me || document.hidden) return;
+    if(state.refreshing){ scheduleRealtimeRefresh(); return; }
+    await refresh();
+  },220);
+}
+
+function startRealtime(){
+  if(!configured() || !window.supabase || realtimeChannel) return;
+  try{
+    if(!realtimeClient){
+      realtimeClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+        auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+        realtime:{params:{eventsPerSecond:10}}
+      });
+    }
+    realtimeChannel=realtimeClient
+      .channel('staff-attendance-live-sync')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'realtime_signals'},()=>scheduleRealtimeRefresh())
+      .subscribe();
+  }catch(e){
+    realtimeChannel=null; // 60초 자동 동기화가 계속 백업 역할을 합니다.
+  }
+}
+
+async function stopRealtime(){
+  if(realtimeRefreshTimer){ clearTimeout(realtimeRefreshTimer); realtimeRefreshTimer=null; }
+  if(realtimeClient && realtimeChannel){
+    try{ await realtimeClient.removeChannel(realtimeChannel); }catch(e){}
+  }
+  realtimeChannel=null;
+}
+
 
 function todayKey(){ const n=new Date(); return dateKey(n.getFullYear(),n.getMonth(),n.getDate()); }
 function addDaysKey(key,days){ const {y,m,d}=parseDateKey(key); const dt=new Date(Date.UTC(y,m,d+days)); return `${dt.getUTCFullYear()}-${pad(dt.getUTCMonth()+1)}-${pad(dt.getUTCDate())}`; }
@@ -869,7 +913,7 @@ async function enterApp(me){
   $('whoText').textContent=`${state.me.display_name} · ${state.me.category}${state.me.is_admin?' · 관리자':''}${configured()?'':' · 테스트모드'}`;
   $('adminTools').classList.toggle('hidden',!state.me.is_admin);
   if(!state.me.is_admin) setAdminToolsExpanded(false);
-  await loadEmployees(); await loadMonthData(); render();
+  await loadEmployees(); await loadMonthData(); startRealtime(); render();
 }
 async function loadEmployees(){
   let data;
@@ -909,6 +953,7 @@ async function refresh(){
   }
 }
 async function logout(callServer=true){
+  await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
   localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[];
   closeAll(); $('appView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
