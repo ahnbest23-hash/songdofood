@@ -84,6 +84,8 @@
   .employee-list{display:flex;flex-direction:column;gap:7px;margin-top:10px}
   .employee-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
   .employee-info{min-width:0;flex:1}.employee-name{font-size:calc(14px * var(--text-scale,1));font-weight:900}.employee-meta{margin-top:2px;color:#6b7280;font-size:calc(11px * var(--text-scale,1));line-height:1.35}
+  .pin-state-badge{display:inline-flex;align-items:center;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:calc(9px * var(--text-scale,1));font-weight:900;line-height:1.2}
+  .pin-state-badge.initial{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}.pin-state-badge.custom{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}.pin-state-badge.loading{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
   .employee-actions{display:flex;gap:5px;flex:0 0 auto}.employee-actions button{padding:7px 8px;border-radius:8px;background:#eef2f7;color:#374151;font-size:calc(10px * var(--text-scale,1));font-weight:850}.employee-actions button.replace{background:#e0f2fe;color:#0369a1}.employee-actions button.pin{background:#f3e8ff;color:#7e22ce}.employee-actions button.exclude{background:#fff1f2;color:#be123c}
   .scheduled-badge{display:inline-flex;align-items:center;padding:7px 8px;border-radius:8px;background:#fff7ed;color:#c2410c;font-size:calc(10px * var(--text-scale,1));font-weight:900;white-space:nowrap}
   .employee-section-title{margin:13px 2px 6px;font-size:calc(12px * var(--text-scale,1));font-weight:900;color:#4b5563}
@@ -102,8 +104,9 @@
   .tab{padding:11px 8px;border-radius:10px;background:transparent;color:#6b7280;font-weight:850}
   .tab.active{background:#fff;color:#111827;box-shadow:0 2px 8px rgba(0,0,0,.07)}
   .calendar-card{padding:12px 10px 13px}
-  .calendar-toolbar{display:grid;grid-template-columns:58px 1fr 58px;align-items:center;gap:8px;margin-bottom:8px}
+  .calendar-toolbar{display:grid;grid-template-columns:58px 1fr 48px 58px;align-items:center;gap:7px;margin-bottom:8px}
   .nav-btn{height:42px;border-radius:12px;background:#f0f2f5;color:#374151;font-size:calc(14px * var(--text-scale,1));font-weight:850}
+  .today-btn{height:42px;border-radius:12px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:calc(12px * var(--text-scale,1));font-weight:900}
   .month-title{height:42px;border-radius:12px;background:#fff;color:#111827;font-size:calc(19px * var(--text-scale,1));font-weight:900;letter-spacing:.2px;border:1px solid #eceff2}
   .weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
   .weekdays{border-top:1px solid #eef0f2;border-left:1px solid #eef0f2}
@@ -197,6 +200,8 @@
   .initial-pin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
   .initial-pin-later{border-radius:13px;padding:13px 12px;background:#eef2f7;color:#4b5563;font-weight:850;font-size:calc(14px * var(--text-scale,1))}
   .self-pin-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .attendance-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#ecfeff;color:#0f766e;border:1px solid #a5f3fc;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .attendance-list{display:flex;flex-direction:column;gap:7px;margin-top:9px}.attendance-list-row{padding:10px 11px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.attendance-list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.attendance-list-type{font-size:calc(13px * var(--text-scale,1));font-weight:900;color:#111827}.attendance-list-date{font-size:calc(11px * var(--text-scale,1));font-weight:850;color:#374151;line-height:1.4}.attendance-list-sub{margin-top:4px;font-size:calc(11px * var(--text-scale,1));color:#6b7280;line-height:1.4}.attendance-list-count{font-size:calc(11px * var(--text-scale,1));color:#6b7280;font-weight:800;margin:3px 2px 8px}.attendance-list-empty{padding:18px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
   .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
@@ -206,10 +211,10 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.color-guide{gap:3px 4px;padding:4px 5px}.color-guide .guide-item{font-size:calc(7.5px * var(--text-scale,1));padding:3px 5px}.color-guide .guide-swatch{width:6px;height:6px}.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 10px}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.color-guide{gap:3px 4px;padding:4px 5px}.color-guide .guide-item{font-size:calc(7.5px * var(--text-scale,1));padding:3px 5px}.color-guide .guide-swatch{width:6px;height:6px}.attendance-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .employee-manage-actions{grid-template-columns:1fr;gap:7px}.reset-pins-btn{font-size:calc(12px * var(--text-scale,1));padding:11px 9px}
-    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:54px 1fr 54px;gap:6px}.nav-btn{font-size:calc(13px * var(--text-scale,1))}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}}
-  @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:50px 1fr 50px}.nav-btn{padding:0 2px}}
+    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}}
+  @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:45px 1fr 40px 45px;gap:4px}.nav-btn,.today-btn{padding:0 1px;font-size:calc(10px * var(--text-scale,1))}}
 </style>
 </head>
 <body>
@@ -245,7 +250,7 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div class="view-tools"><div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div><div class="view-tool-actions"><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
+  <div class="view-tools"><div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div><div class="view-tool-actions"><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -256,6 +261,7 @@
     <div class="calendar-toolbar">
       <button id="prevMonth" class="nav-btn">이전달</button>
       <button id="monthTitle" class="month-title"></button>
+      <button id="todayBtn" class="today-btn">오늘</button>
       <button id="nextMonth" class="nav-btn">다음달</button>
     </div>
     <div class="weekdays"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
@@ -263,7 +269,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1750</div>
+  <div class="version">ver20260909-1811</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -312,6 +318,16 @@
     <div class="modal-head"><div class="modal-title">연·월 선택</div><button class="close-btn" data-close="month">×</button></div>
     <div class="month-picker-year"><button id="yearPrev" class="year-btn">‹</button><div id="yearLabel" class="year-label"></div><button id="yearNext" class="year-btn">›</button></div>
     <div id="monthGrid" class="month-grid"></div>
+  </div>
+</div>
+
+<div id="attendanceListBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">내 근태 목록</div><button class="close-btn" data-close="attendanceList">×</button></div>
+    <div id="attendanceListAdminField" class="field hidden"><label for="attendanceListEmployee">직원</label><select id="attendanceListEmployee"></select></div>
+    <div id="attendanceListCount" class="attendance-list-count"></div>
+    <div id="attendanceListBody" class="attendance-list"><div class="attendance-list-empty">불러오는 중…</div></div>
+    <button id="refreshAttendanceListBtn" class="secondary" style="margin-top:10px">새로고침</button>
   </div>
 </div>
 
@@ -553,10 +569,11 @@ const state = {
   sessionToken: localStorage.getItem(SESSION_KEY) || '',
   me:null, employees:[], attendance:[], view:'mine', selectedDate:null,
   year:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), month:new Date().getMonth(),
-  pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null
+  pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null, pinStatus:{}
 };
 
 let pendingRestoreBackup=null;
+let attendanceListRows=[];
 
 function normalizeTextSizeLevel(value){
   const level=Number(value);
@@ -1173,6 +1190,7 @@ async function refresh(){
     await loadMonthData(false);
     renderCalendar();
     if(state.selectedDate && $('detailBackdrop').classList.contains('open')) renderDetail(state.selectedDate);
+    if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
   }catch(e){
     const msg=String(e?.message||'');
     $('statusLine').textContent='데이터를 새로고침하지 못했습니다.';
@@ -1386,6 +1404,66 @@ async function deleteRecord(id){
   finally{ showLoading(false); }
 }
 
+function attendanceListDetailText(r){
+  if(r.absence_mode!=='time') return '전일';
+  const st=timeShort(r.start_time), et=timeShort(r.end_time);
+  if(r.start_date===r.end_date) return `${st}~${et}`;
+  return `${r.start_date} ${st} ~ ${r.end_date} ${et}`;
+}
+function populateAttendanceListEmployees(){
+  if(!state.me?.is_admin)return;
+  const list=state.employees.slice().sort(employeeDisplayCompare);
+  $('attendanceListEmployee').innerHTML=list.map(e=>`<option value="${e.id}">${escapeHtml(e.display_name)} · ${escapeHtml(e.category)}</option>`).join('');
+  $('attendanceListEmployee').value=String(state.me.employee_id);
+}
+function renderAttendanceList(){
+  const employeeId=state.me?.is_admin?Number($('attendanceListEmployee').value):Number(state.me?.employee_id);
+  const rows=attendanceListRows.filter(r=>Number(r.employee_id)===employeeId).sort((a,b)=>String(b.start_date).localeCompare(String(a.start_date))||Number(b.id)-Number(a.id));
+  $('attendanceListCount').textContent=`총 ${rows.length}건 · 최근순`;
+  if(!rows.length){ $('attendanceListBody').innerHTML='<div class="attendance-list-empty">등록된 근태가 없습니다.</div>'; return; }
+  $('attendanceListBody').innerHTML=rows.map(r=>{
+    const dateText=r.start_date===r.end_date?r.start_date:`${r.start_date} ~ ${r.end_date}`;
+    const modeText=attendanceListDetailText(r);
+    return `<div class="attendance-list-row"><div class="attendance-list-top"><div class="attendance-list-type">${escapeHtml(normalizeAttendanceType(r.attendance_type))}</div><div class="attendance-list-date">${escapeHtml(dateText)}</div></div><div class="attendance-list-sub">${escapeHtml(modeText)}</div></div>`;
+  }).join('');
+}
+async function loadAttendanceList(showSpinner=true){
+  if(!state.me)return;
+  if(showSpinner) $('attendanceListBody').innerHTML='<div class="attendance-list-empty">불러오는 중…</div>';
+  try{
+    let rows;
+    if(!configured()) rows=localRecords();
+    else rows=await rpc('list_attendance',{p_token:state.sessionToken,p_from:`${MIN_YEAR}-01-01`,p_to:`${MAX_YEAR}-12-31`});
+    attendanceListRows=(rows||[]).map(r=>({...r,id:Number(r.id),employee_id:Number(r.employee_id),attendance_type:normalizeAttendanceType(r.attendance_type)}));
+    renderAttendanceList();
+  }catch(e){
+    $('attendanceListCount').textContent='';
+    $('attendanceListBody').innerHTML='<div class="attendance-list-empty">근태 목록을 불러오지 못했습니다.</div>';
+  }
+}
+async function openAttendanceList(){
+  if(!state.me)return;
+  $('attendanceListAdminField').classList.toggle('hidden',!state.me.is_admin);
+  if(state.me.is_admin) populateAttendanceListEmployees();
+  openBackdrop('attendanceListBackdrop');
+  await loadAttendanceList(true);
+}
+
+function pinStatusMarkup(employeeId){
+  const value=state.pinStatus?.[Number(employeeId)];
+  if(value===true) return '<span class="pin-state-badge initial">초기비번 0000</span>';
+  if(value===false) return '<span class="pin-state-badge custom">개인비번 사용중</span>';
+  return '<span class="pin-state-badge loading">비밀번호 상태 확인 중</span>';
+}
+async function loadEmployeePinStatus(){
+  if(!state.me?.is_admin)return;
+  try{
+    if(!configured()){ state.pinStatus={}; return; }
+    const rows=await rpc('list_employee_pin_status',{p_token:state.sessionToken});
+    state.pinStatus={};
+    (rows||[]).forEach(r=>{state.pinStatus[Number(r.employee_id)]=!!r.is_initial_pin;});
+  }catch(e){ state.pinStatus={}; }
+}
 function renderEmployeeManager(){
   const today=todayKey();
   const current=state.employees.filter(e=>employeeActiveOn(e,today)).sort(employeeDisplayCompare);
@@ -1401,7 +1479,8 @@ function renderEmployeeManager(){
         : '';
       actions=`<div class="employee-actions">${pinBtn}${staffBtns}</div>`;
     }
-    return `<div class="employee-row"><div class="employee-info"><div class="employee-name">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</div><div class="employee-meta">${escapeHtml(e.category)} · ${escapeHtml(period)}</div></div>${actions}</div>`;
+    const pinState=!isHistory?pinStatusMarkup(e.id):'';
+    return `<div class="employee-row"><div class="employee-info"><div class="employee-name">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</div><div class="employee-meta">${escapeHtml(e.category)} · ${escapeHtml(period)}</div>${pinState}</div>${actions}</div>`;
   };
   $('currentEmployeeList').innerHTML=current.length?current.map(e=>rowHtml(e,false)).join(''):'<div class="employee-empty">현재 직원이 없습니다.</div>';
   $('historyEmployeeList').innerHTML=history.length?history.map(e=>rowHtml(e,true)).join(''):'<div class="employee-empty">아직 발령·제외 이력이 없습니다.</div>';
@@ -1425,6 +1504,7 @@ async function resetCurrentPins(){
   try{
     if(!configured()) throw new Error('운영 서버 연결이 필요합니다.');
     const result=await rpc('admin_reset_current_pins',{p_token:state.sessionToken,p_admin_pin:pin});
+    state.pinStatus={};
     const count=Number(Array.isArray(result)?result[0]:result)||currentCount;
     closeBackdrop('resetPinsBackdrop');
     $('resetPinsSuccessMessage').innerHTML=`현재 재직 중인 직원 <b>${count}명</b>의 1차 로그인 비밀번호가 <b>0000</b>으로 변경되었습니다.<br><span style="display:block;margin-top:7px;font-size:.84em;font-weight:700;color:#047857">관리자 2차 비밀번호는 그대로 유지됩니다.</span>`;
@@ -1436,7 +1516,7 @@ async function resetCurrentPins(){
     else $('resetPinsError').textContent=msg||'비밀번호를 초기화하지 못했습니다.';
   }finally{ showLoading(false); }
 }
-function openEmployeeManager(){ if(!state.me?.is_admin)return; renderEmployeeManager(); openBackdrop('employeeManageBackdrop'); }
+async function openEmployeeManager(){ if(!state.me?.is_admin)return; state.pinStatus={}; renderEmployeeManager(); openBackdrop('employeeManageBackdrop'); await loadEmployeePinStatus(); renderEmployeeManager(); }
 function openEmployeeAction(mode,id=null){
   if(!state.me?.is_admin)return;
   state.employeeAction={mode,id:id?Number(id):null}; $('employeeActionMode').value=mode; $('employeeActionId').value=id||''; $('employeeActionError').textContent='';
@@ -1508,7 +1588,7 @@ async function saveEmployeeAction(){
       }
       saveLocalEmployees(rows);
     }else{
-      if(mode==='password') await rpc('admin_change_employee_pin',{p_token:state.sessionToken,p_employee_id:id,p_new_pin:pin,p_admin_pin:adminPin});
+      if(mode==='password') { await rpc('admin_change_employee_pin',{p_token:state.sessionToken,p_employee_id:id,p_new_pin:pin,p_admin_pin:adminPin}); state.pinStatus={}; }
       else if(mode==='add') await rpc('admin_add_employee',{p_token:state.sessionToken,p_name:name,p_pin:pin,p_category:category,p_effective_date:eff});
       else if(mode==='replace') await rpc('admin_replace_employee',{p_token:state.sessionToken,p_old_employee_id:id,p_new_name:name,p_effective_date:eff});
       else await rpc('admin_exclude_employee',{p_token:state.sessionToken,p_employee_id:id,p_effective_date:eff});
@@ -1605,6 +1685,11 @@ async function resetAllAttendance(){
   }finally{ showLoading(false); }
 }
 
+async function goToday(){
+  const now=new Date(); const y=now.getFullYear(), m=now.getMonth();
+  if(y<MIN_YEAR||y>MAX_YEAR){ showToast('현재 날짜는 제공 범위를 벗어났습니다.','info'); return; }
+  state.year=y; state.month=m; showLoading(true); await loadMonthData(true); showLoading(false); renderCalendar();
+}
 async function moveMonth(delta){
   let y=state.year,m=state.month+delta; if(m<0){m=11;y--} if(m>11){m=0;y++} if(y<MIN_YEAR||y>MAX_YEAR)return;
   state.year=y;state.month=m;showLoading(true);await loadMonthData(true);showLoading(false);renderCalendar();
@@ -1630,6 +1715,9 @@ function toggleAdminTools(){
 function wire(){
   populateTypeOptions();
   $('adminToolsToggle').addEventListener('click',toggleAdminTools);
+  $('attendanceListBtn').addEventListener('click',openAttendanceList);
+  $('refreshAttendanceListBtn').addEventListener('click',()=>loadAttendanceList(true));
+  $('attendanceListEmployee').addEventListener('change',renderAttendanceList);
   $('selfPinBtn').addEventListener('click',()=>openSelfPin());
   $('initialPinLaterBtn').addEventListener('click',()=>closeBackdrop('initialPinBackdrop'));
   $('initialPinChangeBtn').addEventListener('click',()=>{closeBackdrop('initialPinBackdrop');openSelfPin('0000')});
@@ -1642,7 +1730,7 @@ function wire(){
   $('loginBtn').addEventListener('click',login); $('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter'){if($('loginName').value.trim()===ADMIN_NAME)$('loginAdminPin').focus();else login()}}); $('loginAdminPin').addEventListener('keydown',e=>{if(e.key==='Enter')login()}); $('loginName').addEventListener('input',toggleAdminPinField); $('loginName').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPin').focus()});
   $('logoutBtn').addEventListener('click',()=>logout(true)); $('refreshBtn').addEventListener('click',refresh); $('employeeManageBtn').addEventListener('click',openEmployeeManager); $('auditBtn').addEventListener('click',openAudit); $('refreshAuditBtn').addEventListener('click',openAudit); $('capacityBtn').addEventListener('click',openCapacity); $('refreshCapacityBtn').addEventListener('click',loadCapacity); $('backupBtn').addEventListener('click',manualBackup); $('backupSuccessOkBtn').addEventListener('click',()=>closeBackdrop('backupSuccessBackdrop')); $('restoreBackupBtn').addEventListener('click',openRestoreBackup); $('restoreFile').addEventListener('change',e=>prepareRestoreFile(e.target.files?.[0])); $('confirmRestoreBtn').addEventListener('click',restoreBackupAttendance); $('restoreSuccessOkBtn').addEventListener('click',()=>closeBackdrop('restoreSuccessBackdrop')); $('addEmployeeBtn').addEventListener('click',()=>openEmployeeAction('add')); $('resetCurrentPinsBtn').addEventListener('click',openResetCurrentPins); $('confirmResetPinsBtn').addEventListener('click',resetCurrentPins); $('resetPinsSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetPinsSuccessBackdrop')); $('saveEmployeeActionBtn').addEventListener('click',saveEmployeeAction); $('employeeSuccessOkBtn').addEventListener('click',()=>closeBackdrop('employeeSuccessBackdrop')); $('resetAllBtn').addEventListener('click',openResetAll); $('confirmResetBtn').addEventListener('click',resetAllAttendance); $('resetSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetSuccessBackdrop'));
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;renderTabs();renderCalendar()}));
-  $('prevMonth').addEventListener('click',()=>moveMonth(-1)); $('nextMonth').addEventListener('click',()=>moveMonth(1)); $('monthTitle').addEventListener('click',openMonthPicker);
+  $('prevMonth').addEventListener('click',()=>moveMonth(-1)); $('todayBtn').addEventListener('click',goToday); $('nextMonth').addEventListener('click',()=>moveMonth(1)); $('monthTitle').addEventListener('click',openMonthPicker);
   $('addAttendanceBtn').addEventListener('click',()=>{if(state.view==='mine')openForm(state.selectedDate)}); $('saveAttendanceBtn').addEventListener('click',saveAttendance);
   document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   document.querySelectorAll('.date-mode-btn').forEach(b=>b.addEventListener('click',()=>setDateMode(b.dataset.dateMode)));
