@@ -257,7 +257,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1851</div>
+  <div class="version">ver20260909-1858</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -496,7 +496,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1851';
+const APP_VERSION = 'ver20260909-1858';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -597,7 +597,9 @@ let versionCheckTimer=null;
 let versionReloading=false;
 const UPDATE_ATTEMPT_KEY='staffAttendance_updateAttempt_v2';
 const UPDATE_TOAST_KEY='staffAttendance_updateToast_v1';
+const UPDATE_SESSION_HANDOFF_KEY='staffAttendance_updateSessionHandoff_v1';
 const UPDATE_RETRY_MS=12000;
+const UPDATE_SESSION_HANDOFF_TTL_MS=60000;
 
 function versionManifestUrl(){
   const url=new URL('version.json',document.baseURI);
@@ -634,6 +636,32 @@ function shouldShowUpdateToast(remote){
   }catch(e){}
   return true;
 }
+function saveUpdateSessionHandoff(remote){
+  try{
+    const token=localStorage.getItem(SESSION_KEY) || state.sessionToken || '';
+    if(!token){ localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); return; }
+    const adminUnlocked=sessionStorage.getItem(ADMIN_UNLOCK_KEY)===token;
+    localStorage.setItem(UPDATE_SESSION_HANDOFF_KEY,JSON.stringify({
+      version:remote, token, adminUnlocked, at:Date.now()
+    }));
+  }catch(e){}
+}
+function restoreUpdateSessionHandoff(){
+  try{
+    const raw=localStorage.getItem(UPDATE_SESSION_HANDOFF_KEY);
+    if(!raw) return;
+    const info=JSON.parse(raw);
+    const token=localStorage.getItem(SESSION_KEY) || '';
+    const fresh=Date.now()-Number(info?.at||0)<=UPDATE_SESSION_HANDOFF_TTL_MS;
+    const valid=fresh && info?.version===APP_VERSION && info?.token===token && !!token;
+    localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); // 한 번만 사용
+    if(valid && info?.adminUnlocked){
+      sessionStorage.setItem(ADMIN_UNLOCK_KEY,token);
+    }
+  }catch(e){
+    try{ localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); }catch(_){}
+  }
+}
 function clearCompletedUpdateAttempt(){
   try{
     const raw=sessionStorage.getItem(UPDATE_ATTEMPT_KEY);
@@ -662,6 +690,10 @@ async function checkForAppUpdate(){
     const html=await htmlRes.text();
     if(!indexHtmlHasVersion(html,remote)) return;
 
+    // 자동 업데이트 전 현재 로그인 상태를 짧게 인계한다.
+    // 일반 직원은 localStorage의 세션 토큰이 유지되고,
+    // 관리자는 sessionStorage의 2차 인증 상태도 새 문서에 안전하게 한 번만 넘긴다.
+    saveUpdateSessionHandoff(remote);
     versionReloading=true;
     markUpdateAttempt(remote);
     if(shouldShowUpdateToast(remote)) showToast(`새 버전 ${remote} 반영 중…`,'info');
@@ -1838,7 +1870,7 @@ function wire(){
   setInterval(()=>{if(state.me&&!document.hidden)refresh()},60000);
 }
 
-cleanupVersionQuery(); restoreTextSizeLevel(); wire(); toggleAdminPinField(); startVersionWatcher(); restoreSession();
+restoreUpdateSessionHandoff(); cleanupVersionQuery(); restoreTextSizeLevel(); wire(); toggleAdminPinField(); startVersionWatcher(); restoreSession();
 </script>
 </body>
 </html>
