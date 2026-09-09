@@ -257,7 +257,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1840</div>
+  <div class="version">ver20260909-1851</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -496,7 +496,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1840';
+const APP_VERSION = 'ver20260909-1851';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -595,15 +595,20 @@ function configured(){
 
 let versionCheckTimer=null;
 let versionReloading=false;
-const UPDATE_ATTEMPT_KEY='staffAttendance_updateAttempt_v1';
+const UPDATE_ATTEMPT_KEY='staffAttendance_updateAttempt_v2';
+const UPDATE_TOAST_KEY='staffAttendance_updateToast_v1';
+const UPDATE_RETRY_MS=12000;
 
 function versionManifestUrl(){
   const url=new URL('version.json',document.baseURI);
   url.searchParams.set('_',String(Date.now()));
   return url.toString();
 }
-function freshIndexUrl(remote){
-  const url=new URL('index.html',document.baseURI);
+function freshPageUrl(remote){
+  // 현재 주소 자체에 캐시 무효화 값을 붙여 새 문서로 정상 이동한다.
+  // document.write()로 문서만 갈아끼우지 않으므로 이전 JS 실행 상태가 남지 않는다.
+  const url=new URL(window.location.href);
+  url.hash='';
   url.searchParams.set('__appv',remote);
   url.searchParams.set('_',String(Date.now()));
   return url.toString();
@@ -616,18 +621,27 @@ function recentSameUpdateAttempt(remote){
     const raw=sessionStorage.getItem(UPDATE_ATTEMPT_KEY);
     if(!raw) return false;
     const info=JSON.parse(raw);
-    return info?.version===remote && Date.now()-Number(info?.at||0)<15000;
+    return info?.version===remote && Date.now()-Number(info?.at||0)<UPDATE_RETRY_MS;
   }catch(e){ return false; }
 }
 function markUpdateAttempt(remote){
   try{ sessionStorage.setItem(UPDATE_ATTEMPT_KEY,JSON.stringify({version:remote,at:Date.now()})); }catch(e){}
 }
+function shouldShowUpdateToast(remote){
+  try{
+    if(sessionStorage.getItem(UPDATE_TOAST_KEY)===remote) return false;
+    sessionStorage.setItem(UPDATE_TOAST_KEY,remote);
+  }catch(e){}
+  return true;
+}
 function clearCompletedUpdateAttempt(){
   try{
     const raw=sessionStorage.getItem(UPDATE_ATTEMPT_KEY);
-    if(!raw) return;
-    const info=JSON.parse(raw);
-    if(info?.version===APP_VERSION) sessionStorage.removeItem(UPDATE_ATTEMPT_KEY);
+    if(raw){
+      const info=JSON.parse(raw);
+      if(info?.version===APP_VERSION) sessionStorage.removeItem(UPDATE_ATTEMPT_KEY);
+    }
+    if(sessionStorage.getItem(UPDATE_TOAST_KEY)===APP_VERSION) sessionStorage.removeItem(UPDATE_TOAST_KEY);
   }catch(e){}
 }
 async function checkForAppUpdate(){
@@ -640,31 +654,24 @@ async function checkForAppUpdate(){
     if(!remote || remote===APP_VERSION) return;
     if(recentSameUpdateAttempt(remote)) return;
 
-    // version.json만 먼저 새 버전이 된 순간에는 새로고침하지 않는다.
-    // 실제 index.html까지 같은 버전으로 배포된 것을 확인한 뒤 화면을 교체한다.
-    const htmlRes=await fetch(freshIndexUrl(remote),{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+    // version.json만 먼저 갱신되는 짧은 순간을 피하기 위해
+    // 실제 페이지 HTML도 같은 버전인지 먼저 확인한다.
+    const targetUrl=freshPageUrl(remote);
+    const htmlRes=await fetch(targetUrl,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
     if(!htmlRes.ok) return;
     const html=await htmlRes.text();
     if(!indexHtmlHasVersion(html,remote)) return;
 
     versionReloading=true;
     markUpdateAttempt(remote);
-    showToast(`새 버전 ${remote} 반영 중…`,'info');
-    setTimeout(()=>{
-      try{
-        // 방금 서버에서 받은 최신 HTML 자체로 현재 문서를 교체한다.
-        // 브라우저가 이전 index.html을 다시 보여 주는 캐시 루프를 막는다.
-        document.open('text/html','replace');
-        document.write(html);
-        document.close();
-      }catch(e){
-        const next=new URL(window.location.href);
-        next.searchParams.set('__appv',remote);
-        next.searchParams.set('_',String(Date.now()));
-        window.location.replace(next.toString());
-      }
-    },300);
-  }catch(e){ /* 버전 확인 실패는 현재 화면 사용을 방해하지 않음 */ }
+    if(shouldShowUpdateToast(remote)) showToast(`새 버전 ${remote} 반영 중…`,'info');
+
+    // 실제 페이지 이동으로 새 Window/JS 실행 환경을 만든다.
+    // 따라서 이전 버전의 타이머나 APP_VERSION 값이 남아 반복 실행되지 않는다.
+    setTimeout(()=>window.location.replace(targetUrl),250);
+  }catch(e){
+    versionReloading=false; // 일시적 네트워크 오류면 다음 주기에 다시 확인
+  }
 }
 function startVersionWatcher(){
   clearCompletedUpdateAttempt();
@@ -675,6 +682,10 @@ function startVersionWatcher(){
 function cleanupVersionQuery(){
   try{
     const url=new URL(window.location.href);
+    const requested=String(url.searchParams.get('__appv')||'');
+    // 실제로 요청한 버전의 HTML이 열린 뒤에만 캐시 무효화 파라미터를 지운다.
+    // 만약 CDN 전파 지연으로 이전 HTML이 열렸다면 파라미터를 유지해 다음 재시도를 돕는다.
+    if(requested && requested!==APP_VERSION) return;
     let changed=false;
     ['__appv','_'].forEach(key=>{ if(url.searchParams.has(key)){ url.searchParams.delete(key); changed=true; } });
     if(!changed) return;
