@@ -280,7 +280,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1930</div>
+  <div class="version">ver20260909-1939</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -535,7 +535,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1930';
+const APP_VERSION = 'ver20260909-1939';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -1718,12 +1718,14 @@ function renderAttendanceList(){
   const dayDelta=key=>{ const {y,m,d}=parseDateKey(key); const t=parseDateKey(today); return Math.round((Date.UTC(y,m,d)-Date.UTC(t.y,t.m,t.d))/86400000); };
   const rows=attendanceListRows.filter(r=>Number(r.employee_id)===employeeId).sort((a,b)=>{
     const da=dayDelta(a.start_date), db=dayDelta(b.start_date);
-    const aa=Math.abs(da), ab=Math.abs(db);
-    if(aa!==ab) return aa-ab;
-    if((da>=0)!==(db>=0)) return da>=0?-1:1;
-    return String(a.start_date).localeCompare(String(b.start_date))||Number(b.id)-Number(a.id);
+    const aUpcoming=da>=0, bUpcoming=db>=0;
+    // 오늘/미래 근태를 먼저 보여주고, 그 안에서는 가까운 예정일부터 먼 예정일 순.
+    if(aUpcoming!==bUpcoming) return aUpcoming?-1:1;
+    if(aUpcoming) return da-db || Number(b.id)-Number(a.id);
+    // 지난 근태는 예정 근태 아래에서 최근 과거일부터 오래된 과거일 순.
+    return db-da || Number(b.id)-Number(a.id);
   });
-  $('attendanceListCount').textContent=`총 ${rows.length}건 · 가까운 날짜순`;
+  $('attendanceListCount').textContent=`총 ${rows.length}건 · 다가오는 근태부터`;
   if(!rows.length){ $('attendanceListBody').innerHTML='<div class="attendance-list-empty">등록된 근태가 없습니다.</div>'; return; }
   $('attendanceListBody').innerHTML=rows.map(r=>{
     const dateText=r.start_date===r.end_date?r.start_date:`${r.start_date} ~ ${r.end_date}`;
