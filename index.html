@@ -88,6 +88,7 @@
   .pin-state-badge.initial{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}.pin-state-badge.custom{background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}.pin-state-badge.loading{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
   .employee-actions{display:flex;gap:5px;flex:0 0 auto}.employee-actions button{padding:7px 8px;border-radius:8px;background:#eef2f7;color:#374151;font-size:calc(10px * var(--text-scale,1));font-weight:850}.employee-actions button.replace{background:#e0f2fe;color:#0369a1}.employee-actions button.pin{background:#f3e8ff;color:#7e22ce}.employee-actions button.exclude{background:#fff1f2;color:#be123c}
   .scheduled-badge{display:inline-flex;align-items:center;padding:7px 8px;border-radius:8px;background:#fff7ed;color:#c2410c;font-size:calc(10px * var(--text-scale,1));font-weight:900;white-space:nowrap}
+  .history-access-badge{display:inline-flex;align-items:center;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:calc(9px * var(--text-scale,1));font-weight:900;line-height:1.2}.history-access-badge.readonly{background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe}.history-access-badge.blocked{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}.history-access-badge.scheduled{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
   .employee-section-title{margin:13px 2px 6px;font-size:calc(12px * var(--text-scale,1));font-weight:900;color:#4b5563}
   .employee-empty{padding:14px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}
   .readonly-box{padding:11px 12px;border-radius:12px;background:#f3f4f6;color:#374151;font-size:calc(13px * var(--text-scale,1));font-weight:800;margin-bottom:11px}
@@ -208,6 +209,7 @@
   .realtime-status.connecting{background:#fffbeb;color:#a16207}.realtime-status.connecting .realtime-dot{background:#f59e0b;animation:livePulse 1.2s ease-in-out infinite}
   .realtime-status.fallback{background:#f3f4f6;color:#4b5563}.realtime-status.fallback .realtime-dot{background:#9ca3af}
   .realtime-status.offline{background:#fff1f2;color:#be123c}.realtime-status.offline .realtime-dot{background:#e11d48}
+  .readonly-account-notice{margin:0 0 10px;padding:9px 11px;border:1px solid #ddd6fe;border-radius:12px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:800;line-height:1.5}
   @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.35}}
   .initial-pin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
   .initial-pin-later{border-radius:13px;padding:13px 12px;background:#eef2f7;color:#4b5563;font-weight:850;font-size:calc(14px * var(--text-scale,1))}
@@ -215,8 +217,8 @@
   .attendance-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#ecfeff;color:#0f766e;border:1px solid #a5f3fc;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .attendance-list{display:flex;flex-direction:column;gap:7px;margin-top:9px}.attendance-list-row{padding:10px 11px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.attendance-list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.attendance-list-type{font-size:calc(13px * var(--text-scale,1));font-weight:900;color:#111827}.attendance-list-date{font-size:calc(11px * var(--text-scale,1));font-weight:850;color:#374151;line-height:1.4}.attendance-list-sub{margin-top:4px;font-size:calc(11px * var(--text-scale,1));color:#6b7280;line-height:1.4}.attendance-list-count{font-size:calc(11px * var(--text-scale,1));color:#6b7280;font-weight:800;margin:3px 2px 8px}.attendance-list-empty{padding:18px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}
   .memo-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
-  .memo-detail-section{padding:11px;border-radius:15px;background:#faf7ff;border:1px solid #ede9fe;margin-bottom:10px}.memo-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.memo-detail-title{font-size:calc(13px * var(--text-scale,1));font-weight:950;color:#5b21b6}.memo-private-badge{font-size:calc(9px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#ede9fe;border-radius:999px;padding:3px 7px;white-space:nowrap}.memo-textarea{width:100%;min-height:92px;resize:vertical;border:1px solid #ddd6fe;border-radius:11px;background:#fff;color:#111827;padding:10px 11px;font:inherit;font-size:calc(14px * var(--text-scale,1));line-height:1.45;outline:none}.memo-textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.10)}.memo-meta{display:flex;justify-content:space-between;gap:8px;margin-top:5px;min-height:16px;font-size:calc(10px * var(--text-scale,1));color:#9ca3af}#memoDetailError{color:#dc2626;font-weight:750}.memo-detail-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px}.memo-delete-btn,.memo-close-btn,.memo-save-btn{padding:11px 8px;border-radius:11px;font-weight:900;font-size:calc(13px * var(--text-scale,1))}.memo-delete-btn{background:#fff1f2;color:#be123c}.memo-delete-btn:disabled{opacity:.4}.memo-close-btn{background:#eef2f7;color:#4b5563}.memo-save-btn{background:#7c3aed;color:#fff}
-  .memo-list-help{padding:9px 10px;border-radius:12px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:750;line-height:1.45;margin-bottom:9px}.memo-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:7px}.memo-search-row input{min-width:0}.memo-search-clear{padding:0 11px;border-radius:11px;background:#eef2f7;color:#4b5563;font-weight:850}.memo-list-count{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#6b7280;margin:4px 2px 8px}.memo-list{display:flex;flex-direction:column;gap:7px;max-height:50dvh;overflow:auto;padding-right:1px}.memo-list-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:7px;align-items:flex-start;padding:10px 10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.memo-list-check{width:19px;height:19px;margin:2px 0 0 1px;accent-color:#7c3aed}.memo-list-date{font-size:calc(12px * var(--text-scale,1));font-weight:950;color:#5b21b6;margin-bottom:4px}.memo-list-text{font-size:calc(12px * var(--text-scale,1));line-height:1.45;color:#374151;white-space:pre-wrap;overflow-wrap:anywhere}.memo-list-empty{padding:20px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}.memo-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.memo-selected-delete{padding:12px;border-radius:12px;background:#fff1f2;color:#be123c;font-weight:900}.memo-selected-delete:disabled{opacity:.4}.memo-list-close{padding:12px;border-radius:12px;background:#eef2f7;color:#4b5563;font-weight:900}
+  .memo-detail-section{padding:11px;border-radius:15px;background:#faf7ff;border:1px solid #ede9fe;margin-bottom:10px}.memo-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.memo-detail-title{font-size:calc(13px * var(--text-scale,1));font-weight:950;color:#5b21b6}.memo-private-badge{font-size:calc(9px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#ede9fe;border-radius:999px;padding:3px 7px;white-space:nowrap}.memo-textarea{width:100%;min-height:92px;resize:vertical;border:1px solid #ddd6fe;border-radius:11px;background:#fff;color:#111827;padding:10px 11px;font:inherit;font-size:calc(14px * var(--text-scale,1));line-height:1.45;outline:none}.memo-textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.10)}.memo-meta{display:flex;justify-content:space-between;gap:8px;margin-top:5px;min-height:16px;font-size:calc(10px * var(--text-scale,1));color:#9ca3af}#memoDetailError{color:#dc2626;font-weight:750}.memo-detail-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px}.memo-detail-actions.readonly{grid-template-columns:1fr}.memo-delete-btn,.memo-close-btn,.memo-save-btn{padding:11px 8px;border-radius:11px;font-weight:900;font-size:calc(13px * var(--text-scale,1))}.memo-delete-btn{background:#fff1f2;color:#be123c}.memo-delete-btn:disabled{opacity:.4}.memo-close-btn{background:#eef2f7;color:#4b5563}.memo-save-btn{background:#7c3aed;color:#fff}
+  .memo-list-help{padding:9px 10px;border-radius:12px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:750;line-height:1.45;margin-bottom:9px}.memo-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:7px}.memo-search-row input{min-width:0}.memo-search-clear{padding:0 11px;border-radius:11px;background:#eef2f7;color:#4b5563;font-weight:850}.memo-list-count{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#6b7280;margin:4px 2px 8px}.memo-list{display:flex;flex-direction:column;gap:7px;max-height:50dvh;overflow:auto;padding-right:1px}.memo-list-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:7px;align-items:flex-start;padding:10px 10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.memo-list-row.readonly{grid-template-columns:minmax(0,1fr)}.memo-list-check{width:19px;height:19px;margin:2px 0 0 1px;accent-color:#7c3aed}.memo-list-date{font-size:calc(12px * var(--text-scale,1));font-weight:950;color:#5b21b6;margin-bottom:4px}.memo-list-text{font-size:calc(12px * var(--text-scale,1));line-height:1.45;color:#374151;white-space:pre-wrap;overflow-wrap:anywhere}.memo-list-empty{padding:20px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}.memo-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.memo-list-actions.readonly{grid-template-columns:1fr}.memo-selected-delete{padding:12px;border-radius:12px;background:#fff1f2;color:#be123c;font-weight:900}.memo-selected-delete:disabled{opacity:.4}.memo-list-close{padding:12px;border-radius:12px;background:#eef2f7;color:#4b5563;font-weight:900}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
   .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
@@ -265,6 +267,8 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
+  <div id="readOnlyAccountNotice" class="readonly-account-notice hidden">발령 후 조회 전용 계정입니다. 기존 근태와 개인 메모는 확인할 수 있으며, 새 근태 등록·수정·삭제와 메모 저장·수정·삭제는 할 수 없습니다.</div>
+
   <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
@@ -284,17 +288,17 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-2029</div>
+  <div class="version">ver20260909-2053</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div id="detailTitle" class="modal-title"></div><button class="close-btn" data-close="detail">×</button></div>
     <div id="memoDetailSection" class="memo-detail-section hidden">
-      <div class="memo-detail-head"><div class="memo-detail-title">개인 메모</div><span class="memo-private-badge">나만 보임</span></div>
+      <div class="memo-detail-head"><div class="memo-detail-title">개인 메모</div><span id="memoPrivateBadge" class="memo-private-badge">나만 보임</span></div>
       <textarea id="memoText" class="memo-textarea" maxlength="1000" placeholder="이 날짜에 기억할 내용을 간단히 적어두세요."></textarea>
       <div class="memo-meta"><span id="memoDetailError"></span><span id="memoCharCount">0/1000</span></div>
-      <div class="memo-detail-actions"><button id="deleteMemoBtn" class="memo-delete-btn" type="button">삭제</button><button id="closeMemoDetailBtn" class="memo-close-btn" type="button">닫기</button><button id="saveMemoBtn" class="memo-save-btn" type="button">저장</button></div>
+      <div id="memoDetailActions" class="memo-detail-actions"><button id="deleteMemoBtn" class="memo-delete-btn" type="button">삭제</button><button id="closeMemoDetailBtn" class="memo-close-btn" type="button">닫기</button><button id="saveMemoBtn" class="memo-save-btn" type="button">저장</button></div>
     </div>
     <div id="detailPartialSection" class="detail-section"><div class="detail-title">부분부재</div><div id="detailPartial" class="detail-list"></div></div>
     <div id="detailFullSection" class="detail-section"><div class="detail-title">전일부재</div><div id="detailFull" class="detail-list"></div></div>
@@ -370,18 +374,18 @@
 <div id="memoListBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">메모 모아보기</div><button class="close-btn" data-close="memoList">×</button></div>
-    <div class="memo-list-help">내 개인 메모만 표시됩니다. 날짜 빠른 순으로 정렬되며, 메모 내용이나 날짜로 검색할 수 있습니다.</div>
+    <div id="memoListHelp" class="memo-list-help">내 개인 메모만 표시됩니다. 날짜 빠른 순으로 정렬되며, 메모 내용이나 날짜로 검색할 수 있습니다.</div>
     <div class="memo-search-row"><input id="memoSearch" type="search" autocomplete="off" placeholder="메모 내용 또는 날짜 검색 (예: 9/10)"><button id="memoSearchClearBtn" class="memo-search-clear" type="button">지우기</button></div>
     <div id="memoListCount" class="memo-list-count"></div>
     <div id="memoListBody" class="memo-list"><div class="memo-list-empty">불러오는 중…</div></div>
-    <div class="memo-list-actions"><button id="deleteSelectedMemosBtn" class="memo-selected-delete" type="button" disabled>선택 삭제</button><button class="memo-list-close" type="button" data-close="memoList">닫기</button></div>
+    <div id="memoListActions" class="memo-list-actions"><button id="deleteSelectedMemosBtn" class="memo-selected-delete" type="button" disabled>선택 삭제</button><button class="memo-list-close" type="button" data-close="memoList">닫기</button></div>
   </div>
 </div>
 
 <div id="employeeManageBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">직원 관리</div><button class="close-btn" data-close="employeeManage">×</button></div>
-    <div class="employee-help">정기발령은 <b>직원 교체</b>를 사용하면 기존 직원의 과거 기록은 그대로 남고, 발령일부터 새 직원이 같은 자리·근무조·비밀번호를 이어받습니다.</div>
+    <div class="employee-help">정기발령은 <b>직원 교체</b>를 사용합니다. 기존 직원은 적용일부터 현재 명단에서 빠지고 <b>조회 전용 계정</b>으로 남아 본인의 과거 근태·개인 메모를 확인할 수 있습니다. 새 직원은 같은 자리·근무조를 이어받되 별도 계정과 초기비밀번호 0000으로 시작합니다. <b>직원 제외</b>는 적용일부터 로그인까지 차단합니다.</div>
     <div class="employee-manage-actions"><button id="addEmployeeBtn" class="primary">＋ 직원 추가</button><button id="resetCurrentPinsBtn" class="reset-pins-btn">전체 비밀번호 0000 초기화</button></div>
     <div class="employee-section-title">현재 직원</div>
     <div id="currentEmployeeList" class="employee-list"></div>
@@ -556,7 +560,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-2029';
+const APP_VERSION = 'ver20260909-2053';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -923,6 +927,10 @@ async function stopRealtime(){
 function todayKey(){ const n=new Date(); return dateKey(n.getFullYear(),n.getMonth(),n.getDate()); }
 function addDaysKey(key,days){ const {y,m,d}=parseDateKey(key); const dt=new Date(Date.UTC(y,m,d+days)); return `${dt.getUTCFullYear()}-${pad(dt.getUTCMonth()+1)}-${pad(dt.getUTCDate())}`; }
 function employeeActiveOn(emp,key){ return (!emp.active_from || emp.active_from<=key) && (!emp.active_to || emp.active_to>=key); }
+function employeeHistoryLoginAllowed(emp){ return !!(emp?.history_login_allowed || emp?.post_active_login || emp?.archive_login_allowed); }
+function employeeCanLoginLocal(emp,key=todayKey()){ return !!emp && (!emp.active_from || emp.active_from<=key) && (employeeActiveOn(emp,key) || (employeeHistoryLoginAllowed(emp) && !!emp.active_to && emp.active_to<key)); }
+function employeeReadOnlyLocal(emp,key=todayKey()){ return !!emp && employeeHistoryLoginAllowed(emp) && !!emp.active_to && emp.active_to<key; }
+function accountReadOnly(){ return !!state.me?.is_read_only && !state.me?.is_admin; }
 function localEmployees(){
   try{
     const raw=JSON.parse(localStorage.getItem(LOCAL_EMPLOYEE_KEY)||'null');
@@ -1029,7 +1037,7 @@ function availableEmployees(key){
     .sort((a,b)=>employeeDisplayCompareForDate(a,b,key));
 }
 function myRecordsForDate(key){ return recordsForDate(key).filter(r=>Number(r.employee_id)===Number(state.me.employee_id)); }
-function canEditRecord(r){ return !!state.me?.is_admin || Number(r.employee_id)===Number(state.me?.employee_id); }
+function canEditRecord(r){ if(accountReadOnly()) return false; return !!state.me?.is_admin || Number(r.employee_id)===Number(state.me?.employee_id); }
 
 function localRecords(){
   try{ const rows=JSON.parse(localStorage.getItem(LOCAL_DATA_KEY)||'[]'); return Array.isArray(rows)?rows:[]; }
@@ -1333,7 +1341,7 @@ async function login(){
   showLoading(true);
   try{
     if(!configured()){
-      const emp=localEmployees().find(e=>employeeActiveOn(e,todayKey()) && e.display_name===name && e.pin===pin);
+      const emp=localEmployees().filter(e=>employeeCanLoginLocal(e,todayKey()) && e.display_name===name && e.pin===pin).sort((a,b)=>String(b.active_from||'').localeCompare(String(a.active_from||'')))[0];
       if(!emp) throw new Error('성명 또는 비밀번호를 확인해 주세요.');
       if(emp.is_admin && adminPin!==ADMIN_SECOND_PIN) throw new Error('관리자 2차 비밀번호를 확인해 주세요.');
       state.sessionToken=`local:${emp.id}`; localStorage.setItem(SESSION_KEY,state.sessionToken);
@@ -1370,7 +1378,7 @@ async function restoreSession(){
       $('setupNote').innerHTML='Supabase 연결이 필요합니다.';
       const m=/^local:(\d+)$/.exec(state.sessionToken);
       if(!m) throw new Error('expired');
-      const emp=localEmployees().find(e=>e.id===Number(m[1]) && employeeActiveOn(e,todayKey()));
+      const emp=localEmployees().find(e=>e.id===Number(m[1]) && employeeCanLoginLocal(e,todayKey()));
       if(!emp) throw new Error('expired');
       if(emp.is_admin && sessionStorage.getItem(ADMIN_UNLOCK_KEY)!==state.sessionToken) throw new Error('admin_locked');
       await enterApp({employee_id:emp.id,display_name:emp.display_name,category:emp.category,is_admin:emp.is_admin});
@@ -1403,13 +1411,41 @@ async function maybeShowInitialPinNotice(){
   }
 }
 
+async function loadAccountStatus(){
+  if(!state.me)return;
+  let isReadOnly=false, activeTo=null;
+  if(!configured()){
+    const emp=localEmployees().find(e=>Number(e.id)===Number(state.me.employee_id));
+    isReadOnly=employeeReadOnlyLocal(emp,todayKey()); activeTo=emp?.active_to||null;
+  }else{
+    try{
+      const data=await rpc('get_account_status',{p_token:state.sessionToken});
+      const row=Array.isArray(data)?data[0]:data;
+      isReadOnly=!!row?.is_read_only; activeTo=row?.active_to||null;
+    }catch(e){
+      // 패치 적용 전의 현재 직원 로그인은 막지 않는다. 발령자 조회전용은 SQL 패치 적용 후 활성화된다.
+      isReadOnly=false;
+    }
+  }
+  state.me.is_read_only=isReadOnly; state.me.active_to=activeTo;
+}
+function applyAccountModeUI(){
+  if(!state.me)return;
+  const ro=accountReadOnly();
+  $('whoText').textContent=`${state.me.display_name} · ${state.me.category}${state.me.is_admin?' · 관리자':''}${ro?' · 발령자 · 조회 전용':''}${configured()?'':' · 테스트모드'}`;
+  $('readOnlyAccountNotice').classList.toggle('hidden',!ro);
+  if(ro && $('formBackdrop')?.classList.contains('open')) closeBackdrop('formBackdrop');
+  if($('detailBackdrop')?.classList.contains('open') && state.selectedDate) renderDetail(state.selectedDate);
+  if($('attendanceListBackdrop')?.classList.contains('open')) renderAttendanceList();
+  if($('memoListBackdrop')?.classList.contains('open')) renderMemoList();
+}
 async function enterApp(me){
-  state.me={...me,employee_id:Number(me.employee_id),is_admin:!!me.is_admin};
+  state.me={...me,employee_id:Number(me.employee_id),is_admin:!!me.is_admin,is_read_only:false};
   $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
-  $('whoText').textContent=`${state.me.display_name} · ${state.me.category}${state.me.is_admin?' · 관리자':''}${configured()?'':' · 테스트모드'}`;
+  await loadAccountStatus(); applyAccountModeUI();
   $('adminTools').classList.toggle('hidden',!state.me.is_admin);
   if(!state.me.is_admin) setAdminToolsExpanded(false);
-  await loadEmployees(); await loadMonthData(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render(); maybeShowInitialPinNotice();
+  await loadEmployees(); await loadMonthData(); applyAccountModeUI(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render(); maybeShowInitialPinNotice();
 }
 async function loadEmployees(){
   let data;
@@ -1457,7 +1493,9 @@ async function loadMonthData(silent=false){
 async function refresh(){
   try{
     await loadEmployees();
+    await loadAccountStatus();
     await loadMonthData(false);
+    applyAccountModeUI();
     renderCalendar();
     if(state.selectedDate && $('detailBackdrop').classList.contains('open')) renderDetail(state.selectedDate);
     if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
@@ -1521,7 +1559,7 @@ function renderDetail(key){
   if(mineView) renderMemoDetail(key);
   // 전체 근무표는 조회 전용이며, 부분부재/전일부재 명단도 전체 근무표에서만 보여준다.
   // 내 근무표의 날짜 상세는 개인 메모 + 근태 등록에 집중한다. 기존 근태 수정/삭제는 '내 근태 목록'에서 계속 가능하다.
-  $('detailActions').classList.toggle('hidden',!mineView);
+  $('detailActions').classList.toggle('hidden',!mineView || accountReadOnly());
   $('detailPartialSection').classList.toggle('hidden',mineView);
   $('detailFullSection').classList.toggle('hidden',mineView);
   if(mineView){
@@ -1540,14 +1578,19 @@ function renderDetail(key){
   $('detailFull').innerHTML=renderAttendanceRows(full,key);
 }
 function renderMemoDetail(key){
-  const memo=memoForDate(key);
+  const memo=memoForDate(key); const ro=accountReadOnly();
   $('memoText').value=memo?.memo_text||'';
+  $('memoText').readOnly=ro;
+  $('memoText').placeholder=ro?'저장된 개인 메모가 없습니다.':'이 날짜에 기억할 내용을 간단히 적어두세요.';
   $('memoCharCount').textContent=`${$('memoText').value.length}/1000`;
-  $('deleteMemoBtn').disabled=!memo;
-  $('memoDetailError').textContent=state.memoBackendReady===false&&configured()?'메모 SQL 패치를 먼저 적용해 주세요.':'';
+  $('deleteMemoBtn').disabled=!memo || ro;
+  $('deleteMemoBtn').classList.toggle('hidden',ro); $('saveMemoBtn').classList.toggle('hidden',ro); $('memoDetailActions').classList.toggle('readonly',ro);
+  $('memoPrivateBadge').textContent=ro?'조회 전용':'나만 보임';
+  $('memoDetailError').textContent=ro?'발령 후 조회 전용입니다. 기존 메모는 확인만 가능합니다.':(state.memoBackendReady===false&&configured()?'메모 SQL 패치를 먼저 적용해 주세요.':'');
 }
 async function saveSelectedDateMemo(){
   const key=state.selectedDate; if(!key||state.view!=='mine')return;
+  if(accountReadOnly()){ showToast('발령 후 조회 전용 계정에서는 메모를 변경할 수 없습니다.','info'); return; }
   const text=$('memoText').value.trim(); $('memoDetailError').textContent='';
   if(!text){ $('memoDetailError').textContent='메모 내용을 입력해 주세요.'; return; }
   if(text.length>1000){ $('memoDetailError').textContent='메모는 1,000자까지 입력할 수 있습니다.'; return; }
@@ -1570,6 +1613,7 @@ async function saveSelectedDateMemo(){
 }
 async function deleteSelectedDateMemo(){
   const key=state.selectedDate; const memo=key?memoForDate(key):null; if(!memo||state.view!=='mine')return;
+  if(accountReadOnly()){ showToast('발령 후 조회 전용 계정에서는 메모를 삭제할 수 없습니다.','info'); return; }
   if(!confirm(`${formatDateKR(key)} 메모를 삭제할까요?`))return;
   showLoading(true);
   try{
@@ -1586,15 +1630,19 @@ function memoSearchHaystack(m){
   return `${m.memo_date} ${m.memo_date.replaceAll('-','.')} ${m.memo_date.replaceAll('-','/')} ${month+1}/${d} ${month+1}월 ${d}일 ${formatDateKR(m.memo_date)} ${m.memo_text}`.toLowerCase();
 }
 function updateMemoDeleteButton(){
-  const n=memoSelectedDates.size; const btn=$('deleteSelectedMemosBtn');
-  btn.disabled=n===0; btn.textContent=n?`선택 삭제 (${n}건)`:'선택 삭제';
+  const n=memoSelectedDates.size; const btn=$('deleteSelectedMemosBtn'); const ro=accountReadOnly();
+  if(ro) memoSelectedDates.clear();
+  btn.classList.toggle('hidden',ro); $('memoListActions').classList.toggle('readonly',ro); btn.disabled=ro || n===0; btn.textContent=n?`선택 삭제 (${n}건)`:'선택 삭제';
 }
 function renderMemoList(){
-  const query=$('memoSearch').value.trim().toLowerCase();
+  const query=$('memoSearch').value.trim().toLowerCase(); const ro=accountReadOnly();
   const rows=memoListRows.slice().sort((a,b)=>a.memo_date.localeCompare(b.memo_date)||a.id-b.id).filter(m=>!query||memoSearchHaystack(m).includes(query));
-  $('memoListCount').textContent=query?`전체 ${memoListRows.length}건 · 검색 ${rows.length}건`:`총 ${memoListRows.length}건 · 날짜 빠른 순`;
+  $('memoListHelp').textContent=ro?'발령 후 조회 전용 계정입니다. 기존 개인 메모는 검색·확인할 수 있지만 수정·삭제할 수 없습니다.':'내 개인 메모만 표시됩니다. 날짜 빠른 순으로 정렬되며, 메모 내용이나 날짜로 검색할 수 있습니다.';
+  $('memoListCount').textContent=query?`전체 ${memoListRows.length}건 · 검색 ${rows.length}건${ro?' · 조회 전용':''}`:`총 ${memoListRows.length}건 · 날짜 빠른 순${ro?' · 조회 전용':''}`;
   if(!rows.length){ $('memoListBody').innerHTML=`<div class="memo-list-empty">${query?'검색 결과가 없습니다.':'아직 저장한 메모가 없습니다.'}</div>`; updateMemoDeleteButton(); return; }
-  $('memoListBody').innerHTML=rows.map(m=>`<label class="memo-list-row"><input class="memo-list-check" type="checkbox" data-memo-check="${m.memo_date}" ${memoSelectedDates.has(m.memo_date)?'checked':''}><div><div class="memo-list-date">${escapeHtml(formatDateKR(m.memo_date))}</div><div class="memo-list-text">${escapeHtml(m.memo_text)}</div></div></label>`).join('');
+  $('memoListBody').innerHTML=rows.map(m=>ro
+    ? `<div class="memo-list-row readonly"><div><div class="memo-list-date">${escapeHtml(formatDateKR(m.memo_date))}</div><div class="memo-list-text">${escapeHtml(m.memo_text)}</div></div></div>`
+    : `<label class="memo-list-row"><input class="memo-list-check" type="checkbox" data-memo-check="${m.memo_date}" ${memoSelectedDates.has(m.memo_date)?'checked':''}><div><div class="memo-list-date">${escapeHtml(formatDateKR(m.memo_date))}</div><div class="memo-list-text">${escapeHtml(m.memo_text)}</div></div></label>`).join('');
   updateMemoDeleteButton();
 }
 async function loadMemoList(resetSelection=true){
@@ -1614,6 +1662,7 @@ async function openMemoList(){
   $('memoSearch').value=''; memoSelectedDates.clear(); openBackdrop('memoListBackdrop'); await loadMemoList(true);
 }
 async function deleteSelectedMemos(){
+  if(accountReadOnly()){ showToast('발령 후 조회 전용 계정에서는 메모를 삭제할 수 없습니다.','info'); return; }
   const dates=[...memoSelectedDates].sort(); if(!dates.length)return;
   if(!confirm(`선택한 개인 메모 ${dates.length}건을 삭제할까요?`))return;
   showLoading(true);
@@ -1770,6 +1819,7 @@ function bindNumericTimeInput(id,max){
   });
 }
 function openForm(date,record=null){
+  if(accountReadOnly()){ showToast('발령 후 조회 전용 계정에서는 근태를 등록하거나 수정할 수 없습니다.','info'); return; }
   $('formError').textContent=''; $('editId').value=record?record.id:''; $('formTitle').textContent=record?'근태 수정':'근태 등록';
   $('targetField').classList.toggle('hidden',!state.me.is_admin);
   if(state.me.is_admin) populateTargetEmployees(record?record.start_date:date,record?record.employee_id:state.me.employee_id);
@@ -1782,6 +1832,7 @@ function openForm(date,record=null){
   openBackdrop('formBackdrop');
 }
 async function saveAttendance(){
+  if(accountReadOnly()){ $('formError').textContent='발령 후 조회 전용 계정에서는 근태를 저장할 수 없습니다.'; return; }
   $('formError').textContent='';
   const id=$('editId').value?Number($('editId').value):null;
   const employeeId=state.me.is_admin?Number($('targetEmployee').value):state.me.employee_id;
@@ -1830,6 +1881,7 @@ async function saveAttendance(){
   finally{ showLoading(false); }
 }
 async function deleteRecord(id){
+  if(accountReadOnly()){ showToast('발령 후 조회 전용 계정에서는 근태를 삭제할 수 없습니다.','info'); return; }
   if(!confirm('이 근태를 삭제할까요?')) return;
   showLoading(true);
   try{
@@ -1875,7 +1927,7 @@ function renderAttendanceList(){
     // 지난 근태는 예정 근태 아래에서 최근 과거일부터 오래된 과거일 순.
     return db-da || Number(b.id)-Number(a.id);
   });
-  $('attendanceListCount').textContent=`총 ${rows.length}건 · 다가오는 근태부터`;
+  $('attendanceListCount').textContent=`총 ${rows.length}건 · 다가오는 근태부터${accountReadOnly()?' · 조회 전용':''}`;
   if(!rows.length){ $('attendanceListBody').innerHTML='<div class="attendance-list-empty">등록된 근태가 없습니다.</div>'; return; }
   $('attendanceListBody').innerHTML=rows.map(r=>{
     const dateText=r.start_date===r.end_date?r.start_date:`${r.start_date} ~ ${r.end_date}`;
@@ -1934,13 +1986,18 @@ async function loadEmployeePinStatus(){
     (rows||[]).forEach(r=>{state.pinStatus[Number(r.employee_id)]=!!r.is_initial_pin;});
   }catch(e){ state.pinStatus={}; }
 }
+function employeeHasReplacementSuccessor(emp){
+  if(!emp?.active_to)return false;
+  const nextDate=addDaysKey(emp.active_to,1);
+  return state.employees.some(n=>Number(n.id)!==Number(emp.id) && n.active_from===nextDate && n.category===emp.category && n.group_code===emp.group_code && Number(n.sort_order)===Number(emp.sort_order));
+}
 function renderEmployeeManager(){
   const today=todayKey();
   const current=state.employees.filter(e=>employeeActiveOn(e,today)).sort(employeeDisplayCompare);
   const history=state.employees.filter(e=>!employeeActiveOn(e,today)).sort((a,b)=>String(b.active_from||'').localeCompare(String(a.active_from||''))||employeeDisplayCompare(a,b));
   const rowHtml=(e,isHistory=false)=>{
     const period=e.active_from>today?`${e.active_from}부터 예정`:`${e.active_from||'2026-01-01'} ~ ${e.active_to||'현재'}`;
-    let actions='';
+    let actions='', accessState='';
     if(!isHistory){
       const pinBtn=`<button class="pin" data-emp-pin="${e.id}">비번변경</button>`;
       const scheduled=!!e.active_to && e.active_to>=today;
@@ -1948,9 +2005,15 @@ function renderEmployeeManager(){
         ? (scheduled?'<span class="scheduled-badge">변경예약</span>':`<button class="replace" data-emp-replace="${e.id}">교체</button><button class="exclude" data-emp-exclude="${e.id}">제외</button>`)
         : '';
       actions=`<div class="employee-actions">${pinBtn}${staffBtns}</div>`;
+    }else if(e.active_from>today){
+      accessState='<span class="history-access-badge scheduled">발령 예정</span>';
+    }else{
+      const replaced=employeeHasReplacementSuccessor(e);
+      accessState=replaced?'<span class="history-access-badge readonly">발령 · 조회전용</span>':'<span class="history-access-badge blocked">제외 · 로그인차단</span>';
+      if(replaced) actions=`<div class="employee-actions"><button class="pin" data-emp-pin="${e.id}">비번변경</button></div>`;
     }
     const pinState=!isHistory?pinStatusMarkup(e.id):'';
-    return `<div class="employee-row"><div class="employee-info"><div class="employee-name">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</div><div class="employee-meta">${escapeHtml(e.category)} · ${escapeHtml(period)}</div>${pinState}</div>${actions}</div>`;
+    return `<div class="employee-row"><div class="employee-info"><div class="employee-name">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</div><div class="employee-meta">${escapeHtml(e.category)} · ${escapeHtml(period)}</div>${pinState}${accessState}</div>${actions}</div>`;
   };
   $('currentEmployeeList').innerHTML=current.length?current.map(e=>rowHtml(e,false)).join(''):'<div class="employee-empty">현재 직원이 없습니다.</div>';
   $('historyEmployeeList').innerHTML=history.length?history.map(e=>rowHtml(e,true)).join(''):'<div class="employee-empty">아직 발령·제외 이력이 없습니다.</div>';
@@ -2003,8 +2066,8 @@ function openEmployeeAction(mode,id=null){
   $('employeeNewName').value=''; $('employeeCategory').value='일근(사무)'; $('employeePin').value=isAdd?proposedNextPin():''; $('employeeAdminPin').value='';
   $('employeeEffectiveDate').value=todayKey();
   $('employeeActionNote').classList.toggle('hidden',isAdd);
-  if(isReplace) $('employeeActionNote').innerHTML='<b>근무자리·근무조·정렬순서만 이어받습니다.</b><br>새 직원은 별도 계정(ID)과 초기비밀번호 0000으로 시작하며, 기존 직원의 개인 메모와 과거 근태는 승계되지 않습니다. 적용일 이후로 미리 입력된 기존 직원 근태는 자동 정리됩니다.';
-  if(isExclude) $('employeeActionNote').innerHTML='<b>적용일부터 근무명단에서 제외됩니다.</b><br>과거 달력과 기존 근태 기록은 그대로 남습니다.';
+  if(isReplace) $('employeeActionNote').innerHTML='<b>기존 직원은 적용일부터 조회 전용으로 전환됩니다.</b><br>본인의 과거 근태·개인 메모는 계속 확인할 수 있지만 새 근태/메모 등록·수정·삭제는 할 수 없습니다. 새 직원은 자리·근무조·정렬순서만 이어받고 별도 계정(ID)과 초기비밀번호 0000으로 시작합니다. 적용일 이후로 미리 입력된 기존 직원 근태는 자동 정리됩니다.';
+  if(isExclude) $('employeeActionNote').innerHTML='<b>적용일부터 근무명단에서 제외되고 로그인도 차단됩니다.</b><br>과거 달력과 기존 근태·개인 메모 데이터는 삭제하지 않지만, 본인은 더 이상 계정에 접속할 수 없습니다.';
   if(isPassword) $('employeeActionNote').innerHTML='<b>근태 기록과 근무조에는 영향을 주지 않습니다.</b><br>변경 즉시 기존 비밀번호로는 로그인할 수 없습니다.';
   $('saveEmployeeActionBtn').textContent=isExclude?'직원 제외':isPassword?'비밀번호 변경':'저장';
   closeBackdrop('employeeManageBackdrop'); openBackdrop('employeeActionBackdrop');
@@ -2041,7 +2104,7 @@ async function saveEmployeeAction(){
       }else if(mode==='add'){
         if(rows.some(e=>e.display_name===name && !e.active_to)) throw new Error('현재 또는 예정 직원 중 같은 이름이 있습니다.');
         const sort=rows.reduce((m,e)=>Math.max(m,Number(e.sort_order)||0),0)+1;
-        rows.push({id:newId,display_name:name,pin,group_code:CATEGORY_GROUP[category],category,sort_order:sort,is_admin:false,active_from:eff,active_to:null});
+        rows.push({id:newId,display_name:name,pin,group_code:CATEGORY_GROUP[category],category,sort_order:sort,is_admin:false,active_from:eff,active_to:null,history_login_allowed:false});
         pushLocalAudit('직원 추가',name,`${category} · ${eff}부터`,newId);
       }else{
         if(!old) throw new Error('직원 정보를 찾을 수 없습니다.');
@@ -2050,10 +2113,11 @@ async function saveEmployeeAction(){
         if(eff<=old.active_from) throw new Error('적용일을 확인해 주세요.');
         if(mode==='replace' && name===old.display_name) throw new Error('SAME_NAME');
         old.active_to=addDaysKey(eff,-1);
+        old.history_login_allowed=mode==='replace';
         if(mode==='replace'){
           if(rows.some(e=>e.display_name===name && !e.active_to && Number(e.id)!==Number(old.id))) throw new Error('현재 또는 예정 직원 중 같은 이름이 있습니다.');
           // 교체 직원은 완전히 새로운 계정으로 시작한다. 자리/조/정렬만 승계하고 비밀번호는 0000으로 초기화한다.
-          rows.push({id:newId,display_name:name,pin:'0000',group_code:old.group_code,category:old.category,sort_order:old.sort_order,is_admin:false,active_from:eff,active_to:null});
+          rows.push({id:newId,display_name:name,pin:'0000',group_code:old.group_code,category:old.category,sort_order:old.sort_order,is_admin:false,active_from:eff,active_to:null,history_login_allowed:false});
           // 기존 직원의 적용일 이후 근태는 새 직원에게 넘어가지 않도록 정리한다.
           // 적용일을 걸치는 기간 근태는 적용일 전날까지만 보존하며, 시간지정이면 마지막 재직일을 18:00까지로 마감한다.
           const cutoff=addDaysKey(eff,-1);
@@ -2064,7 +2128,7 @@ async function saveEmployeeAction(){
             return [r];
           });
           saveLocalRecords(adjusted);
-          pushLocalAudit('직원 교체',name,`${old.display_name} → ${name} · ${eff}부터 · 새 계정 0000 시작`,newId);
+          pushLocalAudit('직원 교체',name,`${old.display_name} → ${name} · ${eff}부터 · 기존 직원 조회전용 · 새 계정 0000 시작`,newId);
         }else pushLocalAudit('직원 제외',old.display_name,`${eff}부터 명단 제외`,old.id);
       }
       saveLocalEmployees(rows);
@@ -2075,7 +2139,7 @@ async function saveEmployeeAction(){
       else await rpc('admin_exclude_employee',{p_token:state.sessionToken,p_employee_id:id,p_effective_date:eff});
     }
     await loadEmployees(); await loadMonthData(true); renderCalendar(); closeBackdrop('employeeActionBackdrop');
-    const msg=mode==='password'?`${target?.display_name||'직원'}의 로그인 비밀번호가 변경되었습니다.`:mode==='add'?`${name} 직원이 추가되었습니다.`:mode==='replace'?`${name} 직원으로 교체가 반영되었습니다. 새 직원 비밀번호는 0000입니다.`:'직원 제외가 반영되었습니다.';
+    const msg=mode==='password'?`${target?.display_name||'직원'}의 로그인 비밀번호가 변경되었습니다.`:mode==='add'?`${name} 직원이 추가되었습니다.`:mode==='replace'?`${name} 직원으로 교체가 반영되었습니다. 기존 직원은 적용일부터 조회 전용, 새 직원 비밀번호는 0000입니다.`:'직원 제외가 반영되었습니다. 적용일부터 로그인도 차단됩니다.';
     $('employeeSuccessMessage').textContent=msg; openBackdrop('employeeSuccessBackdrop');
     showToast(configured()?'✓ 변경사항 서버 동기화 완료':'✓ 변경사항이 이 기기에 저장되었습니다.','success');
   }catch(e){
