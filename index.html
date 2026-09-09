@@ -129,6 +129,18 @@
   .availability.empty{color:#b0b5bd;font-weight:700;padding-top:17px}
   .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:9px;padding:0 2px;font-size:calc(10px * var(--text-scale,1));color:#6b7280;align-items:center}
   .legend span{display:inline-flex;align-items:center;gap:4px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.day{background:var(--yellow)}.dot.night{background:var(--night)}.dot.day2{background:var(--teal)}.dot.off{background:var(--off)}
+  .color-guide{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;margin-top:9px;padding:10px 11px;border:1px solid #ede9fe;border-radius:13px;background:#faf8ff}
+  .color-guide .guide-title{font-size:calc(11px * var(--text-scale,1));font-weight:900;color:#6d28d9;margin-right:2px}
+  .color-guide .guide-item{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:calc(10px * var(--text-scale,1));font-weight:900;line-height:1.1;white-space:nowrap;border:1px solid transparent}
+  .color-guide .guide-swatch{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .color-guide .leader{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
+  .color-guide .leader .guide-swatch{background:#a78bfa}
+  .color-guide .office{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+  .color-guide .office .guide-swatch{background:#22c55e}
+  .color-guide .shift-day{background:#fef3c7;color:#854d0e;border-color:#fde68a}
+  .color-guide .shift-day .guide-swatch{background:#facc15}
+  .color-guide .shift-night{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+  .color-guide .shift-night .guide-swatch{background:#60a5fa}
   .status-line{text-align:center;margin-top:9px;font-size:calc(11px * var(--text-scale,1));color:#6b7280;min-height:16px}
   .version{text-align:center;color:#b0b5bd;font-size:calc(10px * var(--text-scale,1));padding:3px 0}
   .backdrop{position:fixed;inset:0;z-index:1000;background:rgba(17,24,39,.46);display:none;align-items:flex-end;justify-content:center;padding:10px}
@@ -233,10 +245,11 @@
     </div>
     <div class="weekdays"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
     <div id="calendarGrid" class="calendar-grid"></div>
-    <div id="legend" class="legend"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
+    <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
+    <div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1635</div>
+  <div class="version">ver20260909-1644</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -1065,7 +1078,8 @@ async function logout(callServer=true){
 function render(){ renderTabs(); renderCalendar(); }
 function renderTabs(){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===state.view));
-  $('legend').classList.toggle('hidden',state.view==='all');
+  $('legend').classList.add('hidden');
+  $('colorGuide').classList.toggle('hidden',state.view!=='all');
 }
 function renderCalendar(){
   $('monthTitle').textContent=`${state.year}년 ${state.month+1}월`;
