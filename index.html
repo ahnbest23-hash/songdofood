@@ -129,10 +129,10 @@
   .availability.empty{color:#b0b5bd;font-weight:700;padding-top:17px}
   .legend{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:9px;padding:0 2px;font-size:calc(10px * var(--text-scale,1));color:#6b7280;align-items:center}
   .legend span{display:inline-flex;align-items:center;gap:4px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.day{background:var(--yellow)}.dot.night{background:var(--night)}.dot.day2{background:var(--teal)}.dot.off{background:var(--off)}
-  .color-guide{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;margin-top:9px;padding:10px 11px;border:1px solid #ede9fe;border-radius:13px;background:#faf8ff}
-  .color-guide .guide-title{font-size:calc(11px * var(--text-scale,1));font-weight:900;color:#6d28d9;margin-right:2px}
-  .color-guide .guide-item{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:calc(10px * var(--text-scale,1));font-weight:900;line-height:1.1;white-space:nowrap;border:1px solid transparent}
-  .color-guide .guide-swatch{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .color-guide{display:grid;grid-template-columns:repeat(2,max-content);gap:4px 5px;align-items:center;justify-content:start;margin:0;padding:5px 6px;border:1px solid #ede9fe;border-radius:10px;background:#faf8ff;min-width:0}
+  .color-guide .guide-title{display:none}
+  .color-guide .guide-item{display:inline-flex;align-items:center;gap:3px;padding:3px 6px;border-radius:999px;font-size:calc(8.5px * var(--text-scale,1));font-weight:900;line-height:1;white-space:nowrap;border:1px solid transparent}
+  .color-guide .guide-swatch{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 auto}
   .color-guide .leader{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
   .color-guide .leader .guide-swatch{background:#a78bfa}
   .color-guide .office{background:#dcfce7;color:#166534;border-color:#bbf7d0}
@@ -183,7 +183,7 @@
   .month-picker-year{display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 12px}
   .year-btn{width:42px;height:38px;border-radius:10px;background:#f1f3f5;font-weight:900}.year-label{min-width:100px;text-align:center;font-size:calc(20px * var(--text-scale,1));font-weight:900}
   .month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.month-grid button{padding:12px 4px;border-radius:11px;background:#f3f4f6;font-weight:850;color:#374151}.month-grid button.active{background:#dbeafe;color:#1d4ed8}
-  .view-tools{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin:-3px 0 10px}
+  .view-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:-3px 0 10px}.view-tool-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
   .realtime-status{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:calc(10px * var(--text-scale,1));font-weight:850;line-height:1.2;background:#f3f4f6;color:#6b7280;width:max-content;max-width:100%}
   .realtime-dot{width:7px;height:7px;border-radius:50%;background:#9ca3af;flex:0 0 auto}
   .realtime-status.connected{background:#ecfdf5;color:#047857}.realtime-status.connected .realtime-dot{background:#10b981}
@@ -203,7 +203,7 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{margin:-3px 0 9px}.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 10px}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.color-guide{gap:3px 4px;padding:4px 5px}.color-guide .guide-item{font-size:calc(7.5px * var(--text-scale,1));padding:3px 5px}.color-guide .guide-swatch{width:6px;height:6px}.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 10px}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:54px 1fr 54px;gap:6px}.nav-btn{font-size:calc(13px * var(--text-scale,1))}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:50px 1fr 50px}.nav-btn{padding:0 2px}}
 </style>
@@ -241,7 +241,7 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div class="view-tools"><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div>
+  <div class="view-tools"><div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div><div class="view-tool-actions"><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -257,10 +257,9 @@
     <div class="weekdays"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
     <div id="calendarGrid" class="calendar-grid"></div>
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
-    <div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1723</div>
+  <div class="version">ver20260909-1744</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
