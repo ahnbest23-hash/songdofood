@@ -130,8 +130,19 @@
   .secondary{width:100%;padding:12px;border-radius:12px;background:#eef2f7;color:#374151;font-weight:850}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
   .form-grid.one{grid-template-columns:1fr}
-  .mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#eef1f4;border-radius:12px}
-  .mode-btn{padding:10px 8px;border-radius:9px;background:transparent;color:#6b7280;font-weight:850}.mode-btn.active{background:#fff;color:#111827;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+  .mode-toggle,.date-mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#eef1f4;border-radius:12px}
+  .mode-btn,.date-mode-btn{padding:10px 8px;border-radius:9px;background:transparent;color:#6b7280;font-weight:850}
+  .mode-btn.active,.date-mode-btn.active{background:#fff;color:#111827;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+  .attendance-date-grid{display:grid;grid-template-columns:1fr;gap:9px}
+  .attendance-date-grid.range{grid-template-columns:1fr 1fr}
+  .attendance-time-grid{display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);gap:7px;align-items:end;margin-bottom:8px}
+  .attendance-time-block{margin:0}
+  .attendance-time-block>span{display:block;font-size:calc(12px * var(--text-scale,1));color:var(--muted);font-weight:700;margin:0 0 6px 2px}
+  .attendance-time-parts{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);gap:4px;align-items:center}
+  .attendance-time-parts input{text-align:center;padding:12px 5px;font-variant-numeric:tabular-nums}
+  .attendance-time-colon,.attendance-time-wave{display:flex;align-items:center;justify-content:center;color:#6b7280;font-weight:900}
+  .attendance-time-wave{padding-bottom:13px}
+  .attendance-range-help{margin:-1px 2px 10px;font-size:calc(11px * var(--text-scale,1));line-height:1.45;color:#6b7280}
   .form-error{color:#dc2626;font-size:calc(12px * var(--text-scale,1));min-height:17px;margin-top:8px}
   .type-select-btn{width:100%;border:1px solid #d1d5db;border-radius:12px;background:#fff;color:var(--text);padding:12px 40px 12px 12px;font-size:calc(16px * var(--text-scale,1));text-align:left;position:relative;font-weight:700}
   .type-select-btn::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:calc(18px * var(--text-scale,1))}
@@ -207,7 +218,7 @@
     <div id="legend" class="legend"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1355</div>
+  <div class="version">ver20260909-1516</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -225,14 +236,19 @@
     <input id="editId" type="hidden">
     <div id="targetField" class="field hidden"><label for="targetEmployee">직원</label><select id="targetEmployee"></select></div>
     <div class="field"><label>근태 종류 <span class="type-count">총 25개</span></label><input id="attendanceType" type="hidden" value="연가"><button id="attendanceTypeBtn" type="button" class="type-select-btn">연가</button></div>
-    <div class="form-grid">
-      <div class="field"><label for="startDate">시작일</label><input id="startDate" type="date" min="2026-01-01" max="2027-12-31"></div>
-      <div class="field"><label for="endDate">종료일</label><input id="endDate" type="date" min="2026-01-01" max="2027-12-31"></div>
+    <div class="field"><label>날짜 입력 방식</label><div class="date-mode-toggle"><button type="button" class="date-mode-btn active" data-date-mode="single">하루</button><button type="button" class="date-mode-btn" data-date-mode="range">기간</button></div></div>
+    <div id="attendanceDateGrid" class="attendance-date-grid">
+      <div class="field"><label id="startDateLabel" for="startDate">날짜</label><input id="startDate" type="date" min="2026-01-01" max="2027-12-31"></div>
+      <div id="endDateField" class="field hidden"><label for="endDate">종료일</label><input id="endDate" type="date" min="2026-01-01" max="2027-12-31"></div>
     </div>
-    <div class="field"><label>부재 방식</label><div class="mode-toggle"><button class="mode-btn active" data-mode="all_day">전일</button><button class="mode-btn" data-mode="time">시간 지정</button></div></div>
-    <div id="timeFields" class="form-grid hidden">
-      <div class="field"><label for="startTime">시작시간</label><input id="startTime" type="time"></div>
-      <div class="field"><label for="endTime">종료시간</label><input id="endTime" type="time"></div>
+    <div class="field"><label>부재 방식</label><div class="mode-toggle"><button type="button" class="mode-btn active" data-mode="all_day">전일</button><button type="button" class="mode-btn" data-mode="time">시간 지정</button></div></div>
+    <div id="timeFields" class="hidden">
+      <div class="attendance-time-grid">
+        <label class="attendance-time-block"><span>시작시간</span><div class="attendance-time-parts"><input id="startHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="시작 시"><b class="attendance-time-colon">:</b><input id="startMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="시작 분"></div></label>
+        <span class="attendance-time-wave">~</span>
+        <label class="attendance-time-block"><span>종료시간</span><div class="attendance-time-parts"><input id="endHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="종료 시"><b class="attendance-time-colon">:</b><input id="endMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="종료 분"></div></label>
+      </div>
+      <div id="rangeTimeHelp" class="attendance-range-help hidden">기간 + 시간 지정은 첫날 시작시간~18:00, 중간 날짜는 전일, 마지막 날 09:00~종료시간으로 처리합니다. 09:00~18:00 전체를 쉬는 날은 전일부재로 집계됩니다.</div>
     </div>
     <div id="formError" class="form-error"></div>
     <button id="saveAttendanceBtn" class="primary">저장</button>
@@ -431,7 +447,7 @@ const state = {
   sessionToken: localStorage.getItem(SESSION_KEY) || '',
   me:null, employees:[], attendance:[], view:'mine', selectedDate:null,
   year:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), month:new Date().getMonth(),
-  pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', refreshing:false, employeeAction:null
+  pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null
 };
 
 let pendingRestoreBackup=null;
@@ -523,7 +539,37 @@ function shiftForEmployee(emp, y,m,d){
 }
 function isWorkingShift(shift){ return ['주','주2','야','일근'].includes(shift); }
 function recordsForDate(key){ return state.attendance.filter(r=>r.start_date<=key && r.end_date>=key); }
-function fullAbsentIds(key){ return new Set(recordsForDate(key).filter(r=>r.absence_mode==='all_day').map(r=>Number(r.employee_id))); }
+const ATTENDANCE_DAY_START = '09:00';
+const ATTENDANCE_DAY_END = '18:00';
+function effectiveAbsenceForDate(record,key){
+  if(!record || key<record.start_date || key>record.end_date) return null;
+  if(record.absence_mode==='all_day') return {kind:'full',timeText:''};
+  if(record.absence_mode!=='time') return null;
+
+  const st=timeShort(record.start_time), et=timeShort(record.end_time);
+  if(!st || !et) return null;
+
+  // 하루 시간지정: 09:00~18:00 전체를 포함하면 전일부재, 아니면 입력시간 그대로 부분부재.
+  if(record.start_date===record.end_date){
+    if(st<=ATTENDANCE_DAY_START && et>=ATTENDANCE_DAY_END) return {kind:'full',timeText:''};
+    return {kind:'partial',timeText:`${st}~${et}`};
+  }
+
+  // 기간 시간지정은 하나의 연속된 부재기간으로 해석한다.
+  // 첫날: 입력 시작시간 ~ 18:00
+  // 중간 날짜: 09:00 ~ 18:00 전체(전일부재)
+  // 마지막 날: 09:00 ~ 입력 종료시간
+  if(key===record.start_date){
+    if(st<=ATTENDANCE_DAY_START) return {kind:'full',timeText:''};
+    return {kind:'partial',timeText:`${st}~${ATTENDANCE_DAY_END}`};
+  }
+  if(key===record.end_date){
+    if(et>=ATTENDANCE_DAY_END) return {kind:'full',timeText:''};
+    return {kind:'partial',timeText:`${ATTENDANCE_DAY_START}~${et}`};
+  }
+  return {kind:'full',timeText:''};
+}
+function fullAbsentIds(key){ return new Set(recordsForDate(key).filter(r=>effectiveAbsenceForDate(r,key)?.kind==='full').map(r=>Number(r.employee_id))); }
 function employeeDisplayRank(emp){
   if(emp.category==='팀장') return 0;
   if(emp.category==='일근(사무)') return 100;
@@ -592,7 +638,9 @@ function showToast(message,kind='success'){
 }
 function logDateRange(start,end){ return start===end?start:`${start} ~ ${end}`; }
 function attendanceSummary(type,start,end,mode,st,et){
-  return `${type} · ${logDateRange(start,end)} · ${mode==='time'?`${timeShort(st)}~${timeShort(et)}`:'전일'}`;
+  if(mode!=='time') return `${type} · ${logDateRange(start,end)} · 전일`;
+  if(start===end) return `${type} · ${start} · ${timeShort(st)}~${timeShort(et)}`;
+  return `${type} · ${start} ${timeShort(st)} ~ ${end} ${timeShort(et)}`;
 }
 function formatAuditTime(value){
   const d=new Date(value); if(Number.isNaN(d.getTime())) return '';
@@ -917,16 +965,17 @@ function renderDetail(key){
     const eb=state.employees.find(e=>e.id===b.employee_id);
     return employeeDisplayCompareForDate(ea||{sort_order:999,id:999},eb||{sort_order:999,id:999},key) || a.id-b.id;
   });
-  const partial=records.filter(r=>r.absence_mode==='time');
-  const full=records.filter(r=>r.absence_mode==='all_day');
-  $('detailPartial').innerHTML=renderAttendanceRows(partial,true);
-  $('detailFull').innerHTML=renderAttendanceRows(full,false);
+  const partial=records.filter(r=>effectiveAbsenceForDate(r,key)?.kind==='partial');
+  const full=records.filter(r=>effectiveAbsenceForDate(r,key)?.kind==='full');
+  $('detailPartial').innerHTML=renderAttendanceRows(partial,key);
+  $('detailFull').innerHTML=renderAttendanceRows(full,key);
 }
-function renderAttendanceRows(list,isPartial){
+function renderAttendanceRows(list,key){
   if(!list.length) return '<div class="empty-msg">없음</div>';
   return list.map(r=>{
     const actions=(state.view==='mine' && canEditRecord(r))?`<div class="mini-actions"><button data-edit="${r.id}">수정</button><button class="danger" data-delete="${r.id}">삭제</button></div>`:'';
-    const time=isPartial?` · ${escapeHtml(timeShort(r.start_time))}~${escapeHtml(timeShort(r.end_time))}`:'';
+    const effective=effectiveAbsenceForDate(r,key);
+    const time=effective?.kind==='partial' && effective.timeText?` · ${escapeHtml(effective.timeText)}`:'';
     return `<div class="detail-row"><div class="detail-main"><b>${escapeHtml(r.display_name)}</b><div class="detail-sub">${escapeHtml(r.attendance_type)}${time}</div></div>${actions}</div>`;
   }).join('');
 }
@@ -949,27 +998,62 @@ function renderTypeSelection(){
 }
 function openTypePicker(){ renderTypeSelection(); openBackdrop('typeBackdrop'); }
 function chooseAttendanceType(type){ $('attendanceType').value=type; renderTypeSelection(); closeBackdrop('typeBackdrop'); }
-function setMode(mode){ state.mode=mode; document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode)); $('timeFields').classList.toggle('hidden',mode!=='time'); }
+function setDateMode(mode){
+  state.dateMode=mode==='range'?'range':'single';
+  document.querySelectorAll('.date-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.dateMode===state.dateMode));
+  $('attendanceDateGrid').classList.toggle('range',state.dateMode==='range');
+  $('endDateField').classList.toggle('hidden',state.dateMode!=='range');
+  $('startDateLabel').textContent=state.dateMode==='range'?'시작일':'날짜';
+  $('rangeTimeHelp').classList.toggle('hidden',!(state.dateMode==='range'&&state.mode==='time'));
+}
+function setMode(mode){
+  state.mode=mode;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+  $('timeFields').classList.toggle('hidden',mode!=='time');
+  $('rangeTimeHelp').classList.toggle('hidden',!(state.dateMode==='range'&&mode==='time'));
+}
+function setNumericTime(value,hourId,minuteId){
+  const t=timeShort(value);
+  $(hourId).value=t?t.slice(0,2):''; $(minuteId).value=t?t.slice(3,5):'';
+}
+function readNumericTime(hourId,minuteId){
+  const hs=String($(hourId).value||'').trim(), ms=String($(minuteId).value||'').trim();
+  if(!hs && !ms) return '';
+  if(!/^\d{1,2}$/.test(hs)||!/^\d{1,2}$/.test(ms)) return null;
+  const h=Number(hs), m=Number(ms);
+  if(h<0||h>23||m<0||m>59) return null;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function bindNumericTimeInput(id,max){
+  const el=$(id); if(!el)return;
+  el.addEventListener('input',()=>{el.value=el.value.replace(/\D/g,'').slice(0,2)});
+  el.addEventListener('blur',()=>{
+    if(!el.value)return; const n=Number(el.value);
+    if(Number.isFinite(n)&&n>=0&&n<=max) el.value=String(n).padStart(2,'0');
+  });
+}
 function openForm(date,record=null){
   $('formError').textContent=''; $('editId').value=record?record.id:''; $('formTitle').textContent=record?'근태 수정':'근태 등록';
   $('targetField').classList.toggle('hidden',!state.me.is_admin);
   if(state.me.is_admin) populateTargetEmployees(record?record.start_date:date,record?record.employee_id:state.me.employee_id);
   $('attendanceType').value=record?record.attendance_type:'연가';
   renderTypeSelection();
-  $('startDate').value=record?record.start_date:date; $('endDate').value=record?record.end_date:date;
-  $('startTime').value=record?timeShort(record.start_time):''; $('endTime').value=record?timeShort(record.end_time):'';
+  $('startDate').value=record?record.start_date:date; $('endDate').value=record?record.end_date:'';
+  setNumericTime(record?.start_time,'startHour','startMinute'); setNumericTime(record?.end_time,'endHour','endMinute');
   setMode(record?record.absence_mode:'all_day');
+  setDateMode(record&&record.end_date!==record.start_date?'range':'single');
   openBackdrop('formBackdrop');
 }
 async function saveAttendance(){
   $('formError').textContent='';
   const id=$('editId').value?Number($('editId').value):null;
   const employeeId=state.me.is_admin?Number($('targetEmployee').value):state.me.employee_id;
-  const type=$('attendanceType').value; const start=$('startDate').value; const end=$('endDate').value;
-  const st=state.mode==='time'?$('startTime').value:null, et=state.mode==='time'?$('endTime').value:null;
-  if(!start||!end){ $('formError').textContent='날짜를 입력해 주세요.'; return; }
+  const type=$('attendanceType').value; const start=$('startDate').value; const end=state.dateMode==='range'?$('endDate').value:start;
+  const st=state.mode==='time'?readNumericTime('startHour','startMinute'):null, et=state.mode==='time'?readNumericTime('endHour','endMinute'):null;
+  if(!start || (state.dateMode==='range'&&!end)){ $('formError').textContent=state.dateMode==='range'?'시작일과 종료일을 입력해 주세요.':'날짜를 입력해 주세요.'; return; }
   if(end<start){ $('formError').textContent='종료일은 시작일보다 빠를 수 없습니다.'; return; }
-  if(state.mode==='time'&&(!st||!et)){ $('formError').textContent='시작시간과 종료시간을 입력해 주세요.'; return; }
+  if(state.mode==='time'&&(st===null||et===null||!st||!et)){ $('formError').textContent='시작시간과 종료시간을 숫자로 모두 입력해 주세요.'; return; }
+  if(state.mode==='time'&&start===end&&et<=st){ $('formError').textContent='같은 날에는 종료시간이 시작시간보다 늦어야 합니다.'; return; }
 
   // 같은 직원의 기존 근태와 기간이 겹치면 막지는 않고 한 번만 경고합니다.
   try{
@@ -1224,6 +1308,8 @@ function wire(){
   $('prevMonth').addEventListener('click',()=>moveMonth(-1)); $('nextMonth').addEventListener('click',()=>moveMonth(1)); $('monthTitle').addEventListener('click',openMonthPicker);
   $('addAttendanceBtn').addEventListener('click',()=>{if(state.view==='mine')openForm(state.selectedDate)}); $('saveAttendanceBtn').addEventListener('click',saveAttendance);
   document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+  document.querySelectorAll('.date-mode-btn').forEach(b=>b.addEventListener('click',()=>setDateMode(b.dataset.dateMode)));
+  ['startHour','startMinute','endHour','endMinute'].forEach((id,i)=>bindNumericTimeInput(id,i%2===0?23:59));
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeBackdrop(`${b.dataset.close}Backdrop`)));
   document.querySelectorAll('.backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeBackdrop(b.id)}));
   $('yearPrev').addEventListener('click',()=>{if(state.pickerYear>MIN_YEAR){state.pickerYear--;renderMonthPicker()}}); $('yearNext').addEventListener('click',()=>{if(state.pickerYear<MAX_YEAR){state.pickerYear++;renderMonthPicker()}});
