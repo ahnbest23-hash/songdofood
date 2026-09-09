@@ -184,6 +184,15 @@
   .year-btn{width:42px;height:38px;border-radius:10px;background:#f1f3f5;font-weight:900}.year-label{min-width:100px;text-align:center;font-size:calc(20px * var(--text-scale,1));font-weight:900}
   .month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.month-grid button{padding:12px 4px;border-radius:11px;background:#f3f4f6;font-weight:850;color:#374151}.month-grid button.active{background:#dbeafe;color:#1d4ed8}
   .view-tools{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin:-3px 0 10px}
+  .realtime-status{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:calc(10px * var(--text-scale,1));font-weight:850;line-height:1.2;background:#f3f4f6;color:#6b7280;width:max-content;max-width:100%}
+  .realtime-dot{width:7px;height:7px;border-radius:50%;background:#9ca3af;flex:0 0 auto}
+  .realtime-status.connected{background:#ecfdf5;color:#047857}.realtime-status.connected .realtime-dot{background:#10b981}
+  .realtime-status.connecting{background:#fffbeb;color:#a16207}.realtime-status.connecting .realtime-dot{background:#f59e0b;animation:livePulse 1.2s ease-in-out infinite}
+  .realtime-status.fallback{background:#f3f4f6;color:#4b5563}.realtime-status.fallback .realtime-dot{background:#9ca3af}
+  .realtime-status.offline{background:#fff1f2;color:#be123c}.realtime-status.offline .realtime-dot{background:#e11d48}
+  @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .initial-pin-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .initial-pin-later{border-radius:13px;padding:13px 12px;background:#eef2f7;color:#4b5563;font-weight:850;font-size:calc(14px * var(--text-scale,1))}
   .self-pin-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
@@ -219,6 +228,7 @@
     <div class="userbox">
       <div class="title">직원 근태 현황</div>
       <div id="whoText" class="who"></div>
+      <div id="realtimeStatus" class="realtime-status connecting" role="status" aria-live="polite"><span class="realtime-dot"></span><span id="realtimeStatusText">실시간 연결 중</span></div>
     </div>
     <div class="top-actions">
       <button id="refreshBtn" class="icon-btn" title="새로고침">↻</button>
@@ -250,7 +260,7 @@
     <div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1708</div>
+  <div class="version">ver20260909-1723</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -416,6 +426,14 @@
   </div>
 </div>
 
+<div id="initialPinBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">초기 비밀번호 안내</div><button class="close-btn" data-close="initialPin">×</button></div>
+    <div class="warning-box"><b>현재 초기 비밀번호 0000을 사용 중입니다.</b><br>다른 사람이 쉽게 추측할 수 있으므로 본인만 아는 4자리 비밀번호로 변경하는 것을 권장합니다.<br><span style="display:block;margin-top:6px;font-size:.9em;color:#6b7280">지금 바꾸지 않아도 근태 홈페이지는 그대로 사용할 수 있습니다.</span></div>
+    <div class="initial-pin-actions"><button id="initialPinLaterBtn" class="initial-pin-later">나중에</button><button id="initialPinChangeBtn" class="primary">비밀번호 변경</button></div>
+  </div>
+</div>
+
 <div id="selfPinBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">내 비밀번호 변경</div><button class="close-btn" data-close="selfPin">×</button></div>
@@ -571,6 +589,29 @@ async function rpc(name, payload={}){
 let realtimeClient=null;
 let realtimeChannel=null;
 let realtimeRefreshTimer=null;
+let realtimeReconnectTimer=null;
+
+function setRealtimeStatus(mode){
+  const box=$('realtimeStatus'), text=$('realtimeStatusText');
+  if(!box||!text)return;
+  const labels={connected:'실시간 연결됨',connecting:'실시간 연결 중',fallback:'자동 동기화 중',offline:'오프라인'};
+  const safe=labels[mode]?mode:'fallback';
+  box.className=`realtime-status ${safe}`;
+  text.textContent=labels[safe];
+}
+function scheduleRealtimeReconnect(delay=5000){
+  if(realtimeReconnectTimer) clearTimeout(realtimeReconnectTimer);
+  if(!state.me || !configured()) return;
+  realtimeReconnectTimer=setTimeout(async()=>{
+    realtimeReconnectTimer=null;
+    if(!state.me || !navigator.onLine) return;
+    if(realtimeClient && realtimeChannel){
+      try{ await realtimeClient.removeChannel(realtimeChannel); }catch(e){}
+      realtimeChannel=null;
+    }
+    startRealtime();
+  },delay);
+}
 
 function scheduleRealtimeRefresh(){
   if(!state.me || document.hidden) return;
@@ -584,7 +625,11 @@ function scheduleRealtimeRefresh(){
 }
 
 function startRealtime(){
-  if(!configured() || !window.supabase || realtimeChannel) return;
+  if(!state.me) return;
+  if(!configured() || !window.supabase){ setRealtimeStatus('fallback'); return; }
+  if(!navigator.onLine){ setRealtimeStatus('offline'); return; }
+  if(realtimeChannel) return;
+  setRealtimeStatus('connecting');
   try{
     if(!realtimeClient){
       realtimeClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
@@ -592,21 +637,37 @@ function startRealtime(){
         realtime:{params:{eventsPerSecond:10}}
       });
     }
-    realtimeChannel=realtimeClient
+    const channel=realtimeClient
       .channel('staff-attendance-live-sync')
-      .on('postgres_changes',{event:'INSERT',schema:'public',table:'realtime_signals'},()=>scheduleRealtimeRefresh())
-      .subscribe();
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'realtime_signals'},()=>scheduleRealtimeRefresh());
+    realtimeChannel=channel;
+    channel.subscribe(status=>{
+      if(realtimeChannel!==channel) return;
+      if(status==='SUBSCRIBED'){
+        if(realtimeReconnectTimer){ clearTimeout(realtimeReconnectTimer); realtimeReconnectTimer=null; }
+        setRealtimeStatus('connected');
+      }else if(status==='CHANNEL_ERROR' || status==='TIMED_OUT' || status==='CLOSED'){
+        setRealtimeStatus(navigator.onLine?'fallback':'offline');
+        realtimeChannel=null;
+        try{ realtimeClient.removeChannel(channel); }catch(e){}
+        if(navigator.onLine) scheduleRealtimeReconnect();
+      }
+    });
   }catch(e){
-    realtimeChannel=null; // 60초 자동 동기화가 계속 백업 역할을 합니다.
+    realtimeChannel=null;
+    setRealtimeStatus(navigator.onLine?'fallback':'offline');
+    if(navigator.onLine) scheduleRealtimeReconnect();
   }
 }
 
 async function stopRealtime(){
   if(realtimeRefreshTimer){ clearTimeout(realtimeRefreshTimer); realtimeRefreshTimer=null; }
+  if(realtimeReconnectTimer){ clearTimeout(realtimeReconnectTimer); realtimeReconnectTimer=null; }
   if(realtimeClient && realtimeChannel){
     try{ await realtimeClient.removeChannel(realtimeChannel); }catch(e){}
   }
   realtimeChannel=null;
+  setRealtimeStatus('fallback');
 }
 
 
@@ -1036,13 +1097,29 @@ async function restoreSession(){
   }finally{ showLoading(false); }
 }
 
+const INITIAL_PIN_NOTICE_KEY_PREFIX='staffAttendance_initialPinNotice_v1_';
+async function maybeShowInitialPinNotice(){
+  if(!state.me || !state.sessionToken || !configured()) return;
+  const noticeKey=`${INITIAL_PIN_NOTICE_KEY_PREFIX}${state.sessionToken}`;
+  if(sessionStorage.getItem(noticeKey)==='1') return;
+  try{
+    const usesInitial=await rpc('is_initial_pin',{p_token:state.sessionToken});
+    sessionStorage.setItem(noticeKey,'1');
+    if(usesInitial===true){
+      setTimeout(()=>{ if(state.me) openBackdrop('initialPinBackdrop'); },120);
+    }
+  }catch(e){
+    // 안내 조회 실패는 로그인/근태 사용을 막지 않습니다.
+  }
+}
+
 async function enterApp(me){
   state.me={...me,employee_id:Number(me.employee_id),is_admin:!!me.is_admin};
   $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('whoText').textContent=`${state.me.display_name} · ${state.me.category}${state.me.is_admin?' · 관리자':''}${configured()?'':' · 테스트모드'}`;
   $('adminTools').classList.toggle('hidden',!state.me.is_admin);
   if(!state.me.is_admin) setAdminToolsExpanded(false);
-  await loadEmployees(); await loadMonthData(); startRealtime(); render();
+  await loadEmployees(); await loadMonthData(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render(); maybeShowInitialPinNotice();
 }
 async function loadEmployees(){
   let data;
@@ -1402,9 +1479,9 @@ async function saveEmployeeAction(){
   finally{ showLoading(false); }
 }
 
-function openSelfPin(){
+function openSelfPin(prefillCurrent=''){
   if(!state.me)return;
-  $('selfPinCurrent').value=''; $('selfPinNew').value=''; $('selfPinConfirm').value=''; $('selfPinError').textContent='';
+  $('selfPinCurrent').value=prefillCurrent; $('selfPinNew').value=''; $('selfPinConfirm').value=''; $('selfPinError').textContent='';
   openBackdrop('selfPinBackdrop');
   setTimeout(()=>$('selfPinCurrent').focus(),50);
 }
@@ -1421,6 +1498,7 @@ async function changeOwnPin(){
     if(!configured()){ throw new Error('SERVER_REQUIRED'); }
     await rpc('change_own_pin',{p_token:state.sessionToken,p_current_pin:current,p_new_pin:next});
     closeBackdrop('selfPinBackdrop');
+    closeBackdrop('initialPinBackdrop');
     showToast('✓ 내 비밀번호가 변경되었습니다.','success');
   }catch(e){
     const msg=String(e.message||'');
@@ -1501,7 +1579,9 @@ function toggleAdminTools(){
 function wire(){
   populateTypeOptions();
   $('adminToolsToggle').addEventListener('click',toggleAdminTools);
-  $('selfPinBtn').addEventListener('click',openSelfPin);
+  $('selfPinBtn').addEventListener('click',()=>openSelfPin());
+  $('initialPinLaterBtn').addEventListener('click',()=>closeBackdrop('initialPinBackdrop'));
+  $('initialPinChangeBtn').addEventListener('click',()=>{closeBackdrop('initialPinBackdrop');openSelfPin('0000')});
   $('saveSelfPinBtn').addEventListener('click',changeOwnPin);
   $('selfPinConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')changeOwnPin()});
   $('textSizeOpenBtn').addEventListener('click',openTextSizePicker);
@@ -1523,7 +1603,9 @@ function wire(){
   bindDetailActions();
   $('employeeManageBackdrop').addEventListener('click',e=>{ const p=e.target.closest('[data-emp-pin]'); const r=e.target.closest('[data-emp-replace]'); const x=e.target.closest('[data-emp-exclude]'); if(p) openEmployeeAction('password',p.dataset.empPin); else if(r) openEmployeeAction('replace',r.dataset.empReplace); else if(x) openEmployeeAction('exclude',x.dataset.empExclude); });
   $('startDate').addEventListener('change',()=>{ if(state.me?.is_admin) populateTargetEmployees($('startDate').value,$('targetEmployee').value); });
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.me)refresh()});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.me){refresh(); if(!realtimeChannel) startRealtime();}});
+  window.addEventListener('online',()=>{if(state.me){setRealtimeStatus('connecting');scheduleRealtimeReconnect(150)}});
+  window.addEventListener('offline',()=>{if(state.me)setRealtimeStatus('offline')});
   setInterval(()=>{if(state.me&&!document.hidden)refresh()},60000);
 }
 
