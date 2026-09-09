@@ -284,7 +284,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-2011</div>
+  <div class="version">ver20260909-2029</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -296,8 +296,8 @@
       <div class="memo-meta"><span id="memoDetailError"></span><span id="memoCharCount">0/1000</span></div>
       <div class="memo-detail-actions"><button id="deleteMemoBtn" class="memo-delete-btn" type="button">삭제</button><button id="closeMemoDetailBtn" class="memo-close-btn" type="button">닫기</button><button id="saveMemoBtn" class="memo-save-btn" type="button">저장</button></div>
     </div>
-    <div class="detail-section"><div class="detail-title">부분부재</div><div id="detailPartial" class="detail-list"></div></div>
-    <div class="detail-section"><div class="detail-title">전일부재</div><div id="detailFull" class="detail-list"></div></div>
+    <div id="detailPartialSection" class="detail-section"><div class="detail-title">부분부재</div><div id="detailPartial" class="detail-list"></div></div>
+    <div id="detailFullSection" class="detail-section"><div class="detail-title">전일부재</div><div id="detailFull" class="detail-list"></div></div>
     <div id="detailActions" class="modal-actions"><button id="addAttendanceBtn" class="primary">＋ 근태 등록</button></div>
   </div>
 </div>
@@ -556,7 +556,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-2011';
+const APP_VERSION = 'ver20260909-2029';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -1519,14 +1519,17 @@ function renderDetail(key){
   const mineView=state.view==='mine';
   $('memoDetailSection').classList.toggle('hidden',!mineView);
   if(mineView) renderMemoDetail(key);
-  // 전체 근무표는 조회 전용: 근태 등록/수정/삭제는 내 근무표에서만 가능
+  // 전체 근무표는 조회 전용이며, 부분부재/전일부재 명단도 전체 근무표에서만 보여준다.
+  // 내 근무표의 날짜 상세는 개인 메모 + 근태 등록에 집중한다. 기존 근태 수정/삭제는 '내 근태 목록'에서 계속 가능하다.
   $('detailActions').classList.toggle('hidden',!mineView);
-  let records=recordsForDate(key);
-  // 일반 직원의 내 근무표에서는 본인 근태만 표시한다. 관리자는 전체 직원 근태를 관리할 수 있다.
-  if(state.view==='mine' && !state.me.is_admin){
-    records=records.filter(r=>Number(r.employee_id)===Number(state.me.employee_id));
+  $('detailPartialSection').classList.toggle('hidden',mineView);
+  $('detailFullSection').classList.toggle('hidden',mineView);
+  if(mineView){
+    $('detailPartial').innerHTML='';
+    $('detailFull').innerHTML='';
+    return;
   }
-  records=records.slice().sort((a,b)=>{
+  const records=recordsForDate(key).slice().sort((a,b)=>{
     const ea=state.employees.find(e=>e.id===a.employee_id);
     const eb=state.employees.find(e=>e.id===b.employee_id);
     return employeeDisplayCompareForDate(ea||{sort_order:999,id:999},eb||{sort_order:999,id:999},key) || a.id-b.id;
@@ -1821,7 +1824,7 @@ async function saveAttendance(){
       const emp=state.employees.find(e=>Number(e.id)===employeeId); targetName=emp?.display_name||'';
       await rpc('save_attendance',{p_token:state.sessionToken,p_id:id,p_employee_id:employeeId,p_attendance_type:type,p_start_date:start,p_end_date:end,p_absence_mode:state.mode,p_start_time:st,p_end_time:et});
     }
-    closeBackdrop('formBackdrop'); await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate);
+    closeBackdrop('formBackdrop'); await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate); if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
     showToast(configured()?'✓ 저장 및 서버 동기화 완료':'✓ 이 기기에 저장되었습니다.','success');
   }catch(e){ $('formError').textContent=e.message || '저장하지 못했습니다.'; }
   finally{ showLoading(false); }
@@ -1840,7 +1843,7 @@ async function deleteRecord(id){
     }else{
       await rpc('delete_attendance',{p_token:state.sessionToken,p_id:id});
     }
-    await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate);
+    await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate); if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
     showToast(configured()?'✓ 삭제 및 서버 동기화 완료':'✓ 이 기기에서 삭제되었습니다.','success');
   }
   catch(e){ showToast(e.message||'삭제하지 못했습니다.','error'); }
@@ -1877,7 +1880,8 @@ function renderAttendanceList(){
   $('attendanceListBody').innerHTML=rows.map(r=>{
     const dateText=r.start_date===r.end_date?r.start_date:`${r.start_date} ~ ${r.end_date}`;
     const modeText=attendanceListDetailText(r);
-    return `<div class="attendance-list-row"><div class="attendance-list-top"><div class="attendance-list-type">${escapeHtml(normalizeAttendanceType(r.attendance_type))}</div><div class="attendance-list-date">${escapeHtml(dateText)}</div></div><div class="attendance-list-sub">${escapeHtml(modeText)}</div></div>`;
+    const actions=canEditRecord(r)?`<div class="mini-actions"><button type="button" data-list-edit="${r.id}">수정</button><button type="button" class="danger" data-list-delete="${r.id}">삭제</button></div>`:'';
+    return `<div class="attendance-list-row"><div class="attendance-list-top"><div><div class="attendance-list-type">${escapeHtml(normalizeAttendanceType(r.attendance_type))}</div><div class="attendance-list-sub">${escapeHtml(modeText)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px"><div class="attendance-list-date">${escapeHtml(dateText)}</div>${actions}</div></div></div>`;
   }).join('');
 }
 async function loadAttendanceList(showSpinner=true){
@@ -1900,6 +1904,19 @@ async function openAttendanceList(){
   if(state.me.is_admin) populateAttendanceListEmployees();
   openBackdrop('attendanceListBackdrop');
   await loadAttendanceList(true);
+}
+function bindAttendanceListActions(){
+  $('attendanceListBody').addEventListener('click',e=>{
+    const edit=e.target.closest('[data-list-edit]'); const del=e.target.closest('[data-list-delete]');
+    if(edit){
+      const r=attendanceListRows.find(x=>Number(x.id)===Number(edit.dataset.listEdit));
+      if(r&&canEditRecord(r)) openForm(r.start_date,r);
+    }
+    if(del){
+      const r=attendanceListRows.find(x=>Number(x.id)===Number(del.dataset.listDelete));
+      if(r&&canEditRecord(r)) deleteRecord(Number(r.id));
+    }
+  });
 }
 
 function pinStatusMarkup(employeeId){
@@ -1986,7 +2003,7 @@ function openEmployeeAction(mode,id=null){
   $('employeeNewName').value=''; $('employeeCategory').value='일근(사무)'; $('employeePin').value=isAdd?proposedNextPin():''; $('employeeAdminPin').value='';
   $('employeeEffectiveDate').value=todayKey();
   $('employeeActionNote').classList.toggle('hidden',isAdd);
-  if(isReplace) $('employeeActionNote').innerHTML='<b>기존 자리와 비밀번호를 그대로 이어받습니다.</b><br>적용일 전까지는 기존 직원, 적용일부터는 새 직원으로 표시됩니다.';
+  if(isReplace) $('employeeActionNote').innerHTML='<b>근무자리·근무조·정렬순서만 이어받습니다.</b><br>새 직원은 별도 계정(ID)과 초기비밀번호 0000으로 시작하며, 기존 직원의 개인 메모와 과거 근태는 승계되지 않습니다. 적용일 이후로 미리 입력된 기존 직원 근태는 자동 정리됩니다.';
   if(isExclude) $('employeeActionNote').innerHTML='<b>적용일부터 근무명단에서 제외됩니다.</b><br>과거 달력과 기존 근태 기록은 그대로 남습니다.';
   if(isPassword) $('employeeActionNote').innerHTML='<b>근태 기록과 근무조에는 영향을 주지 않습니다.</b><br>변경 즉시 기존 비밀번호로는 로그인할 수 없습니다.';
   $('saveEmployeeActionBtn').textContent=isExclude?'직원 제외':isPassword?'비밀번호 변경':'저장';
@@ -2035,19 +2052,30 @@ async function saveEmployeeAction(){
         old.active_to=addDaysKey(eff,-1);
         if(mode==='replace'){
           if(rows.some(e=>e.display_name===name && !e.active_to && Number(e.id)!==Number(old.id))) throw new Error('현재 또는 예정 직원 중 같은 이름이 있습니다.');
-          rows.push({id:newId,display_name:name,pin:old.pin,group_code:old.group_code,category:old.category,sort_order:old.sort_order,is_admin:false,active_from:eff,active_to:null});
-          pushLocalAudit('직원 교체',name,`${old.display_name} → ${name} · ${eff}부터`,newId);
+          // 교체 직원은 완전히 새로운 계정으로 시작한다. 자리/조/정렬만 승계하고 비밀번호는 0000으로 초기화한다.
+          rows.push({id:newId,display_name:name,pin:'0000',group_code:old.group_code,category:old.category,sort_order:old.sort_order,is_admin:false,active_from:eff,active_to:null});
+          // 기존 직원의 적용일 이후 근태는 새 직원에게 넘어가지 않도록 정리한다.
+          // 적용일을 걸치는 기간 근태는 적용일 전날까지만 보존하며, 시간지정이면 마지막 재직일을 18:00까지로 마감한다.
+          const cutoff=addDaysKey(eff,-1);
+          const adjusted=localRecords().flatMap(r=>{
+            if(Number(r.employee_id)!==Number(old.id)) return [r];
+            if(r.start_date>=eff) return [];
+            if(r.end_date>=eff) return [{...r,end_date:cutoff,end_time:r.absence_mode==='time'?'18:00':r.end_time}];
+            return [r];
+          });
+          saveLocalRecords(adjusted);
+          pushLocalAudit('직원 교체',name,`${old.display_name} → ${name} · ${eff}부터 · 새 계정 0000 시작`,newId);
         }else pushLocalAudit('직원 제외',old.display_name,`${eff}부터 명단 제외`,old.id);
       }
       saveLocalEmployees(rows);
     }else{
       if(mode==='password') { await rpc('admin_change_employee_pin',{p_token:state.sessionToken,p_employee_id:id,p_new_pin:pin,p_admin_pin:adminPin}); state.pinStatus={}; }
       else if(mode==='add') await rpc('admin_add_employee',{p_token:state.sessionToken,p_name:name,p_pin:pin,p_category:category,p_effective_date:eff});
-      else if(mode==='replace') await rpc('admin_replace_employee',{p_token:state.sessionToken,p_old_employee_id:id,p_new_name:name,p_effective_date:eff});
+      else if(mode==='replace') { await rpc('admin_replace_employee',{p_token:state.sessionToken,p_old_employee_id:id,p_new_name:name,p_effective_date:eff}); state.pinStatus={}; }
       else await rpc('admin_exclude_employee',{p_token:state.sessionToken,p_employee_id:id,p_effective_date:eff});
     }
     await loadEmployees(); await loadMonthData(true); renderCalendar(); closeBackdrop('employeeActionBackdrop');
-    const msg=mode==='password'?`${target?.display_name||'직원'}의 로그인 비밀번호가 변경되었습니다.`:mode==='add'?`${name} 직원이 추가되었습니다.`:mode==='replace'?`${name} 직원으로 교체 예약이 반영되었습니다.`:'직원 제외가 반영되었습니다.';
+    const msg=mode==='password'?`${target?.display_name||'직원'}의 로그인 비밀번호가 변경되었습니다.`:mode==='add'?`${name} 직원이 추가되었습니다.`:mode==='replace'?`${name} 직원으로 교체가 반영되었습니다. 새 직원 비밀번호는 0000입니다.`:'직원 제외가 반영되었습니다.';
     $('employeeSuccessMessage').textContent=msg; openBackdrop('employeeSuccessBackdrop');
     showToast(configured()?'✓ 변경사항 서버 동기화 완료':'✓ 변경사항이 이 기기에 저장되었습니다.','success');
   }catch(e){
@@ -2205,6 +2233,7 @@ function wire(){
   $('yearPrev').addEventListener('click',()=>{if(state.pickerYear>MIN_YEAR){state.pickerYear--;renderMonthPicker()}}); $('yearNext').addEventListener('click',()=>{if(state.pickerYear<MAX_YEAR){state.pickerYear++;renderMonthPicker()}});
   $('monthGrid').addEventListener('click',e=>{const b=e.target.closest('[data-month]');if(b)chooseMonth(b.dataset.month)});
   bindDetailActions();
+  bindAttendanceListActions();
   $('employeeManageBackdrop').addEventListener('click',e=>{ const p=e.target.closest('[data-emp-pin]'); const r=e.target.closest('[data-emp-replace]'); const x=e.target.closest('[data-emp-exclude]'); if(p) openEmployeeAction('password',p.dataset.empPin); else if(r) openEmployeeAction('replace',r.dataset.empReplace); else if(x) openEmployeeAction('exclude',x.dataset.empExclude); });
   $('startDate').addEventListener('change',()=>{ if(state.me?.is_admin) populateTargetEmployees($('startDate').value,$('targetEmployee').value); });
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.me){refresh(); if(!realtimeChannel) startRealtime();}});
