@@ -226,6 +226,17 @@
   .memo-list-help{padding:9px 10px;border-radius:12px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:750;line-height:1.45;margin-bottom:9px}.memo-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:7px}.memo-search-row input{min-width:0}.memo-search-clear{padding:0 11px;border-radius:11px;background:#eef2f7;color:#4b5563;font-weight:850}.memo-list-count{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#6b7280;margin:4px 2px 8px}.memo-list{display:flex;flex-direction:column;gap:7px;max-height:50dvh;overflow:auto;padding-right:1px}.memo-list-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:7px;align-items:flex-start;padding:10px 10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.memo-list-row.readonly{grid-template-columns:minmax(0,1fr)}.memo-list-check{width:19px;height:19px;margin:2px 0 0 1px;accent-color:#7c3aed}.memo-list-date{font-size:calc(12px * var(--text-scale,1));font-weight:950;color:#5b21b6;margin-bottom:4px}.memo-list-text{font-size:calc(12px * var(--text-scale,1));line-height:1.45;color:#374151;white-space:pre-wrap;overflow-wrap:anywhere}.memo-list-empty{padding:20px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}.memo-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.memo-list-actions.readonly{grid-template-columns:1fr}.memo-selected-delete{padding:12px;border-radius:12px;background:#fff1f2;color:#be123c;font-weight:900}.memo-selected-delete:disabled{opacity:.4}.memo-list-close{padding:12px;border-radius:12px;background:#eef2f7;color:#4b5563;font-weight:900}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
+  .usage-guide-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .usage-guide-intro{font-size:calc(13px * var(--text-scale,1));line-height:1.65;color:#374151;margin:2px 0 10px}
+  .usage-guide-intro strong{color:#111827}
+  .usage-guide-highlight{margin:10px 0;padding:11px 12px;border:1px solid #bfdbfe;border-radius:13px;background:#eff6ff;color:#1d4ed8;font-size:calc(14px * var(--text-scale,1));font-weight:950;line-height:1.5;text-align:center}
+  .usage-guide-body{font-size:calc(12.5px * var(--text-scale,1));line-height:1.65;color:#4b5563;margin:0 0 10px}
+  .usage-guide-body strong{color:#111827}
+  .usage-guide-features{margin:10px 0;padding:10px 11px;border-radius:12px;background:#f8fafc;color:#475569;font-size:calc(11.5px * var(--text-scale,1));font-weight:750;line-height:1.6}
+  .usage-guide-readonly{margin:9px 0;padding:9px 10px;border:1px solid #ddd6fe;border-radius:11px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:800;line-height:1.5}
+  .usage-guide-option{display:flex;align-items:center;gap:8px;margin:12px 2px 10px;color:#4b5563;font-size:calc(12px * var(--text-scale,1));font-weight:800;cursor:pointer}
+  .usage-guide-option input{width:19px;height:19px;margin:0;padding:0;accent-color:#2563eb;flex:0 0 auto}
+  .usage-guide-confirm{width:100%;border-radius:13px;padding:13px 12px;background:#2563eb;color:#fff;font-weight:900;font-size:calc(15px * var(--text-scale,1))}
   .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
   .text-size-level{min-width:0;min-height:44px;padding:0;border:1px solid #e5e7eb;border-radius:9px;background:#f9fafb;color:#4b5563;font-size:calc(13px * var(--text-scale,1));font-weight:900}
   .text-size-level.active{border-color:#8b5cf6;background:#f5f3ff;color:#6d28d9;box-shadow:inset 0 0 0 1px #8b5cf6}
@@ -233,7 +244,7 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.memo-list-btn,.holiday-work-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.memo-list-btn,.holiday-work-list-btn,.self-pin-btn,.text-size-open-btn,.usage-guide-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .employee-manage-actions{grid-template-columns:1fr;gap:7px}.reset-pins-btn{font-size:calc(12px * var(--text-scale,1));padding:11px 9px}
     .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}.date-picker-modal{padding:11px 7px 12px}.date-picker-toolbar{grid-template-columns:50px minmax(0,1fr) 44px 50px;gap:5px}.date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px}.date-picker-nav{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.date-picker-today{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.date-picker-month-title{font-size:calc(18px * var(--text-scale,1))}.date-picker-cell{min-height:72px;padding:4px 2px}.date-picker-cell .shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(12px * var(--text-scale,1))}.date-picker-cell .holiday-work-badge{min-width:43px;height:30px;font-size:calc(8.5px * var(--text-scale,1))}.date-picker-holiday{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.date-picker-daynum{font-size:calc(10px * var(--text-scale,1))}.date-picker-term{font-size:calc(6.5px * var(--text-scale,1));padding:2px 3px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:45px 1fr 40px 45px;gap:4px}.nav-btn,.today-btn{padding:0 1px;font-size:calc(10px * var(--text-scale,1))}}
@@ -274,7 +285,7 @@
 
   <div id="readOnlyAccountNotice" class="readonly-account-notice hidden">발령 후 조회 전용 계정입니다. 기존 근태·휴근·개인 메모는 확인할 수 있으며, 새 근태/휴근 등록·수정·삭제와 메모 저장·수정·삭제는 할 수 없습니다.</div>
 
-  <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="holidayWorkListBtn" class="holiday-work-list-btn hidden">휴근 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
+  <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="holidayWorkListBtn" class="holiday-work-list-btn hidden">휴근 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="usageGuideOpenBtn" class="usage-guide-open-btn">이용안내</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -293,7 +304,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-2256</div>
+  <div class="version">ver20260909-2323</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -545,6 +556,20 @@
   </div>
 </div>
 
+<div id="usageGuideBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="usageGuideTitle">
+    <div class="modal-head"><div id="usageGuideTitle" class="modal-title">직원 근태 홈페이지 안내</div></div>
+    <div class="usage-guide-intro"><strong>이 사이트는 그날 실제 근무 가능한 인원을 빠르게 확인하기 위해 만들었습니다.</strong></div>
+    <div class="usage-guide-highlight">평소에는 아무것도 입력하지 않으셔도 됩니다.</div>
+    <div class="usage-guide-body"><strong>연가·지참·조퇴·장기·교육 등 근태가 생겼을 때만 등록해 주세요.</strong><br>입력된 내용은 <strong>전체 근무표의 가용인원에 자동 반영</strong>됩니다.</div>
+    <div class="usage-guide-body">근태가 누락되면 실제 근무 가능 인원과 다르게 표시될 수 있으니 협조 부탁드립니다.</div>
+    <div class="usage-guide-features">주요 기능은 <strong>내 근무표 확인 / 근태 등록 / 전체 근무표 가용인원 확인 / 개인 메모 / 휴근 관리(일근자)</strong>입니다.</div>
+    <div id="usageGuideReadOnly" class="usage-guide-readonly hidden">발령 후 조회 전용 계정은 기존 근태·휴근·개인 메모를 확인할 수 있으며 새 기록 등록·수정·삭제는 할 수 없습니다.</div>
+    <label class="usage-guide-option"><input id="usageGuideDontShow" type="checkbox"> 다시 보지 않기</label>
+    <button id="usageGuideConfirmBtn" class="usage-guide-confirm" type="button">확인</button>
+  </div>
+</div>
+
 <div id="initialPinBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">초기 비밀번호 안내</div><button class="close-btn" data-close="initialPin">×</button></div>
@@ -590,13 +615,15 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-2256';
+const APP_VERSION = 'ver20260909-2323';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
 const MAX_YEAR = 2027;
 const SESSION_KEY = 'staffAttendance_session_v1';
 const ADMIN_UNLOCK_KEY = 'staffAttendance_admin2_ok_v1';
+const USAGE_GUIDE_HIDE_KEY_PREFIX = 'staffAttendance_usageGuideHide_v1_';
+const USAGE_GUIDE_SESSION_KEY_PREFIX = 'staffAttendance_usageGuideShown_v1_';
 const ADMIN_NAME = '안석근';
 const ADMIN_SECOND_PIN = ''; // 운영용 템플릿에서는 브라우저에 관리자 2차 비밀번호를 보관하지 않습니다.
 const LOCAL_DATA_KEY = 'staffAttendance_localData_v1';
@@ -1538,6 +1565,37 @@ async function restoreSession(){
   }finally{ showLoading(false); }
 }
 
+function usageGuideStorageKey(){ return state.me ? `${USAGE_GUIDE_HIDE_KEY_PREFIX}${state.me.employee_id}` : ''; }
+function usageGuideSessionKey(){ return state.me ? `${USAGE_GUIDE_SESSION_KEY_PREFIX}${state.me.employee_id}` : ''; }
+function openUsageGuide(manual=false){
+  if(!state.me)return;
+  const hideKey=usageGuideStorageKey();
+  $('usageGuideDontShow').checked=!!hideKey && localStorage.getItem(hideKey)==='1';
+  $('usageGuideReadOnly').classList.toggle('hidden',!accountReadOnly());
+  if(!manual){
+    const shownKey=usageGuideSessionKey();
+    if(shownKey) sessionStorage.setItem(shownKey,'1');
+  }
+  openBackdrop('usageGuideBackdrop');
+}
+function maybeShowUsageGuide(){
+  if(!state.me)return false;
+  const hideKey=usageGuideStorageKey(), shownKey=usageGuideSessionKey();
+  if((hideKey&&localStorage.getItem(hideKey)==='1') || (shownKey&&sessionStorage.getItem(shownKey)==='1')) return false;
+  setTimeout(()=>{ if(state.me) openUsageGuide(false); },120);
+  return true;
+}
+function confirmUsageGuide(){
+  if(!state.me){ closeBackdrop('usageGuideBackdrop'); return; }
+  const hideKey=usageGuideStorageKey();
+  if(hideKey){
+    if($('usageGuideDontShow').checked) localStorage.setItem(hideKey,'1');
+    else localStorage.removeItem(hideKey);
+  }
+  closeBackdrop('usageGuideBackdrop');
+  setTimeout(()=>{ if(state.me) maybeShowInitialPinNotice(); },140);
+}
+
 const INITIAL_PIN_NOTICE_KEY_PREFIX='staffAttendance_initialPinNotice_v1_';
 async function maybeShowInitialPinNotice(){
   if(!state.me || !state.sessionToken || !configured()) return;
@@ -1588,7 +1646,8 @@ async function enterApp(me){
   await loadAccountStatus(); applyAccountModeUI();
   $('adminTools').classList.toggle('hidden',!state.me.is_admin);
   if(!state.me.is_admin) setAdminToolsExpanded(false);
-  await loadEmployees(); await loadMonthData(); applyAccountModeUI(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render(); maybeShowInitialPinNotice();
+  await loadEmployees(); await loadMonthData(); applyAccountModeUI(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render();
+  if(!maybeShowUsageGuide()) maybeShowInitialPinNotice();
 }
 async function loadEmployees(){
   let data;
@@ -1665,6 +1724,7 @@ async function refresh(){
   }
 }
 async function logout(callServer=true){
+  const guideShownKey=usageGuideSessionKey(); if(guideShownKey) sessionStorage.removeItem(guideShownKey);
   await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
   localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.holidayWorks=[]; state.holidayWorkBackendReady=null; state.memos=[]; state.memoBackendReady=null;
@@ -2586,6 +2646,8 @@ function wire(){
   $('attendanceListBtn').addEventListener('click',openAttendanceList);
   $('refreshAttendanceListBtn').addEventListener('click',()=>loadAttendanceList(true));
   $('attendanceListEmployee').addEventListener('change',renderAttendanceList);
+  $('usageGuideOpenBtn').addEventListener('click',()=>openUsageGuide(true));
+  $('usageGuideConfirmBtn').addEventListener('click',confirmUsageGuide);
   $('selfPinBtn').addEventListener('click',()=>openSelfPin());
   $('initialPinLaterBtn').addEventListener('click',()=>closeBackdrop('initialPinBackdrop'));
   $('initialPinChangeBtn').addEventListener('click',()=>{closeBackdrop('initialPinBackdrop');openSelfPin('0000')});
@@ -2607,7 +2669,7 @@ function wire(){
   $('datePickerGrid').addEventListener('click',e=>{const b=e.target.closest('[data-picker-date]');if(b&&!b.disabled)chooseAttendanceDate(b.dataset.pickerDate)});
   ['startHour','startMinute','endHour','endMinute'].forEach((id,i)=>bindNumericTimeInput(id,i%2===0?23:59));
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeBackdrop(`${b.dataset.close}Backdrop`)));
-  document.querySelectorAll('.backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeBackdrop(b.id)}));
+  document.querySelectorAll('.backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b && b.id!=='usageGuideBackdrop')closeBackdrop(b.id)}));
   $('yearPrev').addEventListener('click',()=>{if(state.pickerYear>MIN_YEAR){state.pickerYear--;renderMonthPicker()}}); $('yearNext').addEventListener('click',()=>{if(state.pickerYear<MAX_YEAR){state.pickerYear++;renderMonthPicker()}});
   $('monthGrid').addEventListener('click',e=>{const b=e.target.closest('[data-month]');if(b)chooseMonth(b.dataset.month)});
   bindDetailActions();
