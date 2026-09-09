@@ -280,7 +280,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1939</div>
+  <div class="version">ver20260909-1946</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -535,7 +535,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1939';
+const APP_VERSION = 'ver20260909-1946';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -1529,7 +1529,7 @@ function renderAttendanceDatePicker(){
   $('datePickerMonthTitle').textContent=`${attendanceDatePickerYear}년 ${attendanceDatePickerMonth+1}월`;
   const first=new Date(attendanceDatePickerYear,attendanceDatePickerMonth,1).getDay();
   const days=new Date(attendanceDatePickerYear,attendanceDatePickerMonth+1,0).getDate();
-  const total=Math.ceil((first+days)/7)*7;
+  const total=42; // 항상 6주(42칸)로 고정해 달마다 팝업 상단 위치가 움직이지 않게 한다.
   const selected=$($(attendanceDatePickerTarget)?.id||'startDate')?.value||'';
   const startKey=$('startDate').value||''; const endKey=$('endDate').value||'';
   const minDate=attendancePickerMinDate();
