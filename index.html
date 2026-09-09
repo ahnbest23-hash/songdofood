@@ -269,7 +269,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1811</div>
+  <div class="version">ver20260909-1821</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -508,6 +508,9 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
+const APP_VERSION = 'ver20260909-1821';
+const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
+
 const MIN_YEAR = 2026;
 const MAX_YEAR = 2027;
 const SESSION_KEY = 'staffAttendance_session_v1';
@@ -600,6 +603,45 @@ function openTextSizePicker(){ renderTextSizeSetting(); openBackdrop('textSizeBa
 
 function configured(){
   return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL) && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('YOUR-');
+}
+
+let versionCheckTimer=null;
+let versionReloading=false;
+
+function versionManifestUrl(){
+  const url=new URL('version.json',document.baseURI);
+  url.searchParams.set('_',String(Date.now()));
+  return url.toString();
+}
+async function checkForAppUpdate(){
+  if(versionReloading) return;
+  try{
+    const res=await fetch(versionManifestUrl(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+    if(!res.ok) return;
+    const data=await res.json();
+    const remote=String(data?.version||'').trim();
+    if(!remote || remote===APP_VERSION) return;
+    versionReloading=true;
+    showToast(`새 버전 ${remote} 반영 중…`,'info');
+    setTimeout(()=>{
+      const next=new URL(window.location.href);
+      next.searchParams.set('__appv',remote);
+      window.location.replace(next.toString());
+    },350);
+  }catch(e){ /* 버전 확인 실패는 현재 화면 사용을 방해하지 않음 */ }
+}
+function startVersionWatcher(){
+  if(versionCheckTimer) clearInterval(versionCheckTimer);
+  checkForAppUpdate();
+  versionCheckTimer=setInterval(checkForAppUpdate,VERSION_CHECK_INTERVAL_MS);
+}
+function cleanupVersionQuery(){
+  try{
+    const url=new URL(window.location.href);
+    if(!url.searchParams.has('__appv')) return;
+    url.searchParams.delete('__appv');
+    history.replaceState(null,'',url.pathname+(url.searchParams.toString()?`?${url.searchParams}`:'')+url.hash);
+  }catch(e){}
 }
 function showLoading(show){ $('loadingCover').classList.toggle('show', !!show); }
 function pad(n){ return String(n).padStart(2,'0'); }
@@ -1748,7 +1790,7 @@ function wire(){
   setInterval(()=>{if(state.me&&!document.hidden)refresh()},60000);
 }
 
-restoreTextSizeLevel(); wire(); toggleAdminPinField(); restoreSession();
+cleanupVersionQuery(); restoreTextSizeLevel(); wire(); toggleAdminPinField(); startVersionWatcher(); restoreSession();
 </script>
 </body>
 </html>
