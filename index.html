@@ -15,7 +15,7 @@
     --text-scale:1;
     --bg:#f4f6f8; --card:#fff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
     --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fff1f2;
-    --yellow:#facc15; --night:#4f8fe8; --off:#e85d75; --teal:#14b8a6;
+    --yellow:#facc15; --night:#4f8fe8; --off:#e85d75; --teal:#14b8a6; --holiday-work:#f97316;
     --shadow:0 8px 26px rgba(0,0,0,.07);
   }
   html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif}
@@ -125,6 +125,7 @@
   .shift-wrap{display:flex;justify-content:center;align-items:center;height:47px}
   .shift-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:calc(15px * var(--text-scale,1));font-weight:900}
   .shift-day{background:var(--yellow);color:#111827}.shift-day2{background:var(--teal);color:#fff;font-size:calc(13px * var(--text-scale,1))}.shift-night{background:var(--night);color:#fff}
+  .holiday-work-badge{min-width:46px;height:32px;padding:0 3px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--holiday-work);color:#fff;font-size:calc(9.5px * var(--text-scale,1));font-weight:950;line-height:1;white-space:nowrap;box-shadow:0 2px 5px rgba(249,115,22,.18)}
   .shift-off{font-size:calc(17px * var(--text-scale,1));font-weight:900;color:var(--off)}
   .att-dot{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-size:calc(7px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#f3e8ff;padding:2px 4px;border-radius:8px;white-space:nowrap}
   .memo-mark{flex:0 0 auto;width:14px;height:14px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;background:#f3e8ff;color:#7c3aed;border:1px solid #ddd6fe;font-size:calc(8px * var(--text-scale,1));font-weight:950;line-height:1;box-shadow:0 1px 3px rgba(91,33,182,.08)}
@@ -132,6 +133,7 @@
   .availability .name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:1px 1px 0;padding:1px 2px;border-radius:4px}
   .availability .name.leader{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;font-weight:950}
   .availability .name.day-office,.availability .name.day-field{background:#dcfce7;color:#166534}
+  .availability .name.holiday-work{background:#ffedd5;color:#c2410c;border:1px solid #fdba74;font-weight:950}
   .availability .name.shift-day{background:#fef3c7;color:#854d0e}
   .availability .name.shift-night{background:#dbeafe;color:#1d4ed8}
   .availability.empty{color:#b0b5bd;font-weight:700;padding-top:17px}
@@ -215,6 +217,9 @@
   .initial-pin-later{border-radius:13px;padding:13px 12px;background:#eef2f7;color:#4b5563;font-weight:850;font-size:calc(14px * var(--text-scale,1))}
   .self-pin-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .attendance-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#ecfeff;color:#0f766e;border:1px solid #a5f3fc;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .holiday-work-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .holiday-work-detail{padding:11px;border-radius:15px;background:#fff7ed;border:1px solid #fed7aa;margin-bottom:10px}.holiday-work-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.holiday-work-title{font-size:calc(14px * var(--text-scale,1));font-weight:950;color:#9a3412}.holiday-work-check-label{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid #fdba74;border-radius:10px;background:#fff;color:#9a3412;font-size:calc(12px * var(--text-scale,1));font-weight:900;white-space:nowrap}.holiday-work-check-label input{width:18px;height:18px;margin:0;padding:0;accent-color:#f97316}.holiday-work-help{font-size:calc(11px * var(--text-scale,1));line-height:1.5;color:#9a3412;margin:0 0 9px}.holiday-work-result{margin:7px 0 4px;padding:9px 10px;border-radius:11px;background:#fff;color:#9a3412;font-size:calc(12px * var(--text-scale,1));font-weight:900;line-height:1.45;text-align:center}.holiday-work-result b{color:#ea580c}.holiday-work-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px}.holiday-work-actions.readonly{grid-template-columns:1fr}.holiday-work-delete,.holiday-work-close,.holiday-work-save{padding:11px 8px;border-radius:11px;font-weight:900;font-size:calc(13px * var(--text-scale,1))}.holiday-work-delete{background:#fff1f2;color:#be123c}.holiday-work-delete:disabled{opacity:.4}.holiday-work-close{background:#eef2f7;color:#4b5563}.holiday-work-save{background:#f97316;color:#fff}.holiday-work-error{min-height:16px;margin-top:5px;color:#dc2626;font-size:calc(10px * var(--text-scale,1));font-weight:800}
+  .holiday-work-list-help{padding:9px 10px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:calc(11px * var(--text-scale,1));font-weight:750;line-height:1.45;margin-bottom:9px}.holiday-work-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:7px}.holiday-work-search-row input{min-width:0}.holiday-work-search-clear{padding:0 11px;border-radius:11px;background:#eef2f7;color:#4b5563;font-weight:850}.holiday-work-list-count{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#6b7280;margin:4px 2px 8px}.holiday-work-list{display:flex;flex-direction:column;gap:7px;max-height:50dvh;overflow:auto;padding-right:1px}.holiday-work-list-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:7px;align-items:flex-start;padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.holiday-work-list-row.readonly{grid-template-columns:minmax(0,1fr)}.holiday-work-list-check{width:19px;height:19px;margin:2px 0 0 1px;accent-color:#f97316}.holiday-work-list-date{font-size:calc(12px * var(--text-scale,1));font-weight:950;color:#c2410c;margin-bottom:4px}.holiday-work-list-text{font-size:calc(12px * var(--text-scale,1));line-height:1.45;color:#374151}.holiday-work-list-empty{padding:20px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}.holiday-work-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.holiday-work-list-actions.readonly{grid-template-columns:1fr}.holiday-work-selected-delete{padding:12px;border-radius:12px;background:#fff1f2;color:#be123c;font-weight:900}.holiday-work-selected-delete:disabled{opacity:.4}.holiday-work-list-close{padding:12px;border-radius:12px;background:#eef2f7;color:#4b5563;font-weight:900}
   .attendance-list{display:flex;flex-direction:column;gap:7px;margin-top:9px}.attendance-list-row{padding:10px 11px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.attendance-list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.attendance-list-type{font-size:calc(13px * var(--text-scale,1));font-weight:900;color:#111827}.attendance-list-date{font-size:calc(11px * var(--text-scale,1));font-weight:850;color:#374151;line-height:1.4}.attendance-list-sub{margin-top:4px;font-size:calc(11px * var(--text-scale,1));color:#6b7280;line-height:1.4}.attendance-list-count{font-size:calc(11px * var(--text-scale,1));color:#6b7280;font-weight:800;margin:3px 2px 8px}.attendance-list-empty{padding:18px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}
   .memo-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .memo-detail-section{padding:11px;border-radius:15px;background:#faf7ff;border:1px solid #ede9fe;margin-bottom:10px}.memo-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.memo-detail-title{font-size:calc(13px * var(--text-scale,1));font-weight:950;color:#5b21b6}.memo-private-badge{font-size:calc(9px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#ede9fe;border-radius:999px;padding:3px 7px;white-space:nowrap}.memo-textarea{width:100%;min-height:92px;resize:vertical;border:1px solid #ddd6fe;border-radius:11px;background:#fff;color:#111827;padding:10px 11px;font:inherit;font-size:calc(14px * var(--text-scale,1));line-height:1.45;outline:none}.memo-textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.10)}.memo-meta{display:flex;justify-content:space-between;gap:8px;margin-top:5px;min-height:16px;font-size:calc(10px * var(--text-scale,1));color:#9ca3af}#memoDetailError{color:#dc2626;font-weight:750}.memo-detail-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px}.memo-detail-actions.readonly{grid-template-columns:1fr}.memo-delete-btn,.memo-close-btn,.memo-save-btn{padding:11px 8px;border-radius:11px;font-weight:900;font-size:calc(13px * var(--text-scale,1))}.memo-delete-btn{background:#fff1f2;color:#be123c}.memo-delete-btn:disabled{opacity:.4}.memo-close-btn{background:#eef2f7;color:#4b5563}.memo-save-btn{background:#7c3aed;color:#fff}
@@ -228,9 +233,9 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.memo-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.memo-list-btn,.holiday-work-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .employee-manage-actions{grid-template-columns:1fr;gap:7px}.reset-pins-btn{font-size:calc(12px * var(--text-scale,1));padding:11px 9px}
-    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}.date-picker-modal{padding:11px 7px 12px}.date-picker-toolbar{grid-template-columns:50px minmax(0,1fr) 44px 50px;gap:5px}.date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px}.date-picker-nav{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.date-picker-today{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.date-picker-month-title{font-size:calc(18px * var(--text-scale,1))}.date-picker-cell{min-height:72px;padding:4px 2px}.date-picker-cell .shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(12px * var(--text-scale,1))}.date-picker-holiday{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.date-picker-daynum{font-size:calc(10px * var(--text-scale,1))}.date-picker-term{font-size:calc(6.5px * var(--text-scale,1));padding:2px 3px}}
+    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}.date-picker-modal{padding:11px 7px 12px}.date-picker-toolbar{grid-template-columns:50px minmax(0,1fr) 44px 50px;gap:5px}.date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px}.date-picker-nav{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.date-picker-today{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.date-picker-month-title{font-size:calc(18px * var(--text-scale,1))}.date-picker-cell{min-height:72px;padding:4px 2px}.date-picker-cell .shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(12px * var(--text-scale,1))}.date-picker-cell .holiday-work-badge{min-width:43px;height:30px;font-size:calc(8.5px * var(--text-scale,1))}.date-picker-holiday{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.date-picker-daynum{font-size:calc(10px * var(--text-scale,1))}.date-picker-term{font-size:calc(6.5px * var(--text-scale,1));padding:2px 3px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:45px 1fr 40px 45px;gap:4px}.nav-btn,.today-btn{padding:0 1px;font-size:calc(10px * var(--text-scale,1))}}
 </style>
 </head>
@@ -267,9 +272,9 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div id="readOnlyAccountNotice" class="readonly-account-notice hidden">발령 후 조회 전용 계정입니다. 기존 근태와 개인 메모는 확인할 수 있으며, 새 근태 등록·수정·삭제와 메모 저장·수정·삭제는 할 수 없습니다.</div>
+  <div id="readOnlyAccountNotice" class="readonly-account-notice hidden">발령 후 조회 전용 계정입니다. 기존 근태·휴근·개인 메모는 확인할 수 있으며, 새 근태/휴근 등록·수정·삭제와 메모 저장·수정·삭제는 할 수 없습니다.</div>
 
-  <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
+  <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="holidayWorkListBtn" class="holiday-work-list-btn hidden">휴근 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -288,12 +293,24 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-2053</div>
+  <div class="version">ver20260909-2118</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div id="detailTitle" class="modal-title"></div><button class="close-btn" data-close="detail">×</button></div>
+    <div id="holidayWorkDetailSection" class="holiday-work-detail hidden">
+      <div class="holiday-work-head"><div class="holiday-work-title">휴일근무</div><label class="holiday-work-check-label"><input id="holidayWorkChecked" type="checkbox"> 근무함</label></div>
+      <div class="holiday-work-help">일근자의 토·일요일 및 공휴일 근무 기록입니다. 휴게시간은 <b>총 근무시간 4시간마다 30분</b> 자동 차감합니다.</div>
+      <div class="attendance-time-grid">
+        <label class="attendance-time-block"><span>시작시간</span><div class="attendance-time-parts"><input id="holidayStartHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="휴근 시작 시"><b class="attendance-time-colon">:</b><input id="holidayStartMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="휴근 시작 분"></div></label>
+        <span class="attendance-time-wave">~</span>
+        <label class="attendance-time-block"><span>종료시간</span><div class="attendance-time-parts"><input id="holidayEndHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="휴근 종료 시"><b class="attendance-time-colon">:</b><input id="holidayEndMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="휴근 종료 분"></div></label>
+      </div>
+      <div id="holidayWorkResult" class="holiday-work-result">근무함에 체크하면 인정시간을 계산합니다.</div>
+      <div id="holidayWorkError" class="holiday-work-error"></div>
+      <div id="holidayWorkActions" class="holiday-work-actions"><button id="deleteHolidayWorkBtn" class="holiday-work-delete" type="button">삭제</button><button id="closeHolidayWorkBtn" class="holiday-work-close" type="button">닫기</button><button id="saveHolidayWorkBtn" class="holiday-work-save" type="button">저장</button></div>
+    </div>
     <div id="memoDetailSection" class="memo-detail-section hidden">
       <div class="memo-detail-head"><div class="memo-detail-title">개인 메모</div><span id="memoPrivateBadge" class="memo-private-badge">나만 보임</span></div>
       <textarea id="memoText" class="memo-textarea" maxlength="1000" placeholder="이 날짜에 기억할 내용을 간단히 적어두세요."></textarea>
@@ -382,10 +399,21 @@
   </div>
 </div>
 
+<div id="holidayWorkListBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">휴근 모아보기</div><button class="close-btn" data-close="holidayWorkList">×</button></div>
+    <div id="holidayWorkListHelp" class="holiday-work-list-help">내 휴일근무만 표시됩니다. 날짜 빠른 순으로 정렬되며 날짜나 시간으로 검색할 수 있습니다.</div>
+    <div class="holiday-work-search-row"><input id="holidayWorkSearch" type="search" autocomplete="off" placeholder="날짜 또는 시간 검색 (예: 10/3, 09:00)"><button id="holidayWorkSearchClearBtn" class="holiday-work-search-clear" type="button">지우기</button></div>
+    <div id="holidayWorkListCount" class="holiday-work-list-count"></div>
+    <div id="holidayWorkListBody" class="holiday-work-list"><div class="holiday-work-list-empty">불러오는 중…</div></div>
+    <div id="holidayWorkListActions" class="holiday-work-list-actions"><button id="deleteSelectedHolidayWorkBtn" class="holiday-work-selected-delete" type="button" disabled>선택 삭제</button><button class="holiday-work-list-close" type="button" data-close="holidayWorkList">닫기</button></div>
+  </div>
+</div>
+
 <div id="employeeManageBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">직원 관리</div><button class="close-btn" data-close="employeeManage">×</button></div>
-    <div class="employee-help">정기발령은 <b>직원 교체</b>를 사용합니다. 기존 직원은 적용일부터 현재 명단에서 빠지고 <b>조회 전용 계정</b>으로 남아 본인의 과거 근태·개인 메모를 확인할 수 있습니다. 새 직원은 같은 자리·근무조를 이어받되 별도 계정과 초기비밀번호 0000으로 시작합니다. <b>직원 제외</b>는 적용일부터 로그인까지 차단합니다.</div>
+    <div class="employee-help">정기발령은 <b>직원 교체</b>를 사용합니다. 기존 직원은 적용일부터 현재 명단에서 빠지고 <b>조회 전용 계정</b>으로 남아 본인의 과거 근태·휴근·개인 메모를 확인할 수 있습니다. 새 직원은 같은 자리·근무조를 이어받되 별도 계정과 초기비밀번호 0000으로 시작합니다. <b>직원 제외</b>는 적용일부터 로그인까지 차단합니다.</div>
     <div class="employee-manage-actions"><button id="addEmployeeBtn" class="primary">＋ 직원 추가</button><button id="resetCurrentPinsBtn" class="reset-pins-btn">전체 비밀번호 0000 초기화</button></div>
     <div class="employee-section-title">현재 직원</div>
     <div id="currentEmployeeList" class="employee-list"></div>
@@ -440,7 +468,7 @@
 <div id="backupSuccessBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">백업 완료</div><button class="close-btn" data-close="backupSuccess">×</button></div>
-    <div id="backupSuccessMessage" class="success-box">전체 근태 백업 파일이 저장되었습니다.</div>
+    <div id="backupSuccessMessage" class="success-box">전체 근태·휴근 백업 파일이 저장되었습니다.</div>
     <button id="backupSuccessOkBtn" class="primary">확인</button>
   </div>
 </div>
@@ -448,7 +476,7 @@
 <div id="restoreBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">복원</div><button class="close-btn" data-close="restore">×</button></div>
-    <div class="employee-help"><b>이 홈페이지에서 만든 JSON 백업 파일</b>을 선택하면 당시 근태 내용으로 되돌릴 수 있습니다.<br>복원하면 현재 등록된 전체 근태는 백업 내용으로 교체됩니다.</div>
+    <div class="employee-help"><b>이 홈페이지에서 만든 JSON 백업 파일</b>을 선택하면 당시 근태·휴근 내용으로 되돌릴 수 있습니다.<br>복원하면 현재 등록된 전체 근태·휴근은 백업 내용으로 교체됩니다. 개인 메모는 그대로 유지됩니다.</div>
     <div class="field"><label for="restoreFile">백업 파일</label><input id="restoreFile" class="restore-file" type="file" accept="application/json,.json"></div>
     <div id="restorePreview" class="restore-preview hidden"></div>
     <div class="field"><label for="restoreAdminPin">관리자 2차 비밀번호</label><input id="restoreAdminPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리"></div>
@@ -460,7 +488,7 @@
 <div id="restoreSuccessBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">복원 완료</div><button class="close-btn" data-close="restoreSuccess">×</button></div>
-    <div id="restoreSuccessMessage" class="success-box">백업 파일의 근태가 복원되었습니다.</div>
+    <div id="restoreSuccessMessage" class="success-box">백업 파일의 근태·휴근이 복원되었습니다.</div>
     <button id="restoreSuccessOkBtn" class="primary">확인</button>
   </div>
 </div>
@@ -468,7 +496,7 @@
 <div id="resetBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">전체 초기화</div><button class="close-btn" data-close="reset">×</button></div>
-    <div class="warning-box"><b>등록된 모든 직원의 근태가 삭제됩니다.</b><br>직원 계정과 근무패턴은 그대로 유지됩니다.<br><b style="color:#6d28d9">개인 메모는 삭제되지 않고 그대로 유지됩니다.</b><br><b>초기화 직전에 전체 근태 백업 파일을 자동으로 저장한 뒤 삭제합니다.</b></div>
+    <div class="warning-box"><b>등록된 모든 직원의 근태와 휴근이 삭제됩니다.</b><br>직원 계정과 근무패턴은 그대로 유지됩니다.<br><b style="color:#6d28d9">개인 메모는 삭제되지 않고 그대로 유지됩니다.</b><br><b>초기화 직전에 전체 근태·휴근 백업 파일을 자동으로 저장한 뒤 삭제합니다.</b></div>
     <div class="field"><label for="resetAdminPin">관리자 2차 비밀번호</label><input id="resetAdminPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리"></div>
     <div id="resetError" class="form-error"></div>
     <button id="confirmResetBtn" class="danger-primary">전체 초기화 실행</button>
@@ -478,7 +506,7 @@
 <div id="resetSuccessBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">초기화 완료</div><button class="close-btn" data-close="resetSuccess">×</button></div>
-    <div id="resetSuccessMessage" class="success-box">전체 근태가 초기화되었습니다.</div>
+    <div id="resetSuccessMessage" class="success-box">전체 근태와 휴근이 초기화되었습니다.</div>
     <button id="resetSuccessOkBtn" class="primary">확인</button>
   </div>
 </div>
@@ -486,7 +514,7 @@
 <div id="auditBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">최근 변경 내역 <span id="auditLoadedLabel" class="type-count">최대 1,000건 보관</span></div><button class="close-btn" data-close="audit">×</button></div>
-    <div class="employee-help">근태 등록·수정·삭제와 직원 추가·교체·제외·비밀번호 변경 내역을 최근 순서로 보여줍니다. 기록은 최대 1,000건까지 보관하며 한 번에 50건씩 불러옵니다.</div>
+    <div class="employee-help">근태·휴근 등록/수정/삭제와 직원 추가·교체·제외·비밀번호 변경 내역을 최근 순서로 보여줍니다. 기록은 최대 1,000건까지 보관하며 한 번에 50건씩 불러옵니다.</div>
     <div id="auditList" class="audit-list"><div class="employee-empty">불러오는 중…</div></div>
     <button id="auditMoreBtn" class="secondary hidden" style="margin-bottom:8px">더보기 (50건씩)</button>
     <button id="refreshAuditBtn" class="secondary">새로고침</button>
@@ -560,7 +588,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-2053';
+const APP_VERSION = 'ver20260909-2118';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -574,6 +602,7 @@ const LOCAL_EMPLOYEE_KEY = 'staffAttendance_localEmployees_v1';
 const TEXT_SIZE_KEY = 'staffAttendance_textSizeLevel_v2';
 const LOCAL_AUDIT_KEY = 'staffAttendance_localAudit_v1';
 const LOCAL_MEMO_KEY_PREFIX = 'staffAttendance_localMemos_v1_';
+const LOCAL_HOLIDAY_WORK_KEY = 'staffAttendance_localHolidayWork_v1';
 const AUDIT_RETENTION_LIMIT = 1000;
 const AUDIT_PAGE_SIZE = 50;
 const TEXT_SIZE_SCALES = {1:0.750,2:0.780,3:0.810,4:0.840,5:0.870,6:0.900,7:0.930,8:0.950,9:0.970,10:0.985,11:1.000,12:1.050,13:1.100,14:1.150,15:1.200,16:1.260,17:1.320,18:1.380,19:1.450,20:1.530,21:1.620};
@@ -641,7 +670,7 @@ const CATEGORY_GROUP = {'팀장':'DAY','일근(사무)':'DAY','일근(현장)':'
 const $ = id => document.getElementById(id);
 const state = {
   sessionToken: localStorage.getItem(SESSION_KEY) || '',
-  me:null, employees:[], attendance:[], memos:[], memoBackendReady:null, view:'mine', selectedDate:null,
+  me:null, employees:[], attendance:[], holidayWorks:[], holidayWorkBackendReady:null, memos:[], memoBackendReady:null, view:'mine', selectedDate:null,
   year:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), month:new Date().getMonth(),
   pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null, pinStatus:{}
 };
@@ -650,6 +679,8 @@ let pendingRestoreBackup=null;
 let attendanceListRows=[];
 let memoListRows=[];
 let memoSelectedDates=new Set();
+let holidayWorkListRows=[];
+let holidayWorkSelectedDates=new Set();
 let auditRows=[];
 let auditOffset=0;
 let auditHasMore=false;
@@ -966,6 +997,33 @@ function shiftForEmployee(emp, y,m,d){
   return SHIFT_PATTERNS[group][((diff%8)+8)%8];
 }
 function isWorkingShift(shift){ return ['주','주2','야','일근'].includes(shift); }
+function isHolidayWorkEmployee(emp){ return !!emp && (emp.category==='일근(사무)' || emp.category==='일근(현장)'); }
+function isHolidayWorkDayKey(key){
+  const {y,m,d}=parseDateKey(key),wd=new Date(y,m,d).getDay();
+  return wd===0 || wd===6 || !!HOLIDAYS[key];
+}
+function holidayWorkFor(employeeId,key){ return state.holidayWorks.find(r=>Number(r.employee_id)===Number(employeeId)&&r.work_date===key)||null; }
+function holidayWorkForMe(key){ return state.me?holidayWorkFor(state.me.employee_id,key):null; }
+function holidayNetMinutes(start,end){
+  if(!/^\d{2}:\d{2}$/.test(start||'')||!/^\d{2}:\d{2}$/.test(end||'')) return null;
+  const [sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  const total=(eh*60+em)-(sh*60+sm); if(total<=0)return null;
+  return total-Math.floor(total/240)*30;
+}
+function formatHolidayHours(minutes){
+  const n=Number(minutes); if(!Number.isFinite(n)||n<=0)return '';
+  if(n%60===0)return `${n/60}h`;
+  if(n%30===0)return `${(n/60).toFixed(1).replace(/\.0$/,'')}h`;
+  const h=Math.floor(n/60),m=n%60; return h?`${h}h${m}m`:`${m}m`;
+}
+function holidayWorkMarkup(row){ return row?`<div class="shift-wrap"><span class="holiday-work-badge">휴근(${escapeHtml(formatHolidayHours(row.net_minutes))})</span></div>`:''; }
+function localHolidayWorks(){
+  try{ const rows=JSON.parse(localStorage.getItem(LOCAL_HOLIDAY_WORK_KEY)||'[]'); return Array.isArray(rows)?rows:[]; }catch(e){ return []; }
+}
+function saveLocalHolidayWorks(rows){ localStorage.setItem(LOCAL_HOLIDAY_WORK_KEY,JSON.stringify(rows)); }
+function normalizeHolidayWorkRows(rows){
+  return (rows||[]).map(r=>({...r,id:Number(r.id),employee_id:Number(r.employee_id),work_date:String(r.work_date||'').slice(0,10),start_time:timeShort(r.start_time),end_time:timeShort(r.end_time),net_minutes:Number(r.net_minutes)||0})).filter(r=>r.employee_id&&r.work_date);
+}
 function recordsForDate(key){ return state.attendance.filter(r=>r.start_date<=key && r.end_date>=key); }
 const ATTENDANCE_DAY_START = '09:00';
 const ATTENDANCE_DAY_END = '18:00';
@@ -1021,6 +1079,7 @@ function employeeDisplayCompareForDate(a,b,key){
   return employeeDisplayRankForDate(a,key)-employeeDisplayRankForDate(b,key) || Number(a.sort_order||999)-Number(b.sort_order||999) || Number(a.id)-Number(b.id);
 }
 function availabilityNameClass(emp,key){
+  if(holidayWorkFor(emp.id,key)) return 'holiday-work';
   if(emp.category==='팀장') return 'leader';
   if(emp.category==='일근(사무)') return 'day-office';
   if(emp.category==='일근(현장)') return 'day-field';
@@ -1033,8 +1092,11 @@ function availabilityNameClass(emp,key){
 function availableEmployees(key){
   const {y,m,d}=parseDateKey(key); const absent=fullAbsentIds(key);
   return state.employees
-    .filter(e=>employeeActiveOn(e,key) && isWorkingShift(shiftForEmployee(e,y,m,d)) && !absent.has(Number(e.id)))
+    .filter(e=>employeeActiveOn(e,key) && (isWorkingShift(shiftForEmployee(e,y,m,d)) || !!holidayWorkFor(e.id,key)) && !absent.has(Number(e.id)))
     .sort((a,b)=>employeeDisplayCompareForDate(a,b,key));
+}
+function availabilityDisplayName(emp,key){
+  const hw=holidayWorkFor(emp.id,key); return hw?`${emp.display_name} · 휴근 ${formatHolidayHours(hw.net_minutes)}`:emp.display_name;
 }
 function myRecordsForDate(key){ return recordsForDate(key).filter(r=>Number(r.employee_id)===Number(state.me.employee_id)); }
 function canEditRecord(r){ if(accountReadOnly()) return false; return !!state.me?.is_admin || Number(r.employee_id)===Number(state.me?.employee_id); }
@@ -1105,16 +1167,20 @@ function downloadJsonBackup(payload){
   return filename;
 }
 async function buildFullBackup(){
-  let attendance;
-  if(!configured()) attendance=localRecords();
-  else attendance=await rpc('list_attendance',{p_token:state.sessionToken,p_from:`${MIN_YEAR}-01-01`,p_to:`${MAX_YEAR}-12-31`});
+  let attendance,holidayWork;
+  if(!configured()){ attendance=localRecords(); holidayWork=normalizeHolidayWorkRows(localHolidayWorks()); }
+  else{
+    attendance=await rpc('list_attendance',{p_token:state.sessionToken,p_from:`${MIN_YEAR}-01-01`,p_to:`${MAX_YEAR}-12-31`});
+    holidayWork=normalizeHolidayWorkRows(await rpc('list_holiday_work',{p_token:state.sessionToken,p_from:`${MIN_YEAR}-01-01`,p_to:`${MAX_YEAR}-12-31`}));
+  }
   return {
-    format:'staff-attendance-backup-v1',
+    format:'staff-attendance-backup-v3',
     exported_at:new Date().toISOString(),
     app_year_range:[MIN_YEAR,MAX_YEAR],
     source:configured()?'supabase':'local',
     employees:state.employees.map(({id,display_name,category,group_code,is_admin,sort_order,active_from,active_to})=>({id,display_name,category,group_code,is_admin,sort_order,active_from,active_to})),
-    attendance:(attendance||[]).map(r=>({...r,attendance_type:normalizeAttendanceType(r.attendance_type)}))
+    attendance:(attendance||[]).map(r=>({...r,attendance_type:normalizeAttendanceType(r.attendance_type)})),
+    holiday_work:(holidayWork||[]).map(r=>({id:r.id,employee_id:r.employee_id,work_date:r.work_date,start_time:timeShort(r.start_time),end_time:timeShort(r.end_time),net_minutes:Number(r.net_minutes)||holidayNetMinutes(timeShort(r.start_time),timeShort(r.end_time)),created_by:Number(r.created_by)||Number(r.employee_id),updated_at:r.updated_at||null}))
   };
 }
 function normalizeBackupDate(value){
@@ -1122,7 +1188,7 @@ function normalizeBackupDate(value){
   return /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '';
 }
 function validateBackupPayload(payload){
-  if(!payload || !['staff-attendance-backup-v1','staff-attendance-backup-v2'].includes(payload.format)) throw new Error('이 홈페이지에서 만든 백업 파일이 아닙니다.');
+  if(!payload || !['staff-attendance-backup-v1','staff-attendance-backup-v2','staff-attendance-backup-v3'].includes(payload.format)) throw new Error('이 홈페이지에서 만든 백업 파일이 아닙니다.');
   if(!Array.isArray(payload.attendance)) throw new Error('백업 파일에 근태 데이터가 없습니다.');
   const knownIds=new Set(state.employees.map(e=>Number(e.id)));
   const rows=payload.attendance.map((r,idx)=>{
@@ -1141,7 +1207,15 @@ function validateBackupPayload(payload){
     const emp=state.employees.find(e=>Number(e.id)===employeeId);
     return {id,employee_id:employeeId,display_name:emp?.display_name||r.display_name||'',attendance_type:type,start_date:start,end_date:end,absence_mode:mode,start_time:st,end_time:et,created_by:Number(r.created_by)||state.me.employee_id,updated_at:r.updated_at||null};
   });
-  return {...payload,attendance:rows};
+  const holidayRows=(Array.isArray(payload.holiday_work)?payload.holiday_work:[]).map((r,idx)=>{
+    const employeeId=Number(r.employee_id),workDate=normalizeBackupDate(r.work_date),st=timeShort(r.start_time),et=timeShort(r.end_time);
+    const emp=state.employees.find(e=>Number(e.id)===employeeId),net=holidayNetMinutes(st,et);
+    if(!Number.isInteger(employeeId)||!knownIds.has(employeeId)||!isHolidayWorkEmployee(emp)) throw new Error(`백업의 ${idx+1}번째 휴근에 직원 정보가 올바르지 않습니다.`);
+    if(!workDate||!isHolidayWorkDayKey(workDate)||!employeeActiveOn(emp,workDate)) throw new Error(`백업의 ${idx+1}번째 휴근 날짜가 올바르지 않습니다.`);
+    if(!net) throw new Error(`백업의 ${idx+1}번째 휴근 시간이 올바르지 않습니다.`);
+    return {id:Number(r.id)||idx+1,employee_id:employeeId,work_date:workDate,start_time:st,end_time:et,net_minutes:net,created_by:Number(r.created_by)||employeeId,updated_at:r.updated_at||null};
+  });
+  return {...payload,attendance:rows,holiday_work:holidayRows};
 }
 function backupExportedText(value){
   const d=new Date(value); if(Number.isNaN(d.getTime())) return '알 수 없음';
@@ -1153,9 +1227,9 @@ async function manualBackup(){
   try{
     const backup=await buildFullBackup();
     const backupName=downloadJsonBackup(backup);
-    const count=backup.attendance?.length||0;
-    $('statusLine').textContent=`전체 근태 ${count}건을 백업했습니다.`;
-    $('backupSuccessMessage').innerHTML=`전체 근태 <b>${count}건</b>의 백업 파일이 저장되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#1d4ed8">${escapeHtml(backupName)}</span>`;
+    const count=backup.attendance?.length||0,hwCount=backup.holiday_work?.length||0;
+    $('statusLine').textContent=`근태 ${count}건 · 휴근 ${hwCount}건을 백업했습니다.`;
+    $('backupSuccessMessage').innerHTML=`근태 <b>${count}건</b> · 휴근 <b>${hwCount}건</b>의 백업 파일이 저장되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#1d4ed8">${escapeHtml(backupName)}</span>`;
     openBackdrop('backupSuccessBackdrop');
     showToast('✓ 백업 파일이 저장되었습니다.','success');
   }catch(e){
@@ -1177,7 +1251,7 @@ async function prepareRestoreFile(file){
     if(text.length>5*1024*1024) throw new Error('백업 파일이 너무 큽니다.');
     const parsed=validateBackupPayload(JSON.parse(text));
     pendingRestoreBackup={fileName:file.name,payload:parsed};
-    $('restorePreview').innerHTML=`<b>${escapeHtml(file.name)}</b><br>백업 시각: ${escapeHtml(backupExportedText(parsed.exported_at))}<br>복원할 근태: <b>${parsed.attendance.length}건</b>`;
+    $('restorePreview').innerHTML=`<b>${escapeHtml(file.name)}</b><br>백업 시각: ${escapeHtml(backupExportedText(parsed.exported_at))}<br>복원할 근태: <b>${parsed.attendance.length}건</b><br>복원할 휴근: <b>${parsed.holiday_work.length}건</b>`;
     $('restorePreview').classList.remove('hidden'); $('confirmRestoreBtn').disabled=false;
   }catch(e){ $('restoreError').textContent=e.message||'백업 파일을 읽지 못했습니다.'; }
 }
@@ -1186,8 +1260,8 @@ async function restoreBackupAttendance(){
   $('restoreError').textContent='';
   const pin=$('restoreAdminPin').value.trim();
   if(!/^\d{4}$/.test(pin)){ $('restoreError').textContent='관리자 2차 비밀번호를 입력해 주세요.'; return; }
-  const count=pendingRestoreBackup.payload.attendance.length;
-  if(!confirm(`현재 등록된 전체 근태를 백업 파일의 ${count}건으로 교체할까요?\n\n복원 후에는 백업 시점의 근태 내용이 적용됩니다.`)) return;
+  const count=pendingRestoreBackup.payload.attendance.length,hwCount=pendingRestoreBackup.payload.holiday_work.length;
+  if(!confirm(`현재 등록된 전체 근태·휴근을 백업 파일의 근태 ${count}건, 휴근 ${hwCount}건으로 교체할까요?\n\n복원 후에는 백업 시점의 운영 기록이 적용됩니다. 개인 메모는 그대로 유지됩니다.`)) return;
   showLoading(true);
   try{
     // 복원 자체가 현재 데이터를 덮어쓰므로, 관리자 비밀번호 확인 후 현재 상태를 한 번 더 자동 백업합니다.
@@ -1202,16 +1276,17 @@ async function restoreBackupAttendance(){
     if(!configured()){
       const rows=pendingRestoreBackup.payload.attendance.map((r,i)=>({...r,id:Number(r.id)||i+1}));
       saveLocalRecords(rows);
+      saveLocalHolidayWorks(pendingRestoreBackup.payload.holiday_work.map((r,i)=>({...r,id:Number(r.id)||i+1})));
       saveLocalAudit([]);
       pushLocalAudit('백업 복원','',`${count}건 복원 · ${pendingRestoreBackup.fileName}`,null);
     }else{
-      await rpc('restore_attendance_backup',{p_token:state.sessionToken,p_admin_pin:pin,p_rows:pendingRestoreBackup.payload.attendance});
+      await rpc('restore_operational_backup',{p_token:state.sessionToken,p_admin_pin:pin,p_attendance_rows:pendingRestoreBackup.payload.attendance,p_holiday_work_rows:pendingRestoreBackup.payload.holiday_work});
     }
     const restoredFile=pendingRestoreBackup.fileName;
     pendingRestoreBackup=null; state.selectedDate=null;
     closeAll(); await loadMonthData(true); renderCalendar();
-    $('statusLine').textContent=`백업에서 근태 ${count}건을 복원했습니다.`;
-    $('restoreSuccessMessage').innerHTML=`백업 파일의 근태 <b>${count}건</b>이 복원되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">${escapeHtml(restoredFile)}</span><span style="display:block;margin-top:8px;font-size:.78em;font-weight:700;color:#1d4ed8">복원 직전 상태도 자동 백업했습니다.<br>${escapeHtml(safetyBackupName)}</span>`;
+    $('statusLine').textContent=`백업에서 근태 ${count}건 · 휴근 ${hwCount}건을 복원했습니다.`;
+    $('restoreSuccessMessage').innerHTML=`백업 파일의 근태 <b>${count}건</b> · 휴근 <b>${hwCount}건</b>이 복원되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">${escapeHtml(restoredFile)}</span><span style="display:block;margin-top:8px;font-size:.78em;font-weight:700;color:#1d4ed8">복원 직전 상태도 자동 백업했습니다.<br>${escapeHtml(safetyBackupName)}</span>`;
     openBackdrop('restoreSuccessBackdrop');
   }catch(e){
     const msg=String(e.message||'');
@@ -1222,7 +1297,7 @@ async function restoreBackupAttendance(){
 
 const CAPACITY_TABLE_LABELS = {
   employees:'직원/발령', attendance_entries:'근태', audit_logs:'변경이력', app_sessions:'로그인 세션',
-  realtime_signals:'실시간 동기화', personal_memos:'개인 메모', memos:'개인 메모'
+  realtime_signals:'실시간 동기화', personal_memos:'개인 메모', memos:'개인 메모', holiday_work_entries:'휴근'
 };
 function formatBytes(bytes){
   const n=Math.max(0,Number(bytes)||0);
@@ -1454,6 +1529,19 @@ async function loadEmployees(){
   state.employees=(data||[]).map(e=>({...e,id:Number(e.id),sort_order:Number(e.sort_order),is_admin:!!e.is_admin,active_from:e.active_from||'2026-01-01',active_to:e.active_to||null})).sort(employeeDisplayCompare);
   populateTargetEmployees(todayKey(),state.me?.employee_id);
 }
+async function loadHolidayWorks(){
+  if(!state.me){ state.holidayWorks=[]; return; }
+  const from=`${MIN_YEAR}-01-01`,to=`${MAX_YEAR}-12-31`;
+  if(!configured()){
+    state.holidayWorks=normalizeHolidayWorkRows(localHolidayWorks()).filter(r=>r.work_date>=from&&r.work_date<=to);
+    state.holidayWorkBackendReady=true; return;
+  }
+  try{
+    state.holidayWorks=normalizeHolidayWorkRows(await rpc('list_holiday_work',{p_token:state.sessionToken,p_from:from,p_to:to}));
+    state.holidayWorkBackendReady=true;
+  }catch(e){ state.holidayWorks=[]; state.holidayWorkBackendReady=false; }
+}
+
 async function loadMonthMemos(from,to){
   if(!state.me){ state.memos=[]; return; }
   if(!configured()){
@@ -1483,6 +1571,7 @@ async function loadMonthData(silent=false){
       data=await rpc('list_attendance',{p_token:state.sessionToken,p_from:from,p_to:to});
     }
     state.attendance=(data||[]).map(r=>({...r,id:Number(r.id),employee_id:Number(r.employee_id),attendance_type:normalizeAttendanceType(r.attendance_type)}));
+    await loadHolidayWorks();
     await loadMonthMemos(from,to);
     $('statusLine').textContent=configured()?'':'테스트 모드 · 이 기기에만 저장';
   }catch(e){
@@ -1500,6 +1589,7 @@ async function refresh(){
     if(state.selectedDate && $('detailBackdrop').classList.contains('open')) renderDetail(state.selectedDate);
     if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
     if($('memoListBackdrop')?.classList.contains('open')) await loadMemoList(false);
+    if($('holidayWorkListBackdrop')?.classList.contains('open')) await loadHolidayWorkList(false);
   }catch(e){
     const msg=String(e?.message||'');
     $('statusLine').textContent='데이터를 새로고침하지 못했습니다.';
@@ -1509,7 +1599,7 @@ async function refresh(){
 async function logout(callServer=true){
   await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
-  localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.memos=[]; state.memoBackendReady=null;
+  localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.holidayWorks=[]; state.holidayWorkBackendReady=null; state.memos=[]; state.memoBackendReady=null;
   closeAll(); $('appView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
 }
 
@@ -1518,6 +1608,7 @@ function renderTabs(){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===state.view));
   $('legend').classList.add('hidden');
   if($('memoListBtn')) $('memoListBtn').classList.toggle('hidden',state.view!=='mine');
+  if($('holidayWorkListBtn')) $('holidayWorkListBtn').classList.toggle('hidden',state.view!=='mine' || !isHolidayWorkEmployee(state.me));
 }
 function renderCalendar(){
   $('monthTitle').textContent=`${state.year}년 ${state.month+1}월`;
@@ -1530,10 +1621,10 @@ function renderCalendar(){
     const cls=['day-cell',wd===0?'sun':'',wd===6?'sat':'',holiday?'holiday':'',today.getFullYear()===state.year&&today.getMonth()===state.month&&today.getDate()===d?'today':''].filter(Boolean).join(' ');
     let body='';
     if(state.view==='mine'){
-      const emp=state.employees.find(e=>e.id===state.me.employee_id); const shift=(emp&&employeeActiveOn(emp,key))?shiftForEmployee(emp,state.year,state.month,d):''; body=shift?shiftMarkup(shift):'<div class="shift-wrap"><span style="color:#c4c7cc;font-weight:800">-</span></div>';
+      const emp=state.employees.find(e=>e.id===state.me.employee_id); const shift=(emp&&employeeActiveOn(emp,key))?shiftForEmployee(emp,state.year,state.month,d):''; const hw=holidayWorkForMe(key); body=(hw&&isHolidayWorkEmployee(emp))?holidayWorkMarkup(hw):(shift?shiftMarkup(shift):'<div class="shift-wrap"><span style="color:#c4c7cc;font-weight:800">-</span></div>');
       if(myRecordsForDate(key).length) body+=`<div class="att-dot">근태 ${myRecordsForDate(key).length}</div>`;
     }else{
-      const names=availableEmployees(key); body=names.length?`<div class="availability">${names.map(e=>`<span class="name ${availabilityNameClass(e,key)}">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</span>`).join('')}</div>`:'<div class="availability empty">-</div>';
+      const names=availableEmployees(key); body=names.length?`<div class="availability">${names.map(e=>`<span class="name ${availabilityNameClass(e,key)}">${e.category==='팀장'?'★ ':''}${escapeHtml(availabilityDisplayName(e,key))}</span>`).join('')}</div>`:'<div class="availability empty">-</div>';
     }
     const memoMark=(state.view==='mine'&&memoForDate(key))?'<span class="memo-mark" title="개인 메모 있음" aria-label="개인 메모 있음">✎</span>':'';
     html+=`<button type="button" class="${cls}" data-date="${key}"><div class="day-head"><span class="day-num">${d}</span>${memoMark}${holiday?`<span class="holiday-mini">${escapeHtml(holiday)}</span>`:''}</div>${body}</button>`;
@@ -1555,6 +1646,10 @@ function openDetail(key){ state.selectedDate=key; renderDetail(key); openBackdro
 function renderDetail(key){
   $('detailTitle').textContent=formatDateKR(key);
   const mineView=state.view==='mine';
+  const emp=state.employees.find(e=>Number(e.id)===Number(state.me?.employee_id));
+  const showHolidayWork=mineView && isHolidayWorkEmployee(emp) && isHolidayWorkDayKey(key) && employeeActiveOn(emp,key) && (!accountReadOnly() || !!holidayWorkForMe(key));
+  $('holidayWorkDetailSection').classList.toggle('hidden',!showHolidayWork);
+  if(showHolidayWork) renderHolidayWorkDetail(key);
   $('memoDetailSection').classList.toggle('hidden',!mineView);
   if(mineView) renderMemoDetail(key);
   // 전체 근무표는 조회 전용이며, 부분부재/전일부재 명단도 전체 근무표에서만 보여준다.
@@ -1676,6 +1771,96 @@ async function deleteSelectedMemos(){
   finally{ showLoading(false); }
 }
 
+function renderHolidayWorkDetail(key){
+  const row=holidayWorkForMe(key),ro=accountReadOnly();
+  $('holidayWorkChecked').checked=!!row;
+  setNumericTime(row?.start_time||'09:00','holidayStartHour','holidayStartMinute');
+  setNumericTime(row?.end_time||'18:00','holidayEndHour','holidayEndMinute');
+  ['holidayStartHour','holidayStartMinute','holidayEndHour','holidayEndMinute'].forEach(id=>$(id).readOnly=ro);
+  $('holidayWorkChecked').disabled=ro;
+  $('deleteHolidayWorkBtn').disabled=!row||ro;
+  $('deleteHolidayWorkBtn').classList.toggle('hidden',ro); $('saveHolidayWorkBtn').classList.toggle('hidden',ro); $('holidayWorkActions').classList.toggle('readonly',ro);
+  $('holidayWorkError').textContent=ro?'발령 후 조회 전용입니다. 기존 휴근은 확인만 가능합니다.':(state.holidayWorkBackendReady===false&&configured()?'휴근 SQL 패치를 먼저 적용해 주세요.':'');
+  updateHolidayWorkResult();
+}
+function updateHolidayWorkResult(){
+  const checked=$('holidayWorkChecked').checked;
+  if(!checked){ $('holidayWorkResult').innerHTML='근무함에 체크하면 인정시간을 계산합니다.'; return; }
+  const st=readNumericTime('holidayStartHour','holidayStartMinute'),et=readNumericTime('holidayEndHour','holidayEndMinute');
+  if(st===null||et===null||!st||!et){ $('holidayWorkResult').innerHTML='시작·종료시간을 입력해 주세요.'; return; }
+  const total=(()=>{const [sh,sm]=st.split(':').map(Number),[eh,em]=et.split(':').map(Number);return (eh*60+em)-(sh*60+sm)})();
+  if(total<=0){ $('holidayWorkResult').innerHTML='종료시간은 시작시간보다 늦어야 합니다.'; return; }
+  const breaks=Math.floor(total/240)*30,net=holidayNetMinutes(st,et);
+  $('holidayWorkResult').innerHTML=`총 ${Math.floor(total/60)}시간${total%60?` ${total%60}분`:''} · 휴게 ${breaks?`${Math.floor(breaks/60)?Math.floor(breaks/60)+'시간 ':''}${breaks%60?breaks%60+'분':''}`:'없음'} → <b>휴근 ${escapeHtml(formatHolidayHours(net))}</b>`;
+}
+async function saveSelectedHolidayWork(){
+  const key=state.selectedDate;if(!key||state.view!=='mine')return;
+  if(accountReadOnly()){showToast('발령 후 조회 전용 계정에서는 휴근을 변경할 수 없습니다.','info');return;}
+  $('holidayWorkError').textContent='';
+  if(!$('holidayWorkChecked').checked){$('holidayWorkError').textContent='휴일근무를 등록하려면 근무함에 체크해 주세요.';return;}
+  const st=readNumericTime('holidayStartHour','holidayStartMinute'),et=readNumericTime('holidayEndHour','holidayEndMinute');
+  if(st===null||et===null||!st||!et){$('holidayWorkError').textContent='시작시간과 종료시간을 숫자로 모두 입력해 주세요.';return;}
+  const net=holidayNetMinutes(st,et);if(!net){$('holidayWorkError').textContent='종료시간은 시작시간보다 늦어야 합니다.';return;}
+  showLoading(true);
+  try{
+    if(!configured()){
+      const rows=normalizeHolidayWorkRows(localHolidayWorks());const idx=rows.findIndex(r=>Number(r.employee_id)===Number(state.me.employee_id)&&r.work_date===key);
+      const row={id:idx>=0?rows[idx].id:(rows.reduce((mx,r)=>Math.max(mx,Number(r.id)||0),0)+1),employee_id:Number(state.me.employee_id),display_name:state.me.display_name,category:state.me.category,work_date:key,start_time:st,end_time:et,net_minutes:net,updated_at:new Date().toISOString()};
+      if(idx>=0)rows[idx]=row;else rows.push(row);saveLocalHolidayWorks(rows);
+      pushLocalAudit(idx>=0?'휴근 수정':'휴근 등록',state.me.display_name,`${key} · ${st}~${et} · 휴근 ${formatHolidayHours(net)}`,state.me.employee_id);
+    }else await rpc('save_my_holiday_work',{p_token:state.sessionToken,p_date:key,p_start_time:st,p_end_time:et});
+    await loadHolidayWorks();renderCalendar();renderHolidayWorkDetail(key);if($('holidayWorkListBackdrop').classList.contains('open'))await loadHolidayWorkList(false);if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();
+    showToast(`✓ 휴근 ${formatHolidayHours(net)} 저장 완료`,'success');
+  }catch(e){const msg=String(e.message||'');$('holidayWorkError').textContent=(msg.includes('save_my_holiday_work')||msg.includes('function')||msg.includes('schema cache'))?'휴근 SQL 패치를 먼저 적용해 주세요.':(msg.includes('NOT_HOLIDAY')?'토·일요일 또는 공휴일에만 휴근을 등록할 수 있습니다.':(msg.includes('NOT_DAY_EMPLOYEE')?'일근(사무)/일근(현장) 직원만 사용할 수 있습니다.':(msg.includes('READ_ONLY')?'조회 전용 계정에서는 휴근을 변경할 수 없습니다.':msg)));
+  }finally{showLoading(false);}
+}
+async function deleteSelectedHolidayWork(){
+  const key=state.selectedDate,row=key?holidayWorkForMe(key):null;if(!row)return;
+  if(accountReadOnly()){showToast('발령 후 조회 전용 계정에서는 휴근을 삭제할 수 없습니다.','info');return;}
+  if(!confirm(`${formatDateKR(key)} 휴근 기록을 삭제할까요?`))return;
+  showLoading(true);
+  try{
+    if(!configured()){saveLocalHolidayWorks(normalizeHolidayWorkRows(localHolidayWorks()).filter(r=>!(Number(r.employee_id)===Number(state.me.employee_id)&&r.work_date===key)));pushLocalAudit('휴근 삭제',state.me.display_name,`${key} · ${row.start_time}~${row.end_time}`,state.me.employee_id);}
+    else await rpc('delete_my_holiday_work',{p_token:state.sessionToken,p_date:key});
+    await loadHolidayWorks();renderCalendar();renderHolidayWorkDetail(key);if($('holidayWorkListBackdrop').classList.contains('open'))await loadHolidayWorkList(false);if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();showToast('휴근 기록을 삭제했습니다.','success');
+  }catch(e){$('holidayWorkError').textContent=String(e.message||'휴근을 삭제하지 못했습니다.');}finally{showLoading(false);}
+}
+function holidayWorkSearchHaystack(r){
+  const {m,d}=parseDateKey(r.work_date);return `${r.work_date} ${r.work_date.replaceAll('-','.')} ${r.work_date.replaceAll('-','/')} ${m+1}/${d} ${m+1}월 ${d}일 ${formatDateKR(r.work_date)} ${timeShort(r.start_time)} ${timeShort(r.end_time)} ${formatHolidayHours(r.net_minutes)} 휴근`.toLowerCase();
+}
+function updateHolidayWorkDeleteButton(){
+  const ro=accountReadOnly();if(ro)holidayWorkSelectedDates.clear();const n=holidayWorkSelectedDates.size,btn=$('deleteSelectedHolidayWorkBtn');
+  btn.classList.toggle('hidden',ro);$('holidayWorkListActions').classList.toggle('readonly',ro);btn.disabled=ro||n===0;btn.textContent=n?`선택 삭제 (${n}건)`:'선택 삭제';
+}
+function renderHolidayWorkList(){
+  const q=$('holidayWorkSearch').value.trim().toLowerCase(),ro=accountReadOnly();
+  const rows=holidayWorkListRows.slice().sort((a,b)=>a.work_date.localeCompare(b.work_date)||a.id-b.id).filter(r=>!q||holidayWorkSearchHaystack(r).includes(q));
+  $('holidayWorkListHelp').textContent=ro?'발령 후 조회 전용 계정입니다. 기존 휴근은 검색·확인할 수 있지만 수정·삭제할 수 없습니다.':'내 휴일근무만 표시됩니다. 날짜 빠른 순으로 정렬되며 날짜나 시간으로 검색할 수 있습니다.';
+  $('holidayWorkListCount').textContent=q?`전체 ${holidayWorkListRows.length}건 · 검색 ${rows.length}건${ro?' · 조회 전용':''}`:`총 ${holidayWorkListRows.length}건 · 날짜 빠른 순${ro?' · 조회 전용':''}`;
+  if(!rows.length){$('holidayWorkListBody').innerHTML=`<div class="holiday-work-list-empty">${q?'검색 결과가 없습니다.':'아직 등록한 휴근이 없습니다.'}</div>`;updateHolidayWorkDeleteButton();return;}
+  $('holidayWorkListBody').innerHTML=rows.map(r=>{
+    const text=`${timeShort(r.start_time)}~${timeShort(r.end_time)} · 휴근 ${formatHolidayHours(r.net_minutes)}`;
+    return ro?`<div class="holiday-work-list-row readonly"><div><div class="holiday-work-list-date">${escapeHtml(formatDateKR(r.work_date))}</div><div class="holiday-work-list-text">${escapeHtml(text)}</div></div></div>`:`<label class="holiday-work-list-row"><input class="holiday-work-list-check" type="checkbox" data-holiday-work-check="${r.work_date}" ${holidayWorkSelectedDates.has(r.work_date)?'checked':''}><div><div class="holiday-work-list-date">${escapeHtml(formatDateKR(r.work_date))}</div><div class="holiday-work-list-text">${escapeHtml(text)}</div></div></label>`;
+  }).join('');updateHolidayWorkDeleteButton();
+}
+async function loadHolidayWorkList(resetSelection=true){
+  if(resetSelection)holidayWorkSelectedDates.clear();$('holidayWorkListBody').innerHTML='<div class="holiday-work-list-empty">불러오는 중…</div>';
+  try{
+    if(!configured())holidayWorkListRows=normalizeHolidayWorkRows(localHolidayWorks()).filter(r=>Number(r.employee_id)===Number(state.me.employee_id));
+    else{const raw=await rpc('list_my_holiday_work',{p_token:state.sessionToken,p_from:null,p_to:null});holidayWorkListRows=normalizeHolidayWorkRows((raw||[]).map(r=>({...r,employee_id:Number(state.me.employee_id)})));}
+    state.holidayWorkBackendReady=true;renderHolidayWorkList();
+  }catch(e){state.holidayWorkBackendReady=false;holidayWorkListRows=[];$('holidayWorkListCount').textContent='';$('holidayWorkListBody').innerHTML='<div class="holiday-work-list-empty">휴근 기능을 사용하려면 Supabase에 휴근 SQL 패치를 먼저 실행해 주세요.</div>';updateHolidayWorkDeleteButton();}
+}
+async function openHolidayWorkList(){if(!state.me||state.view!=='mine'||!isHolidayWorkEmployee(state.me))return;$('holidayWorkSearch').value='';holidayWorkSelectedDates.clear();openBackdrop('holidayWorkListBackdrop');await loadHolidayWorkList(true);}
+async function deleteSelectedHolidayWorks(){
+  if(accountReadOnly()){showToast('발령 후 조회 전용 계정에서는 휴근을 삭제할 수 없습니다.','info');return;}const dates=[...holidayWorkSelectedDates].sort();if(!dates.length)return;if(!confirm(`선택한 휴근 ${dates.length}건을 삭제할까요?`))return;showLoading(true);
+  try{
+    if(!configured()){const set=new Set(dates);saveLocalHolidayWorks(normalizeHolidayWorkRows(localHolidayWorks()).filter(r=>Number(r.employee_id)!==Number(state.me.employee_id)||!set.has(r.work_date)));pushLocalAudit('휴근 일괄삭제',state.me.display_name,`${dates.length}건 삭제`,state.me.employee_id);}
+    else await rpc('delete_my_holiday_works',{p_token:state.sessionToken,p_dates:dates});
+    holidayWorkSelectedDates.clear();await loadHolidayWorks();await loadHolidayWorkList(false);renderCalendar();if(state.selectedDate&&$('detailBackdrop').classList.contains('open'))renderDetail(state.selectedDate);if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();showToast(`휴근 ${dates.length}건을 삭제했습니다.`,'success');
+  }catch(e){alert(String(e.message||'선택한 휴근을 삭제하지 못했습니다.'));}finally{showLoading(false);}
+}
+
 function renderAttendanceRows(list,key){
   if(!list.length) return '<div class="empty-msg">없음</div>';
   return list.map(r=>{
@@ -1746,7 +1931,7 @@ function renderAttendanceDatePicker(){
     const cls=['date-picker-cell',wd===0?'sun':'',wd===6?'sat':'',holiday?'holiday':'',key===selected?'selected':'',key===todayKeyValue?'today':'',inRange?'range':'',key===startKey&&state.dateMode==='range'?'range-start':'',key===endKey&&state.dateMode==='range'?'range-end':'',disabled?'disabled':''].filter(Boolean).join(' ');
     let shift='';
     if(emp&&employeeActiveOn(emp,key)) shift=shiftForEmployee(emp,attendanceDatePickerYear,attendanceDatePickerMonth,d);
-    const body=shift?shiftMarkup(shift):'<div class="shift-wrap"><span style="color:#c4c7cc;font-weight:800">-</span></div>';
+    const hw=emp?holidayWorkFor(emp.id,key):null; const body=(hw&&isHolidayWorkEmployee(emp))?holidayWorkMarkup(hw):(shift?shiftMarkup(shift):'<div class="shift-wrap"><span style="color:#c4c7cc;font-weight:800">-</span></div>');
     const aria=[key,holiday,term,shift].filter(Boolean).join(' ');
     html+=`<button type="button" class="${cls}" data-picker-date="${key}" ${disabled?'disabled':''} aria-label="${escapeHtml(aria)}"><div class="date-picker-dayhead"><span class="date-picker-daynum">${d}</span>${holiday?`<span class="date-picker-holiday">${escapeHtml(holiday)}</span>`:''}</div>${body}${term?`<span class="date-picker-term">${escapeHtml(term)}</span>`:''}</button>`;
   }
@@ -2200,7 +2385,7 @@ async function resetAllAttendance(){
   $('resetError').textContent='';
   const pin=$('resetAdminPin').value.trim();
   if(!/^\d{4}$/.test(pin)){ $('resetError').textContent='관리자 2차 비밀번호를 입력해 주세요.'; return; }
-  if(!confirm('정말 모든 직원의 근태를 초기화할까요?\n\n개인 메모는 삭제되지 않고 그대로 유지됩니다.\n초기화 직전에 전체 근태 백업 파일이 자동 저장됩니다.')) return;
+  if(!confirm('정말 모든 직원의 근태와 휴근을 초기화할까요?\n\n개인 메모는 삭제되지 않고 그대로 유지됩니다.\n초기화 직전에 전체 근태·휴근 백업 파일이 자동 저장됩니다.')) return;
   showLoading(true);
   try{
     // 비밀번호를 먼저 확인한 뒤 백업을 저장하고, 백업 성공 후에만 초기화합니다.
@@ -2214,14 +2399,15 @@ async function resetAllAttendance(){
 
     if(!configured()){
       localStorage.removeItem(LOCAL_DATA_KEY);
+      localStorage.removeItem(LOCAL_HOLIDAY_WORK_KEY);
       localStorage.removeItem(LOCAL_AUDIT_KEY);
     }else{
       await rpc('reset_all_attendance',{p_token:state.sessionToken,p_admin_pin:pin});
     }
-    state.attendance=[]; state.selectedDate=null;
+    state.attendance=[]; state.holidayWorks=[]; state.selectedDate=null;
     closeAll(); await loadMonthData(true); renderCalendar();
-    $('statusLine').textContent='전체 근태가 초기화되었습니다.';
-    $('resetSuccessMessage').innerHTML=`전체 근태가 초기화되었습니다.<br><span style="display:block;margin-top:5px;font-size:.82em;font-weight:800;color:#6d28d9">개인 메모는 그대로 유지되었습니다.</span><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">초기화 전 백업 파일이 저장되었습니다.<br>${escapeHtml(backupName)}</span>`;
+    $('statusLine').textContent='전체 근태와 휴근이 초기화되었습니다.';
+    $('resetSuccessMessage').innerHTML=`전체 근태와 휴근이 초기화되었습니다.<br><span style="display:block;margin-top:5px;font-size:.82em;font-weight:800;color:#6d28d9">개인 메모는 그대로 유지되었습니다.</span><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">초기화 전 백업 파일이 저장되었습니다.<br>${escapeHtml(backupName)}</span>`;
     openBackdrop('resetSuccessBackdrop');
   }catch(e){
     const msg=String(e.message||'');
@@ -2261,6 +2447,16 @@ function wire(){
   populateTypeOptions();
   $('adminToolsToggle').addEventListener('click',toggleAdminTools);
   $('memoListBtn').addEventListener('click',openMemoList);
+  $('holidayWorkListBtn').addEventListener('click',openHolidayWorkList);
+  $('holidayWorkSearch').addEventListener('input',renderHolidayWorkList);
+  $('holidayWorkSearchClearBtn').addEventListener('click',()=>{$('holidayWorkSearch').value='';renderHolidayWorkList();$('holidayWorkSearch').focus()});
+  $('holidayWorkListBody').addEventListener('change',e=>{const c=e.target.closest('[data-holiday-work-check]');if(!c)return;const key=c.dataset.holidayWorkCheck;if(c.checked)holidayWorkSelectedDates.add(key);else holidayWorkSelectedDates.delete(key);updateHolidayWorkDeleteButton()});
+  $('deleteSelectedHolidayWorkBtn').addEventListener('click',deleteSelectedHolidayWorks);
+  $('holidayWorkChecked').addEventListener('change',updateHolidayWorkResult);
+  ['holidayStartHour','holidayStartMinute','holidayEndHour','holidayEndMinute'].forEach((id,i)=>{bindNumericTimeInput(id,i%2===0?23:59);$(id).addEventListener('input',updateHolidayWorkResult);$(id).addEventListener('blur',updateHolidayWorkResult)});
+  $('saveHolidayWorkBtn').addEventListener('click',saveSelectedHolidayWork);
+  $('deleteHolidayWorkBtn').addEventListener('click',deleteSelectedHolidayWork);
+  $('closeHolidayWorkBtn').addEventListener('click',()=>closeBackdrop('detailBackdrop'));
   $('memoSearch').addEventListener('input',renderMemoList);
   $('memoSearchClearBtn').addEventListener('click',()=>{$('memoSearch').value='';renderMemoList();$('memoSearch').focus()});
   $('memoListBody').addEventListener('change',e=>{const c=e.target.closest('[data-memo-check]');if(!c)return;const key=c.dataset.memoCheck;if(c.checked)memoSelectedDates.add(key);else memoSelectedDates.delete(key);updateMemoDeleteButton()});
