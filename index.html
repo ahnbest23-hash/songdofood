@@ -156,7 +156,7 @@
   .view-tools{display:flex;justify-content:flex-end;margin:-3px 0 10px}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
-  .text-size-levels{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;margin-top:6px}
+  .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
   .text-size-level{min-width:0;min-height:44px;padding:0;border:1px solid #e5e7eb;border-radius:9px;background:#f9fafb;color:#4b5563;font-size:calc(13px * var(--text-scale,1));font-weight:900}
   .text-size-level.active{border-color:#8b5cf6;background:#f5f3ff;color:#6d28d9;box-shadow:inset 0 0 0 1px #8b5cf6}
   .text-size-guide{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:9px;color:#9ca3af;font-size:calc(10px * var(--text-scale,1));font-weight:700}
@@ -200,7 +200,7 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div class="view-tools"><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">5단계</span></button></div>
+  <div class="view-tools"><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -218,7 +218,7 @@
     <div id="legend" class="legend"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1531</div>
+  <div class="version">ver20260909-1547</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -365,10 +365,10 @@
 <div id="textSizeBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">큰글자로 보기</div><button class="close-btn" data-close="textSize">×</button></div>
-    <div class="text-size-levels" aria-label="글자 크기 9단계">
-      <button class="text-size-level" data-level="1">1</button><button class="text-size-level" data-level="2">2</button><button class="text-size-level" data-level="3">3</button><button class="text-size-level" data-level="4">4</button><button class="text-size-level" data-level="5">5</button><button class="text-size-level" data-level="6">6</button><button class="text-size-level" data-level="7">7</button><button class="text-size-level" data-level="8">8</button><button class="text-size-level" data-level="9">9</button>
+    <div class="text-size-levels" aria-label="글자 크기 21단계">
+      <button class="text-size-level" data-level="1">1</button><button class="text-size-level" data-level="2">2</button><button class="text-size-level" data-level="3">3</button><button class="text-size-level" data-level="4">4</button><button class="text-size-level" data-level="5">5</button><button class="text-size-level" data-level="6">6</button><button class="text-size-level" data-level="7">7</button><button class="text-size-level" data-level="8">8</button><button class="text-size-level" data-level="9">9</button><button class="text-size-level" data-level="10">10</button><button class="text-size-level" data-level="11">11</button><button class="text-size-level" data-level="12">12</button><button class="text-size-level" data-level="13">13</button><button class="text-size-level" data-level="14">14</button><button class="text-size-level" data-level="15">15</button><button class="text-size-level" data-level="16">16</button><button class="text-size-level" data-level="17">17</button><button class="text-size-level" data-level="18">18</button><button class="text-size-level" data-level="19">19</button><button class="text-size-level" data-level="20">20</button><button class="text-size-level" data-level="21">21</button>
     </div>
-    <div class="text-size-guide"><span>작게</span><span>5단계 · 기본</span><span>크게</span></div>
+    <div class="text-size-guide"><span>작게</span><span>11단계 · 기본</span><span>크게</span></div>
   </div>
 </div>
 
@@ -395,10 +395,10 @@ const ADMIN_NAME = '안석근';
 const ADMIN_SECOND_PIN = ''; // 운영용 템플릿에서는 브라우저에 관리자 2차 비밀번호를 보관하지 않습니다.
 const LOCAL_DATA_KEY = 'staffAttendance_localData_v1';
 const LOCAL_EMPLOYEE_KEY = 'staffAttendance_localEmployees_v1';
-const TEXT_SIZE_KEY = 'staffAttendance_textSizeLevel_v1';
+const TEXT_SIZE_KEY = 'staffAttendance_textSizeLevel_v2';
 const LOCAL_AUDIT_KEY = 'staffAttendance_localAudit_v1';
-const TEXT_SIZE_SCALES = {1:0.82,2:0.86,3:0.93,4:0.965,5:1.00,6:1.045,7:1.09,8:1.135,9:1.18};
-let currentTextSizeLevel = 5;
+const TEXT_SIZE_SCALES = {1:0.750,2:0.780,3:0.810,4:0.840,5:0.870,6:0.900,7:0.930,8:0.950,9:0.970,10:0.985,11:1.000,12:1.050,13:1.100,14:1.150,15:1.200,16:1.260,17:1.320,18:1.380,19:1.450,20:1.530,21:1.620};
+let currentTextSizeLevel = 11;
 const SHIFT_ANCHOR_UTC = Date.UTC(2026, 8, 1);
 const SHIFT_PATTERNS = {
   A:['야','야','비','비','주','주','휴','휴'],
@@ -455,7 +455,7 @@ let pendingRestoreBackup=null;
 
 function normalizeTextSizeLevel(value){
   const level=Number(value);
-  return Number.isInteger(level) && level>=1 && level<=9 ? level : 5;
+  return Number.isInteger(level) && level>=1 && level<=21 ? level : 11;
 }
 function renderTextSizeSetting(){
   document.documentElement.style.setProperty('--text-scale',String(TEXT_SIZE_SCALES[currentTextSizeLevel]));
@@ -472,7 +472,7 @@ function applyTextSizeLevel(level,save=true){
   if(save){ try{ localStorage.setItem(TEXT_SIZE_KEY,String(currentTextSizeLevel)); }catch(e){} }
 }
 function restoreTextSizeLevel(){
-  try{ applyTextSizeLevel(localStorage.getItem(TEXT_SIZE_KEY) ?? 5,false); }catch(e){ applyTextSizeLevel(5,false); }
+  try{ applyTextSizeLevel(localStorage.getItem(TEXT_SIZE_KEY) ?? 11,false); }catch(e){ applyTextSizeLevel(11,false); }
 }
 function openTextSizePicker(){ renderTextSizeSetting(); openBackdrop('textSizeBackdrop'); }
 
