@@ -257,7 +257,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1830</div>
+  <div class="version">ver20260909-1840</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -496,7 +496,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1830';
+const APP_VERSION = 'ver20260909-1840';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -595,11 +595,40 @@ function configured(){
 
 let versionCheckTimer=null;
 let versionReloading=false;
+const UPDATE_ATTEMPT_KEY='staffAttendance_updateAttempt_v1';
 
 function versionManifestUrl(){
   const url=new URL('version.json',document.baseURI);
   url.searchParams.set('_',String(Date.now()));
   return url.toString();
+}
+function freshIndexUrl(remote){
+  const url=new URL('index.html',document.baseURI);
+  url.searchParams.set('__appv',remote);
+  url.searchParams.set('_',String(Date.now()));
+  return url.toString();
+}
+function indexHtmlHasVersion(html,remote){
+  return html.includes(`const APP_VERSION = '${remote}'`) || html.includes(`class="version">${remote}</div>`);
+}
+function recentSameUpdateAttempt(remote){
+  try{
+    const raw=sessionStorage.getItem(UPDATE_ATTEMPT_KEY);
+    if(!raw) return false;
+    const info=JSON.parse(raw);
+    return info?.version===remote && Date.now()-Number(info?.at||0)<15000;
+  }catch(e){ return false; }
+}
+function markUpdateAttempt(remote){
+  try{ sessionStorage.setItem(UPDATE_ATTEMPT_KEY,JSON.stringify({version:remote,at:Date.now()})); }catch(e){}
+}
+function clearCompletedUpdateAttempt(){
+  try{
+    const raw=sessionStorage.getItem(UPDATE_ATTEMPT_KEY);
+    if(!raw) return;
+    const info=JSON.parse(raw);
+    if(info?.version===APP_VERSION) sessionStorage.removeItem(UPDATE_ATTEMPT_KEY);
+  }catch(e){}
 }
 async function checkForAppUpdate(){
   if(versionReloading) return;
@@ -609,16 +638,36 @@ async function checkForAppUpdate(){
     const data=await res.json();
     const remote=String(data?.version||'').trim();
     if(!remote || remote===APP_VERSION) return;
+    if(recentSameUpdateAttempt(remote)) return;
+
+    // version.json만 먼저 새 버전이 된 순간에는 새로고침하지 않는다.
+    // 실제 index.html까지 같은 버전으로 배포된 것을 확인한 뒤 화면을 교체한다.
+    const htmlRes=await fetch(freshIndexUrl(remote),{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
+    if(!htmlRes.ok) return;
+    const html=await htmlRes.text();
+    if(!indexHtmlHasVersion(html,remote)) return;
+
     versionReloading=true;
+    markUpdateAttempt(remote);
     showToast(`새 버전 ${remote} 반영 중…`,'info');
     setTimeout(()=>{
-      const next=new URL(window.location.href);
-      next.searchParams.set('__appv',remote);
-      window.location.replace(next.toString());
-    },350);
+      try{
+        // 방금 서버에서 받은 최신 HTML 자체로 현재 문서를 교체한다.
+        // 브라우저가 이전 index.html을 다시 보여 주는 캐시 루프를 막는다.
+        document.open('text/html','replace');
+        document.write(html);
+        document.close();
+      }catch(e){
+        const next=new URL(window.location.href);
+        next.searchParams.set('__appv',remote);
+        next.searchParams.set('_',String(Date.now()));
+        window.location.replace(next.toString());
+      }
+    },300);
   }catch(e){ /* 버전 확인 실패는 현재 화면 사용을 방해하지 않음 */ }
 }
 function startVersionWatcher(){
+  clearCompletedUpdateAttempt();
   if(versionCheckTimer) clearInterval(versionCheckTimer);
   checkForAppUpdate();
   versionCheckTimer=setInterval(checkForAppUpdate,VERSION_CHECK_INTERVAL_MS);
@@ -626,8 +675,9 @@ function startVersionWatcher(){
 function cleanupVersionQuery(){
   try{
     const url=new URL(window.location.href);
-    if(!url.searchParams.has('__appv')) return;
-    url.searchParams.delete('__appv');
+    let changed=false;
+    ['__appv','_'].forEach(key=>{ if(url.searchParams.has(key)){ url.searchParams.delete(key); changed=true; } });
+    if(!changed) return;
     history.replaceState(null,'',url.pathname+(url.searchParams.toString()?`?${url.searchParams}`:'')+url.hash);
   }catch(e){}
 }
