@@ -177,6 +177,29 @@
   .month-picker-year{display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 12px}
   .year-btn{width:42px;height:38px;border-radius:10px;background:#f1f3f5;font-weight:900}.year-label{min-width:100px;text-align:center;font-size:calc(20px * var(--text-scale,1));font-weight:900}
   .month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.month-grid button{padding:12px 4px;border-radius:11px;background:#f3f4f6;font-weight:850;color:#374151}.month-grid button.active{background:#dbeafe;color:#1d4ed8}
+  .attendance-date-input[readonly]{cursor:pointer;background:#fff;color:#111827;font-weight:800;caret-color:transparent}
+  .attendance-date-input[readonly]::placeholder{color:#9ca3af;font-weight:700}
+  .date-picker-modal{max-width:600px}
+  .date-picker-toolbar{display:grid;grid-template-columns:58px minmax(0,1fr) 48px 58px;gap:7px;align-items:center;margin:2px 0 8px}
+  .date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px;border-radius:12px;font-weight:900}
+  .date-picker-nav{background:#f0f2f5;color:#374151;font-size:calc(14px * var(--text-scale,1))}.date-picker-nav:disabled{opacity:.35}
+  .date-picker-today{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-size:calc(12px * var(--text-scale,1))}
+  .date-picker-month-title{display:flex;align-items:center;justify-content:center;background:#fff;color:#111827;border:1px solid #eceff2;font-size:calc(19px * var(--text-scale,1));letter-spacing:.2px}
+  .date-picker-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #eef0f2;border-left:1px solid #eef0f2}
+  .date-picker-weekdays span{text-align:center;padding:7px 0;font-size:calc(11px * var(--text-scale,1));font-weight:850;color:#4b5563;border-right:1px solid #eef0f2;border-bottom:1px solid #eef0f2}.date-picker-weekdays .sun{color:#d04f4f}.date-picker-weekdays .sat{color:#3976b9}
+  .date-picker-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-left:1px solid #eef0f2}
+  .date-picker-cell{position:relative;min-width:0;min-height:76px;padding:5px 3px;border-right:1px solid #eef0f2;border-bottom:1px solid #eef0f2;background:#fff;text-align:left;overflow:hidden}
+  .date-picker-cell.blank{background:#fafafa;pointer-events:none}
+  .date-picker-cell.disabled{background:#f8fafc;color:#cbd5e1;pointer-events:none}
+  .date-picker-cell.today{background:#eff6ff;box-shadow:inset 0 0 0 2px #60a5fa}
+  .date-picker-cell.range{background:#eff6ff}
+  .date-picker-cell.range-start,.date-picker-cell.range-end,.date-picker-cell.selected{background:#dbeafe;box-shadow:inset 0 0 0 2px #2563eb;z-index:1}
+  .date-picker-dayhead{display:flex;align-items:flex-start;gap:2px;min-height:15px}
+  .date-picker-daynum{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#4b5563;line-height:1.2;flex:0 0 auto}.date-picker-cell.sun .date-picker-daynum,.date-picker-cell.holiday .date-picker-daynum{color:#d04f4f}.date-picker-cell.sat .date-picker-daynum{color:#3976b9}
+  .date-picker-holiday{font-size:calc(7px * var(--text-scale,1));line-height:1.12;color:#c2414c;background:#ffe4e6;border-radius:3px;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;margin-left:auto}
+  .date-picker-term{position:absolute;left:50%;bottom:3px;transform:translateX(-50%);max-width:92%;font-size:calc(7px * var(--text-scale,1));line-height:1.1;color:#047857;background:#ecfdf5;border-radius:7px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:900}
+  .date-picker-cell .shift-wrap{height:47px}.date-picker-cell .shift-circle{width:36px;height:36px;font-size:calc(15px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(13px * var(--text-scale,1))}.date-picker-cell .shift-off{font-size:calc(17px * var(--text-scale,1))}
+  .date-picker-guide{display:flex;flex-wrap:wrap;gap:5px 10px;margin-top:8px;color:#6b7280;font-size:calc(10px * var(--text-scale,1));font-weight:750}.date-picker-guide .holiday-guide{color:#be123c}.date-picker-guide .term-guide{color:#047857}.date-picker-guide .sat-guide{color:#2563eb}
   .view-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;margin:-3px 0 10px}.view-tool-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
   .realtime-status{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:calc(10px * var(--text-scale,1));font-weight:850;line-height:1.2;background:#f3f4f6;color:#6b7280;width:max-content;max-width:100%}
   .realtime-dot{width:7px;height:7px;border-radius:50%;background:#9ca3af;flex:0 0 auto}
@@ -201,7 +224,7 @@
   @media(max-width:520px){
     .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .employee-manage-actions{grid-template-columns:1fr;gap:7px}.reset-pins-btn{font-size:calc(12px * var(--text-scale,1));padding:11px 9px}
-    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}}
+    .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}.date-picker-modal{padding:11px 7px 12px}.date-picker-toolbar{grid-template-columns:50px minmax(0,1fr) 44px 50px;gap:5px}.date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px}.date-picker-nav{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.date-picker-today{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.date-picker-month-title{font-size:calc(18px * var(--text-scale,1))}.date-picker-cell{min-height:72px;padding:4px 2px}.date-picker-cell .shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(12px * var(--text-scale,1))}.date-picker-holiday{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.date-picker-daynum{font-size:calc(10px * var(--text-scale,1))}.date-picker-term{font-size:calc(6.5px * var(--text-scale,1));padding:2px 3px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:45px 1fr 40px 45px;gap:4px}.nav-btn,.today-btn{padding:0 1px;font-size:calc(10px * var(--text-scale,1))}}
 </style>
 </head>
@@ -257,7 +280,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1858</div>
+  <div class="version">ver20260909-1918</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -277,8 +300,8 @@
     <div class="field"><label>근태 종류 <span class="type-count">총 25개</span></label><input id="attendanceType" type="hidden" value="연가"><button id="attendanceTypeBtn" type="button" class="type-select-btn">연가</button></div>
     <div class="field"><label>날짜 입력 방식</label><div class="date-mode-toggle"><button type="button" class="date-mode-btn active" data-date-mode="single">하루</button><button type="button" class="date-mode-btn" data-date-mode="range">기간</button></div></div>
     <div id="attendanceDateGrid" class="attendance-date-grid">
-      <div class="field"><label id="startDateLabel" for="startDate">날짜</label><input id="startDate" type="date" min="2026-01-01" max="2027-12-31"></div>
-      <div id="endDateField" class="field hidden"><label for="endDate">종료일</label><input id="endDate" type="date" min="2026-01-01" max="2027-12-31"></div>
+      <div class="field"><label id="startDateLabel" for="startDate">날짜</label><input id="startDate" class="attendance-date-input" type="text" inputmode="none" readonly autocomplete="off" placeholder="날짜 선택" aria-haspopup="dialog"></div>
+      <div id="endDateField" class="field hidden"><label for="endDate">종료일</label><input id="endDate" class="attendance-date-input" type="text" inputmode="none" readonly autocomplete="off" placeholder="종료일 선택" aria-haspopup="dialog"></div>
     </div>
     <div class="field"><label>부재 방식</label><div class="mode-toggle"><button type="button" class="mode-btn active" data-mode="all_day">전일</button><button type="button" class="mode-btn" data-mode="time">시간 지정</button></div></div>
     <div id="timeFields" class="hidden">
@@ -306,6 +329,21 @@
     <div class="modal-head"><div class="modal-title">연·월 선택</div><button class="close-btn" data-close="month">×</button></div>
     <div class="month-picker-year"><button id="yearPrev" class="year-btn">‹</button><div id="yearLabel" class="year-label"></div><button id="yearNext" class="year-btn">›</button></div>
     <div id="monthGrid" class="month-grid"></div>
+  </div>
+</div>
+
+<div id="datePickerBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal date-picker-modal">
+    <div class="modal-head"><div id="datePickerTitle" class="modal-title">날짜 선택</div><button class="close-btn" data-close="datePicker">×</button></div>
+    <div class="date-picker-toolbar">
+      <button id="datePickerPrev" type="button" class="date-picker-nav">이전달</button>
+      <div id="datePickerMonthTitle" class="date-picker-month-title"></div>
+      <button id="datePickerToday" type="button" class="date-picker-today">오늘</button>
+      <button id="datePickerNext" type="button" class="date-picker-nav">다음달</button>
+    </div>
+    <div class="date-picker-weekdays"><span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span class="sat">토</span></div>
+    <div id="datePickerGrid" class="date-picker-grid"></div>
+    <div class="date-picker-guide"><span class="holiday-guide">● 일요일·공휴일</span><span class="sat-guide">● 토요일</span><span class="term-guide">● 24절기</span></div>
   </div>
 </div>
 
@@ -496,7 +534,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1858';
+const APP_VERSION = 'ver20260909-1918';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -534,6 +572,22 @@ const HOLIDAYS = {
   '2027-10-09':'한글날','2027-10-11':'대체공휴일','2027-12-25':'성탄절','2027-12-27':'대체공휴일'
 };
 
+// 한국천문연구원 월력요항 기준 24절기(한국 표준시 날짜)
+const SOLAR_TERMS = {
+  '2026-01-05':'소한','2026-01-20':'대한','2026-02-04':'입춘','2026-02-19':'우수',
+  '2026-03-05':'경칩','2026-03-20':'춘분','2026-04-05':'청명','2026-04-20':'곡우',
+  '2026-05-05':'입하','2026-05-21':'소만','2026-06-06':'망종','2026-06-21':'하지',
+  '2026-07-07':'소서','2026-07-23':'대서','2026-08-07':'입추','2026-08-23':'처서',
+  '2026-09-07':'백로','2026-09-23':'추분','2026-10-08':'한로','2026-10-23':'상강',
+  '2026-11-07':'입동','2026-11-22':'소설','2026-12-07':'대설','2026-12-22':'동지',
+  '2027-01-05':'소한','2027-01-20':'대한','2027-02-04':'입춘','2027-02-19':'우수',
+  '2027-03-06':'경칩','2027-03-21':'춘분','2027-04-05':'청명','2027-04-20':'곡우',
+  '2027-05-06':'입하','2027-05-21':'소만','2027-06-06':'망종','2027-06-21':'하지',
+  '2027-07-07':'소서','2027-07-23':'대서','2027-08-08':'입추','2027-08-23':'처서',
+  '2027-09-08':'백로','2027-09-23':'추분','2027-10-08':'한로','2027-10-24':'상강',
+  '2027-11-08':'입동','2027-11-22':'소설','2027-12-07':'대설','2027-12-22':'동지'
+};
+
 const ATTENDANCE_TYPES = [
   '연가','지참','조퇴','외출','결근',
   '교육','병가','공가','장기','대휴',
@@ -565,6 +619,9 @@ const state = {
 
 let pendingRestoreBackup=null;
 let attendanceListRows=[];
+let attendanceDatePickerTarget='startDate';
+let attendanceDatePickerYear=state.year;
+let attendanceDatePickerMonth=state.month;
 
 function normalizeTextSizeLevel(value){
   const level=Number(value);
@@ -1419,6 +1476,86 @@ function setDateMode(mode){
   $('startDateLabel').textContent=state.dateMode==='range'?'시작일':'날짜';
   $('rangeTimeHelp').classList.toggle('hidden',!(state.dateMode==='range'&&state.mode==='time'));
 }
+function parseDateKeyParts(value){
+  const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m?{year:Number(m[1]),month:Number(m[2])-1,day:Number(m[3])}:null;
+}
+function attendancePickerEmployee(){
+  const id=state.me?.is_admin?Number($('targetEmployee')?.value||state.me.employee_id):Number(state.me?.employee_id||0);
+  return state.employees.find(e=>Number(e.id)===id) || state.employees.find(e=>Number(e.id)===Number(state.me?.employee_id));
+}
+function attendancePickerMinDate(){
+  if(attendanceDatePickerTarget==='endDate' && state.dateMode==='range' && $('startDate').value) return $('startDate').value;
+  return `${MIN_YEAR}-01-01`;
+}
+function renderAttendanceDatePicker(){
+  $('datePickerMonthTitle').textContent=`${attendanceDatePickerYear}년 ${attendanceDatePickerMonth+1}월`;
+  const first=new Date(attendanceDatePickerYear,attendanceDatePickerMonth,1).getDay();
+  const days=new Date(attendanceDatePickerYear,attendanceDatePickerMonth+1,0).getDate();
+  const total=Math.ceil((first+days)/7)*7;
+  const selected=$($(attendanceDatePickerTarget)?.id||'startDate')?.value||'';
+  const startKey=$('startDate').value||''; const endKey=$('endDate').value||'';
+  const minDate=attendancePickerMinDate();
+  const today=new Date(); const todayKeyValue=dateKey(today.getFullYear(),today.getMonth(),today.getDate());
+  const emp=attendancePickerEmployee();
+  let html='';
+  for(let i=0;i<total;i++){
+    const d=i-first+1;
+    if(d<1||d>days){ html+='<div class="date-picker-cell blank" aria-hidden="true"></div>'; continue; }
+    const key=dateKey(attendanceDatePickerYear,attendanceDatePickerMonth,d);
+    const wd=new Date(attendanceDatePickerYear,attendanceDatePickerMonth,d).getDay();
+    const holiday=HOLIDAYS[key]||''; const term=SOLAR_TERMS[key]||'';
+    const disabled=key<`${MIN_YEAR}-01-01`||key>`${MAX_YEAR}-12-31`||key<minDate;
+    const inRange=state.dateMode==='range'&&startKey&&endKey&&key>=startKey&&key<=endKey;
+    const cls=['date-picker-cell',wd===0?'sun':'',wd===6?'sat':'',holiday?'holiday':'',key===selected?'selected':'',key===todayKeyValue?'today':'',inRange?'range':'',key===startKey&&state.dateMode==='range'?'range-start':'',key===endKey&&state.dateMode==='range'?'range-end':'',disabled?'disabled':''].filter(Boolean).join(' ');
+    let shift='';
+    if(emp&&employeeActiveOn(emp,key)) shift=shiftForEmployee(emp,attendanceDatePickerYear,attendanceDatePickerMonth,d);
+    const body=shift?shiftMarkup(shift):'<div class="shift-wrap"><span style="color:#c4c7cc;font-weight:800">-</span></div>';
+    const aria=[key,holiday,term,shift].filter(Boolean).join(' ');
+    html+=`<button type="button" class="${cls}" data-picker-date="${key}" ${disabled?'disabled':''} aria-label="${escapeHtml(aria)}"><div class="date-picker-dayhead"><span class="date-picker-daynum">${d}</span>${holiday?`<span class="date-picker-holiday">${escapeHtml(holiday)}</span>`:''}</div>${body}${term?`<span class="date-picker-term">${escapeHtml(term)}</span>`:''}</button>`;
+  }
+  $('datePickerGrid').innerHTML=html;
+  $('datePickerPrev').disabled=attendanceDatePickerYear===MIN_YEAR&&attendanceDatePickerMonth===0;
+  $('datePickerNext').disabled=attendanceDatePickerYear===MAX_YEAR&&attendanceDatePickerMonth===11;
+}
+function openAttendanceDatePicker(targetId){
+  attendanceDatePickerTarget=targetId==='endDate'?'endDate':'startDate';
+  const current=parseDateKeyParts($(attendanceDatePickerTarget).value) || parseDateKeyParts(attendanceDatePickerTarget==='endDate'?$('startDate').value:'') || {year:state.year,month:state.month,day:1};
+  attendanceDatePickerYear=Math.min(Math.max(current.year,MIN_YEAR),MAX_YEAR);
+  attendanceDatePickerMonth=current.month;
+  $('datePickerTitle').textContent=attendanceDatePickerTarget==='endDate'?'종료일 선택':(state.dateMode==='range'?'시작일 선택 · 선택 후 종료일을 이어서 선택':'날짜 선택');
+  renderAttendanceDatePicker();
+  openBackdrop('datePickerBackdrop');
+}
+function moveAttendanceDatePickerMonth(delta){
+  const next=new Date(attendanceDatePickerYear,attendanceDatePickerMonth+delta,1);
+  const y=next.getFullYear(),m=next.getMonth();
+  if(y<MIN_YEAR||y>MAX_YEAR)return;
+  attendanceDatePickerYear=y; attendanceDatePickerMonth=m; renderAttendanceDatePicker();
+}
+function chooseAttendanceDate(key){
+  if(state.dateMode==='range' && attendanceDatePickerTarget==='startDate'){
+    $('startDate').value=key;
+    if($('endDate').value && $('endDate').value<key) $('endDate').value='';
+    $('startDate').dispatchEvent(new Event('change',{bubbles:true}));
+    attendanceDatePickerTarget='endDate';
+    $('datePickerTitle').textContent='종료일 선택';
+    renderAttendanceDatePicker();
+    return;
+  }
+  const input=$(attendanceDatePickerTarget); if(!input)return;
+  input.value=key;
+  input.dispatchEvent(new Event('change',{bubbles:true}));
+  closeBackdrop('datePickerBackdrop');
+}
+function goAttendanceDatePickerToday(){
+  const t=new Date(); let y=t.getFullYear(),m=t.getMonth();
+  y=Math.min(Math.max(y,MIN_YEAR),MAX_YEAR);
+  if(y===MIN_YEAR&&t.getFullYear()<MIN_YEAR)m=0;
+  if(y===MAX_YEAR&&t.getFullYear()>MAX_YEAR)m=11;
+  attendanceDatePickerYear=y; attendanceDatePickerMonth=m; renderAttendanceDatePicker();
+}
+
 function setMode(mode){
   state.mode=mode;
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
@@ -1856,6 +1993,9 @@ function wire(){
   $('addAttendanceBtn').addEventListener('click',()=>{if(state.view==='mine')openForm(state.selectedDate)}); $('saveAttendanceBtn').addEventListener('click',saveAttendance);
   document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   document.querySelectorAll('.date-mode-btn').forEach(b=>b.addEventListener('click',()=>setDateMode(b.dataset.dateMode)));
+  ['startDate','endDate'].forEach(id=>{const el=$(id);el.addEventListener('click',()=>openAttendanceDatePicker(id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openAttendanceDatePicker(id)}})});
+  $('datePickerPrev').addEventListener('click',()=>moveAttendanceDatePickerMonth(-1)); $('datePickerNext').addEventListener('click',()=>moveAttendanceDatePickerMonth(1)); $('datePickerToday').addEventListener('click',goAttendanceDatePickerToday);
+  $('datePickerGrid').addEventListener('click',e=>{const b=e.target.closest('[data-picker-date]');if(b&&!b.disabled)chooseAttendanceDate(b.dataset.pickerDate)});
   ['startHour','startMinute','endHour','endMinute'].forEach((id,i)=>bindNumericTimeInput(id,i%2===0?23:59));
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeBackdrop(`${b.dataset.close}Backdrop`)));
   document.querySelectorAll('.backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b)closeBackdrop(b.id)}));
