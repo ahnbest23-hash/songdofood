@@ -183,7 +183,8 @@
   .month-picker-year{display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 12px}
   .year-btn{width:42px;height:38px;border-radius:10px;background:#f1f3f5;font-weight:900}.year-label{min-width:100px;text-align:center;font-size:calc(20px * var(--text-scale,1));font-weight:900}
   .month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.month-grid button{padding:12px 4px;border-radius:11px;background:#f3f4f6;font-weight:850;color:#374151}.month-grid button.active{background:#dbeafe;color:#1d4ed8}
-  .view-tools{display:flex;justify-content:flex-end;margin:-3px 0 10px}
+  .view-tools{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin:-3px 0 10px}
+  .self-pin-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
   .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
@@ -193,7 +194,7 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{margin:-3px 0 9px}.text-size-open-btn{min-height:35px;padding:0 10px}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{margin:-3px 0 9px}.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 10px}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:54px 1fr 54px;gap:6px}.nav-btn{font-size:calc(13px * var(--text-scale,1))}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:50px 1fr 50px}.nav-btn{padding:0 2px}}
 </style>
@@ -230,7 +231,7 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div class="view-tools"><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div>
+  <div class="view-tools"><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -249,7 +250,7 @@
     <div id="colorGuide" class="color-guide hidden"><span class="guide-title">색상 안내</span><span class="guide-item leader"><i class="guide-swatch"></i>팀장</span><span class="guide-item office"><i class="guide-swatch"></i>일근 주간</span><span class="guide-item shift-day"><i class="guide-swatch"></i>교대 주간</span><span class="guide-item shift-night"><i class="guide-swatch"></i>교대 야간</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1644</div>
+  <div class="version">ver20260909-1708</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -412,6 +413,18 @@
     <div id="capacityCheckedAt" class="capacity-note"></div>
     <div class="capacity-note">데이터베이스 사용량은 Supabase 프로젝트 전체 DB 크기라서 앱 테이블 합계보다 크게 보일 수 있습니다. 사진·파일을 추가하면 파일 저장소 사용량이 별도로 증가합니다.</div>
     <button id="refreshCapacityBtn" class="secondary">용량 새로고침</button>
+  </div>
+</div>
+
+<div id="selfPinBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">내 비밀번호 변경</div><button class="close-btn" data-close="selfPin">×</button></div>
+    <div class="employee-help">현재 로그인 비밀번호를 확인한 뒤 새 4자리 비밀번호로 변경합니다.<br>관리자 계정의 2차 비밀번호는 변경되지 않습니다.</div>
+    <div class="field"><label for="selfPinCurrent">현재 비밀번호</label><input id="selfPinCurrent" type="password" inputmode="numeric" maxlength="4" autocomplete="current-password" placeholder="4자리"></div>
+    <div class="field"><label for="selfPinNew">새 비밀번호</label><input id="selfPinNew" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="4자리"></div>
+    <div class="field"><label for="selfPinConfirm">새 비밀번호 확인</label><input id="selfPinConfirm" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="4자리"></div>
+    <div id="selfPinError" class="form-error"></div>
+    <button id="saveSelfPinBtn" class="primary">비밀번호 변경</button>
   </div>
 </div>
 
@@ -1389,6 +1402,34 @@ async function saveEmployeeAction(){
   finally{ showLoading(false); }
 }
 
+function openSelfPin(){
+  if(!state.me)return;
+  $('selfPinCurrent').value=''; $('selfPinNew').value=''; $('selfPinConfirm').value=''; $('selfPinError').textContent='';
+  openBackdrop('selfPinBackdrop');
+  setTimeout(()=>$('selfPinCurrent').focus(),50);
+}
+async function changeOwnPin(){
+  if(!state.me)return;
+  $('selfPinError').textContent='';
+  const current=$('selfPinCurrent').value.trim(), next=$('selfPinNew').value.trim(), confirmPin=$('selfPinConfirm').value.trim();
+  if(!/^\d{4}$/.test(current)){ $('selfPinError').textContent='현재 비밀번호를 숫자 4자리로 입력해 주세요.'; return; }
+  if(!/^\d{4}$/.test(next)){ $('selfPinError').textContent='새 비밀번호를 숫자 4자리로 입력해 주세요.'; return; }
+  if(next!==confirmPin){ $('selfPinError').textContent='새 비밀번호 확인이 일치하지 않습니다.'; return; }
+  if(next===current){ $('selfPinError').textContent='현재 비밀번호와 다른 비밀번호를 입력해 주세요.'; return; }
+  showLoading(true);
+  try{
+    if(!configured()){ throw new Error('SERVER_REQUIRED'); }
+    await rpc('change_own_pin',{p_token:state.sessionToken,p_current_pin:current,p_new_pin:next});
+    closeBackdrop('selfPinBackdrop');
+    showToast('✓ 내 비밀번호가 변경되었습니다.','success');
+  }catch(e){
+    const msg=String(e.message||'');
+    if(msg.includes('CURRENT_PIN_INVALID')) $('selfPinError').textContent='현재 비밀번호가 맞지 않습니다.';
+    else if(msg.includes('INVALID_PIN')) $('selfPinError').textContent='새 비밀번호는 숫자 4자리로 입력해 주세요.';
+    else $('selfPinError').textContent='비밀번호를 변경하지 못했습니다.';
+  }finally{ showLoading(false); }
+}
+
 function toggleAdminPinField(){
   const isAdminName=$('loginName').value.trim()===ADMIN_NAME;
   $('adminPinField').classList.toggle('hidden',!isAdminName);
@@ -1460,6 +1501,9 @@ function toggleAdminTools(){
 function wire(){
   populateTypeOptions();
   $('adminToolsToggle').addEventListener('click',toggleAdminTools);
+  $('selfPinBtn').addEventListener('click',openSelfPin);
+  $('saveSelfPinBtn').addEventListener('click',changeOwnPin);
+  $('selfPinConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')changeOwnPin()});
   $('textSizeOpenBtn').addEventListener('click',openTextSizePicker);
   document.querySelectorAll('.text-size-level').forEach(btn=>btn.addEventListener('click',()=>applyTextSizeLevel(btn.dataset.level)));
   $('attendanceTypeBtn').addEventListener('click',openTypePicker);
