@@ -280,7 +280,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1918</div>
+  <div class="version">ver20260909-1930</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -460,9 +460,10 @@
 
 <div id="auditBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
-    <div class="modal-head"><div class="modal-title">최근 변경 내역 <span class="type-count">최근 10건</span></div><button class="close-btn" data-close="audit">×</button></div>
-    <div class="employee-help">근태 등록·수정·삭제와 직원 추가·교체·제외·비밀번호 변경 내역을 최근 순서로 보여줍니다.</div>
+    <div class="modal-head"><div class="modal-title">최근 변경 내역 <span id="auditLoadedLabel" class="type-count">최대 1,000건 보관</span></div><button class="close-btn" data-close="audit">×</button></div>
+    <div class="employee-help">근태 등록·수정·삭제와 직원 추가·교체·제외·비밀번호 변경 내역을 최근 순서로 보여줍니다. 기록은 최대 1,000건까지 보관하며 한 번에 50건씩 불러옵니다.</div>
     <div id="auditList" class="audit-list"><div class="employee-empty">불러오는 중…</div></div>
+    <button id="auditMoreBtn" class="secondary hidden" style="margin-bottom:8px">더보기 (50건씩)</button>
     <button id="refreshAuditBtn" class="secondary">새로고침</button>
   </div>
 </div>
@@ -534,7 +535,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1918';
+const APP_VERSION = 'ver20260909-1930';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -547,6 +548,8 @@ const LOCAL_DATA_KEY = 'staffAttendance_localData_v1';
 const LOCAL_EMPLOYEE_KEY = 'staffAttendance_localEmployees_v1';
 const TEXT_SIZE_KEY = 'staffAttendance_textSizeLevel_v2';
 const LOCAL_AUDIT_KEY = 'staffAttendance_localAudit_v1';
+const AUDIT_RETENTION_LIMIT = 1000;
+const AUDIT_PAGE_SIZE = 50;
 const TEXT_SIZE_SCALES = {1:0.750,2:0.780,3:0.810,4:0.840,5:0.870,6:0.900,7:0.930,8:0.950,9:0.970,10:0.985,11:1.000,12:1.050,13:1.100,14:1.150,15:1.200,16:1.260,17:1.320,18:1.380,19:1.450,20:1.530,21:1.620};
 let currentTextSizeLevel = 11;
 const SHIFT_ANCHOR_UTC = Date.UTC(2026, 8, 1);
@@ -619,6 +622,10 @@ const state = {
 
 let pendingRestoreBackup=null;
 let attendanceListRows=[];
+let auditRows=[];
+let auditOffset=0;
+let auditHasMore=false;
+let auditLoading=false;
 let attendanceDatePickerTarget='startDate';
 let attendanceDatePickerYear=state.year;
 let attendanceDatePickerMonth=state.month;
@@ -1010,7 +1017,7 @@ function localAudit(){
   try{ const rows=JSON.parse(localStorage.getItem(LOCAL_AUDIT_KEY)||'[]'); return Array.isArray(rows)?rows:[]; }
   catch{ return []; }
 }
-function saveLocalAudit(rows){ localStorage.setItem(LOCAL_AUDIT_KEY,JSON.stringify(rows.slice(0,100))); }
+function saveLocalAudit(rows){ localStorage.setItem(LOCAL_AUDIT_KEY,JSON.stringify(rows.slice(0,AUDIT_RETENTION_LIMIT))); }
 function pushLocalAudit(action,targetName,summary,targetEmployeeId=null){
   try{
     const rows=localAudit();
@@ -1234,23 +1241,53 @@ async function loadCapacity(){
 }
 function openCapacity(){ if(!state.me?.is_admin)return; openBackdrop('capacityBackdrop'); loadCapacity(); }
 
-async function openAudit(){
-  if(!state.me?.is_admin)return;
-  openBackdrop('auditBackdrop'); $('auditList').innerHTML='<div class="employee-empty">불러오는 중…</div>';
-  try{
-    let rows;
-    if(!configured()) rows=localAudit().slice(0,10);
-    else rows=await rpc('list_recent_audit',{p_token:state.sessionToken,p_limit:10});
-    renderAudit(rows||[]);
-  }catch(e){ $('auditList').innerHTML='<div class="employee-empty">변경 내역을 불러오지 못했습니다.</div>'; }
+function updateAuditControls(){
+  const label=$('auditLoadedLabel'), more=$('auditMoreBtn');
+  if(label) label.textContent=auditRows.length?`표시 ${auditRows.length}건 · 최대 1,000건`:'최대 1,000건 보관';
+  if(more){
+    more.classList.toggle('hidden',!auditHasMore);
+    more.disabled=auditLoading;
+    more.textContent=auditLoading?'불러오는 중…':'더보기 (50건씩)';
+  }
 }
-function renderAudit(rows){
-  if(!rows.length){ $('auditList').innerHTML='<div class="employee-empty">아직 변경 내역이 없습니다.</div>'; return; }
-  $('auditList').innerHTML=rows.map(r=>{
+function renderAudit(){
+  if(!auditRows.length){ $('auditList').innerHTML='<div class="employee-empty">아직 변경 내역이 없습니다.</div>'; updateAuditControls(); return; }
+  $('auditList').innerHTML=auditRows.map(r=>{
     const actor=escapeHtml(r.actor_name||''); const target=escapeHtml(r.target_name||'');
     const people=target && target!==actor ? `${actor} → ${target}` : (target||actor);
     return `<div class="audit-row"><div class="audit-top"><span class="audit-action">${escapeHtml(r.action_type||'변경')}</span><span class="audit-time">${escapeHtml(formatAuditTime(r.created_at))}</span></div><div class="audit-people">${people}</div><div class="audit-summary">${escapeHtml(r.summary||'')}</div></div>`;
   }).join('');
+  updateAuditControls();
+}
+async function loadAuditPage(reset=false){
+  if(!state.me?.is_admin || auditLoading)return;
+  if(reset){
+    auditRows=[]; auditOffset=0; auditHasMore=false;
+    $('auditList').innerHTML='<div class="employee-empty">불러오는 중…</div>';
+  }
+  auditLoading=true; updateAuditControls();
+  try{
+    let fetched;
+    const requestCount=AUDIT_PAGE_SIZE+1;
+    if(!configured()) fetched=localAudit().slice(auditOffset,auditOffset+requestCount);
+    else fetched=await rpc('list_recent_audit_page',{p_token:state.sessionToken,p_limit:requestCount,p_offset:auditOffset});
+    fetched=Array.isArray(fetched)?fetched:[];
+    const page=fetched.slice(0,AUDIT_PAGE_SIZE);
+    auditRows.push(...page);
+    auditOffset+=page.length;
+    auditHasMore=fetched.length>AUDIT_PAGE_SIZE && auditOffset<AUDIT_RETENTION_LIMIT;
+    renderAudit();
+  }catch(e){
+    if(!auditRows.length) $('auditList').innerHTML='<div class="employee-empty">변경 내역을 불러오지 못했습니다.<br>Supabase의 최근 변경 1,000건 SQL 패치를 확인해 주세요.</div>';
+    else showToast('추가 변경 내역을 불러오지 못했습니다.','error');
+  }finally{
+    auditLoading=false; updateAuditControls();
+  }
+}
+async function openAudit(){
+  if(!state.me?.is_admin)return;
+  openBackdrop('auditBackdrop');
+  await loadAuditPage(true);
 }
 
 async function login(){
@@ -1677,8 +1714,16 @@ function populateAttendanceListEmployees(){
 }
 function renderAttendanceList(){
   const employeeId=state.me?.is_admin?Number($('attendanceListEmployee').value):Number(state.me?.employee_id);
-  const rows=attendanceListRows.filter(r=>Number(r.employee_id)===employeeId).sort((a,b)=>String(b.start_date).localeCompare(String(a.start_date))||Number(b.id)-Number(a.id));
-  $('attendanceListCount').textContent=`총 ${rows.length}건 · 최근순`;
+  const today=todayKey();
+  const dayDelta=key=>{ const {y,m,d}=parseDateKey(key); const t=parseDateKey(today); return Math.round((Date.UTC(y,m,d)-Date.UTC(t.y,t.m,t.d))/86400000); };
+  const rows=attendanceListRows.filter(r=>Number(r.employee_id)===employeeId).sort((a,b)=>{
+    const da=dayDelta(a.start_date), db=dayDelta(b.start_date);
+    const aa=Math.abs(da), ab=Math.abs(db);
+    if(aa!==ab) return aa-ab;
+    if((da>=0)!==(db>=0)) return da>=0?-1:1;
+    return String(a.start_date).localeCompare(String(b.start_date))||Number(b.id)-Number(a.id);
+  });
+  $('attendanceListCount').textContent=`총 ${rows.length}건 · 가까운 날짜순`;
   if(!rows.length){ $('attendanceListBody').innerHTML='<div class="attendance-list-empty">등록된 근태가 없습니다.</div>'; return; }
   $('attendanceListBody').innerHTML=rows.map(r=>{
     const dateText=r.start_date===r.end_date?r.start_date:`${r.start_date} ~ ${r.end_date}`;
@@ -1987,7 +2032,7 @@ function wire(){
   $('attendanceTypeBtn').addEventListener('click',openTypePicker);
   $('typeGrid').addEventListener('click',e=>{const b=e.target.closest('[data-type]');if(b)chooseAttendanceType(b.dataset.type)});
   $('loginBtn').addEventListener('click',login); $('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter'){if($('loginName').value.trim()===ADMIN_NAME)$('loginAdminPin').focus();else login()}}); $('loginAdminPin').addEventListener('keydown',e=>{if(e.key==='Enter')login()}); $('loginName').addEventListener('input',toggleAdminPinField); $('loginName').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPin').focus()});
-  $('logoutBtn').addEventListener('click',()=>logout(true)); $('refreshBtn').addEventListener('click',refresh); $('employeeManageBtn').addEventListener('click',openEmployeeManager); $('auditBtn').addEventListener('click',openAudit); $('refreshAuditBtn').addEventListener('click',openAudit); $('capacityBtn').addEventListener('click',openCapacity); $('refreshCapacityBtn').addEventListener('click',loadCapacity); $('backupBtn').addEventListener('click',manualBackup); $('backupSuccessOkBtn').addEventListener('click',()=>closeBackdrop('backupSuccessBackdrop')); $('restoreBackupBtn').addEventListener('click',openRestoreBackup); $('restoreFile').addEventListener('change',e=>prepareRestoreFile(e.target.files?.[0])); $('confirmRestoreBtn').addEventListener('click',restoreBackupAttendance); $('restoreSuccessOkBtn').addEventListener('click',()=>closeBackdrop('restoreSuccessBackdrop')); $('addEmployeeBtn').addEventListener('click',()=>openEmployeeAction('add')); $('resetCurrentPinsBtn').addEventListener('click',openResetCurrentPins); $('confirmResetPinsBtn').addEventListener('click',resetCurrentPins); $('resetPinsSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetPinsSuccessBackdrop')); $('saveEmployeeActionBtn').addEventListener('click',saveEmployeeAction); $('employeeSuccessOkBtn').addEventListener('click',()=>closeBackdrop('employeeSuccessBackdrop')); $('resetAllBtn').addEventListener('click',openResetAll); $('confirmResetBtn').addEventListener('click',resetAllAttendance); $('resetSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetSuccessBackdrop'));
+  $('logoutBtn').addEventListener('click',()=>logout(true)); $('refreshBtn').addEventListener('click',refresh); $('employeeManageBtn').addEventListener('click',openEmployeeManager); $('auditBtn').addEventListener('click',openAudit); $('refreshAuditBtn').addEventListener('click',()=>loadAuditPage(true)); $('auditMoreBtn').addEventListener('click',()=>loadAuditPage(false)); $('capacityBtn').addEventListener('click',openCapacity); $('refreshCapacityBtn').addEventListener('click',loadCapacity); $('backupBtn').addEventListener('click',manualBackup); $('backupSuccessOkBtn').addEventListener('click',()=>closeBackdrop('backupSuccessBackdrop')); $('restoreBackupBtn').addEventListener('click',openRestoreBackup); $('restoreFile').addEventListener('change',e=>prepareRestoreFile(e.target.files?.[0])); $('confirmRestoreBtn').addEventListener('click',restoreBackupAttendance); $('restoreSuccessOkBtn').addEventListener('click',()=>closeBackdrop('restoreSuccessBackdrop')); $('addEmployeeBtn').addEventListener('click',()=>openEmployeeAction('add')); $('resetCurrentPinsBtn').addEventListener('click',openResetCurrentPins); $('confirmResetPinsBtn').addEventListener('click',resetCurrentPins); $('resetPinsSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetPinsSuccessBackdrop')); $('saveEmployeeActionBtn').addEventListener('click',saveEmployeeAction); $('employeeSuccessOkBtn').addEventListener('click',()=>closeBackdrop('employeeSuccessBackdrop')); $('resetAllBtn').addEventListener('click',openResetAll); $('confirmResetBtn').addEventListener('click',resetAllAttendance); $('resetSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetSuccessBackdrop'));
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;renderTabs();renderCalendar()}));
   $('prevMonth').addEventListener('click',()=>moveMonth(-1)); $('todayBtn').addEventListener('click',goToday); $('nextMonth').addEventListener('click',()=>moveMonth(1)); $('monthTitle').addEventListener('click',openMonthPicker);
   $('addAttendanceBtn').addEventListener('click',()=>{if(state.view==='mine')openForm(state.selectedDate)}); $('saveAttendanceBtn').addEventListener('click',saveAttendance);
