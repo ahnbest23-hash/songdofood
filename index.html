@@ -126,6 +126,7 @@
   .shift-day{background:var(--yellow);color:#111827}.shift-day2{background:var(--teal);color:#fff;font-size:calc(13px * var(--text-scale,1))}.shift-night{background:var(--night);color:#fff}
   .shift-off{font-size:calc(17px * var(--text-scale,1));font-weight:900;color:var(--off)}
   .att-dot{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-size:calc(7px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#f3e8ff;padding:2px 4px;border-radius:8px;white-space:nowrap}
+  .memo-mark{flex:0 0 auto;width:14px;height:14px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;background:#f3e8ff;color:#7c3aed;border:1px solid #ddd6fe;font-size:calc(8px * var(--text-scale,1));font-weight:950;line-height:1;box-shadow:0 1px 3px rgba(91,33,182,.08)}
   .availability{padding-top:3px;font-size:calc(8px * var(--text-scale,1));line-height:1.18;text-align:center;font-weight:800;color:#374151;word-break:keep-all;overflow-wrap:anywhere}
   .availability .name{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:1px 1px 0;padding:1px 2px;border-radius:4px}
   .availability .name.leader{background:#ede9fe;color:#5b21b6;border:1px solid #c4b5fd;font-weight:950}
@@ -213,6 +214,9 @@
   .self-pin-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .attendance-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#ecfeff;color:#0f766e;border:1px solid #a5f3fc;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .attendance-list{display:flex;flex-direction:column;gap:7px;margin-top:9px}.attendance-list-row{padding:10px 11px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.attendance-list-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.attendance-list-type{font-size:calc(13px * var(--text-scale,1));font-weight:900;color:#111827}.attendance-list-date{font-size:calc(11px * var(--text-scale,1));font-weight:850;color:#374151;line-height:1.4}.attendance-list-sub{margin-top:4px;font-size:calc(11px * var(--text-scale,1));color:#6b7280;line-height:1.4}.attendance-list-count{font-size:calc(11px * var(--text-scale,1));color:#6b7280;font-weight:800;margin:3px 2px 8px}.attendance-list-empty{padding:18px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}
+  .memo-list-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
+  .memo-detail-section{padding:11px;border-radius:15px;background:#faf7ff;border:1px solid #ede9fe;margin-bottom:10px}.memo-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.memo-detail-title{font-size:calc(13px * var(--text-scale,1));font-weight:950;color:#5b21b6}.memo-private-badge{font-size:calc(9px * var(--text-scale,1));font-weight:900;color:#7c3aed;background:#ede9fe;border-radius:999px;padding:3px 7px;white-space:nowrap}.memo-textarea{width:100%;min-height:92px;resize:vertical;border:1px solid #ddd6fe;border-radius:11px;background:#fff;color:#111827;padding:10px 11px;font:inherit;font-size:calc(14px * var(--text-scale,1));line-height:1.45;outline:none}.memo-textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.10)}.memo-meta{display:flex;justify-content:space-between;gap:8px;margin-top:5px;min-height:16px;font-size:calc(10px * var(--text-scale,1));color:#9ca3af}#memoDetailError{color:#dc2626;font-weight:750}.memo-detail-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px}.memo-delete-btn,.memo-close-btn,.memo-save-btn{padding:11px 8px;border-radius:11px;font-weight:900;font-size:calc(13px * var(--text-scale,1))}.memo-delete-btn{background:#fff1f2;color:#be123c}.memo-delete-btn:disabled{opacity:.4}.memo-close-btn{background:#eef2f7;color:#4b5563}.memo-save-btn{background:#7c3aed;color:#fff}
+  .memo-list-help{padding:9px 10px;border-radius:12px;background:#faf7ff;color:#6d28d9;font-size:calc(11px * var(--text-scale,1));font-weight:750;line-height:1.45;margin-bottom:9px}.memo-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-bottom:7px}.memo-search-row input{min-width:0}.memo-search-clear{padding:0 11px;border-radius:11px;background:#eef2f7;color:#4b5563;font-weight:850}.memo-list-count{font-size:calc(11px * var(--text-scale,1));font-weight:800;color:#6b7280;margin:4px 2px 8px}.memo-list{display:flex;flex-direction:column;gap:7px;max-height:50dvh;overflow:auto;padding-right:1px}.memo-list-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:7px;align-items:flex-start;padding:10px 10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}.memo-list-check{width:19px;height:19px;margin:2px 0 0 1px;accent-color:#7c3aed}.memo-list-date{font-size:calc(12px * var(--text-scale,1));font-weight:950;color:#5b21b6;margin-bottom:4px}.memo-list-text{font-size:calc(12px * var(--text-scale,1));line-height:1.45;color:#374151;white-space:pre-wrap;overflow-wrap:anywhere}.memo-list-empty{padding:20px 8px;text-align:center;color:#9ca3af;font-size:calc(12px * var(--text-scale,1))}.memo-list-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.memo-selected-delete{padding:12px;border-radius:12px;background:#fff1f2;color:#be123c;font-weight:900}.memo-selected-delete:disabled{opacity:.4}.memo-list-close{padding:12px;border-radius:12px;background:#eef2f7;color:#4b5563;font-weight:900}
   .text-size-open-btn{min-height:36px;padding:0 12px;border-radius:11px;background:#fff;color:#4b5563;border:1px solid #e5e7eb;font-size:calc(12px * var(--text-scale,1));font-weight:900;box-shadow:0 2px 7px rgba(0,0,0,.04)}
   .text-size-open-btn .level-label{margin-left:5px;color:#6d28d9}
   .text-size-levels{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:6px}
@@ -222,7 +226,7 @@
   .text-size-guide span:nth-child(2){text-align:center;color:#6b7280}.text-size-guide span:last-child{text-align:right}
   .loading-cover{position:fixed;inset:0;z-index:2000;background:rgba(255,255,255,.68);display:none;align-items:center;justify-content:center}.loading-cover.show{display:flex}.spinner{width:34px;height:34px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
   @media(max-width:520px){
-    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
+    .admin-tools{margin:-2px 0 10px}.admin-tools-toggle{min-width:61px;min-height:43px;padding:5px 8px}.admin-action-group{gap:5px}.view-tools{gap:5px;margin:-3px 0 9px}.view-tool-actions{gap:5px}.attendance-list-btn,.memo-list-btn,.self-pin-btn,.text-size-open-btn{min-height:35px;padding:0 9px;font-size:calc(11px * var(--text-scale,1))}.text-size-levels{gap:3px}.text-size-level{min-height:42px;font-size:calc(12px * var(--text-scale,1))}
     .employee-manage-actions{grid-template-columns:1fr;gap:7px}.reset-pins-btn{font-size:calc(12px * var(--text-scale,1));padding:11px 9px}
     .wrap{padding:10px 7px 28px}.card{border-radius:17px}.calendar-card{padding:10px 6px 11px}.title{font-size:calc(21px * var(--text-scale,1))}.calendar-toolbar{grid-template-columns:50px 1fr 44px 50px;gap:5px}.nav-btn{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.today-btn{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.month-title{font-size:calc(18px * var(--text-scale,1))}.day-cell{min-height:72px;padding:4px 2px}.shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.shift-day2{font-size:calc(12px * var(--text-scale,1))}.availability{font-size:calc(7.5px * var(--text-scale,1));line-height:1.24}.holiday-mini{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.day-num{font-size:calc(10px * var(--text-scale,1))}.backdrop{padding:5px}.modal{padding:12px 10px 13px;max-height:92dvh}.form-grid{grid-template-columns:1fr 1fr;gap:7px}.type-grid{gap:5px}.type-grid button{min-height:54px;font-size:calc(10px * var(--text-scale,1));padding:4px 1px}.date-picker-modal{padding:11px 7px 12px}.date-picker-toolbar{grid-template-columns:50px minmax(0,1fr) 44px 50px;gap:5px}.date-picker-nav,.date-picker-today,.date-picker-month-title{height:42px}.date-picker-nav{font-size:calc(12px * var(--text-scale,1));padding:0 2px}.date-picker-today{font-size:calc(11px * var(--text-scale,1));padding:0 2px}.date-picker-month-title{font-size:calc(18px * var(--text-scale,1))}.date-picker-cell{min-height:72px;padding:4px 2px}.date-picker-cell .shift-circle{width:33px;height:33px;font-size:calc(14px * var(--text-scale,1))}.date-picker-cell .shift-day2{font-size:calc(12px * var(--text-scale,1))}.date-picker-holiday{font-size:calc(6.5px * var(--text-scale,1));max-width:38px}.date-picker-daynum{font-size:calc(10px * var(--text-scale,1))}.date-picker-term{font-size:calc(6.5px * var(--text-scale,1));padding:2px 3px}}
   @media(max-width:370px){.availability{font-size:calc(7px * var(--text-scale,1))}.day-cell{min-height:70px}.calendar-toolbar{grid-template-columns:45px 1fr 40px 45px;gap:4px}.nav-btn,.today-btn{padding:0 1px;font-size:calc(10px * var(--text-scale,1))}}
@@ -261,7 +265,7 @@
     <button class="tab" data-view="all">전체 근무표</button>
   </div>
 
-  <div class="view-tools"><div class="view-tool-actions"><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
+  <div class="view-tools"><div class="view-tool-actions"><button id="memoListBtn" class="memo-list-btn">메모 모아보기</button><button id="attendanceListBtn" class="attendance-list-btn">내 근태 목록</button><button id="selfPinBtn" class="self-pin-btn">내 비밀번호 변경</button><button id="textSizeOpenBtn" class="text-size-open-btn">큰글자로 보기 <span id="textSizeLevelLabel" class="level-label">11단계</span></button></div></div>
 
   <div id="adminTools" class="admin-tools hidden">
     <button id="adminToolsToggle" class="admin-tools-toggle" type="button" aria-expanded="false" aria-controls="adminActionGroup"><span class="admin-toggle-label">관리자<br>기능</span><span class="admin-chevron">⌄</span></button>
@@ -280,12 +284,18 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-1946</div>
+  <div class="version">ver20260909-2011</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div id="detailTitle" class="modal-title"></div><button class="close-btn" data-close="detail">×</button></div>
+    <div id="memoDetailSection" class="memo-detail-section hidden">
+      <div class="memo-detail-head"><div class="memo-detail-title">개인 메모</div><span class="memo-private-badge">나만 보임</span></div>
+      <textarea id="memoText" class="memo-textarea" maxlength="1000" placeholder="이 날짜에 기억할 내용을 간단히 적어두세요."></textarea>
+      <div class="memo-meta"><span id="memoDetailError"></span><span id="memoCharCount">0/1000</span></div>
+      <div class="memo-detail-actions"><button id="deleteMemoBtn" class="memo-delete-btn" type="button">삭제</button><button id="closeMemoDetailBtn" class="memo-close-btn" type="button">닫기</button><button id="saveMemoBtn" class="memo-save-btn" type="button">저장</button></div>
+    </div>
     <div class="detail-section"><div class="detail-title">부분부재</div><div id="detailPartial" class="detail-list"></div></div>
     <div class="detail-section"><div class="detail-title">전일부재</div><div id="detailFull" class="detail-list"></div></div>
     <div id="detailActions" class="modal-actions"><button id="addAttendanceBtn" class="primary">＋ 근태 등록</button></div>
@@ -354,6 +364,17 @@
     <div id="attendanceListCount" class="attendance-list-count"></div>
     <div id="attendanceListBody" class="attendance-list"><div class="attendance-list-empty">불러오는 중…</div></div>
     <button id="refreshAttendanceListBtn" class="secondary" style="margin-top:10px">새로고침</button>
+  </div>
+</div>
+
+<div id="memoListBackdrop" class="backdrop" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">메모 모아보기</div><button class="close-btn" data-close="memoList">×</button></div>
+    <div class="memo-list-help">내 개인 메모만 표시됩니다. 날짜 빠른 순으로 정렬되며, 메모 내용이나 날짜로 검색할 수 있습니다.</div>
+    <div class="memo-search-row"><input id="memoSearch" type="search" autocomplete="off" placeholder="메모 내용 또는 날짜 검색 (예: 9/10)"><button id="memoSearchClearBtn" class="memo-search-clear" type="button">지우기</button></div>
+    <div id="memoListCount" class="memo-list-count"></div>
+    <div id="memoListBody" class="memo-list"><div class="memo-list-empty">불러오는 중…</div></div>
+    <div class="memo-list-actions"><button id="deleteSelectedMemosBtn" class="memo-selected-delete" type="button" disabled>선택 삭제</button><button class="memo-list-close" type="button" data-close="memoList">닫기</button></div>
   </div>
 </div>
 
@@ -443,7 +464,7 @@
 <div id="resetBackdrop" class="backdrop" aria-hidden="true">
   <div class="modal">
     <div class="modal-head"><div class="modal-title">전체 초기화</div><button class="close-btn" data-close="reset">×</button></div>
-    <div class="warning-box"><b>등록된 모든 직원의 근태가 삭제됩니다.</b><br>직원 계정과 근무패턴은 그대로 유지됩니다.<br><b>초기화 직전에 전체 근태 백업 파일을 자동으로 저장한 뒤 삭제합니다.</b></div>
+    <div class="warning-box"><b>등록된 모든 직원의 근태가 삭제됩니다.</b><br>직원 계정과 근무패턴은 그대로 유지됩니다.<br><b style="color:#6d28d9">개인 메모는 삭제되지 않고 그대로 유지됩니다.</b><br><b>초기화 직전에 전체 근태 백업 파일을 자동으로 저장한 뒤 삭제합니다.</b></div>
     <div class="field"><label for="resetAdminPin">관리자 2차 비밀번호</label><input id="resetAdminPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리"></div>
     <div id="resetError" class="form-error"></div>
     <button id="confirmResetBtn" class="danger-primary">전체 초기화 실행</button>
@@ -535,7 +556,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-1946';
+const APP_VERSION = 'ver20260909-2011';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -548,6 +569,7 @@ const LOCAL_DATA_KEY = 'staffAttendance_localData_v1';
 const LOCAL_EMPLOYEE_KEY = 'staffAttendance_localEmployees_v1';
 const TEXT_SIZE_KEY = 'staffAttendance_textSizeLevel_v2';
 const LOCAL_AUDIT_KEY = 'staffAttendance_localAudit_v1';
+const LOCAL_MEMO_KEY_PREFIX = 'staffAttendance_localMemos_v1_';
 const AUDIT_RETENTION_LIMIT = 1000;
 const AUDIT_PAGE_SIZE = 50;
 const TEXT_SIZE_SCALES = {1:0.750,2:0.780,3:0.810,4:0.840,5:0.870,6:0.900,7:0.930,8:0.950,9:0.970,10:0.985,11:1.000,12:1.050,13:1.100,14:1.150,15:1.200,16:1.260,17:1.320,18:1.380,19:1.450,20:1.530,21:1.620};
@@ -615,13 +637,15 @@ const CATEGORY_GROUP = {'팀장':'DAY','일근(사무)':'DAY','일근(현장)':'
 const $ = id => document.getElementById(id);
 const state = {
   sessionToken: localStorage.getItem(SESSION_KEY) || '',
-  me:null, employees:[], attendance:[], view:'mine', selectedDate:null,
+  me:null, employees:[], attendance:[], memos:[], memoBackendReady:null, view:'mine', selectedDate:null,
   year:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), month:new Date().getMonth(),
   pickerYear:Math.min(Math.max(new Date().getFullYear(),MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null, pinStatus:{}
 };
 
 let pendingRestoreBackup=null;
 let attendanceListRows=[];
+let memoListRows=[];
+let memoSelectedDates=new Set();
 let auditRows=[];
 let auditOffset=0;
 let auditHasMore=false;
@@ -1018,6 +1042,16 @@ function localAudit(){
   catch{ return []; }
 }
 function saveLocalAudit(rows){ localStorage.setItem(LOCAL_AUDIT_KEY,JSON.stringify(rows.slice(0,AUDIT_RETENTION_LIMIT))); }
+function localMemoKey(employeeId){ return `${LOCAL_MEMO_KEY_PREFIX}${Number(employeeId)||0}`; }
+function localMemos(employeeId=state.me?.employee_id){
+  try{ const rows=JSON.parse(localStorage.getItem(localMemoKey(employeeId))||'[]'); return Array.isArray(rows)?rows:[]; }
+  catch{ return []; }
+}
+function saveLocalMemos(rows,employeeId=state.me?.employee_id){ localStorage.setItem(localMemoKey(employeeId),JSON.stringify(rows)); }
+function normalizeMemoRows(rows){
+  return (Array.isArray(rows)?rows:[]).map(r=>({id:Number(r.id)||0,memo_date:String(r.memo_date||''),memo_text:String(r.memo_text||''),updated_at:r.updated_at||null})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.memo_date));
+}
+function memoForDate(key){ return state.memos.find(m=>m.memo_date===key)||null; }
 function pushLocalAudit(action,targetName,summary,targetEmployeeId=null){
   try{
     const rows=localAudit();
@@ -1221,9 +1255,10 @@ async function loadCapacity(){
       const recordsBytes=new Blob([localStorage.getItem(LOCAL_DATA_KEY)||'']).size;
       const employeeBytes=new Blob([localStorage.getItem(LOCAL_EMPLOYEE_KEY)||'']).size;
       const auditBytes=new Blob([localStorage.getItem(LOCAL_AUDIT_KEY)||'']).size;
-      const used=recordsBytes+employeeBytes+auditBytes;
+      const memoBytes=new Blob([localStorage.getItem(localMemoKey(state.me?.employee_id))||'']).size;
+      const used=recordsBytes+employeeBytes+auditBytes+memoBytes;
       renderCapacityMeter('db',used,500*1024*1024); renderCapacityMeter('storage',0,1024*1024*1024);
-      renderCapacityBreakdown([{table_name:'attendance_entries',bytes:recordsBytes},{table_name:'employees',bytes:employeeBytes},{table_name:'audit_logs',bytes:auditBytes}]);
+      renderCapacityBreakdown([{table_name:'attendance_entries',bytes:recordsBytes},{table_name:'employees',bytes:employeeBytes},{table_name:'audit_logs',bytes:auditBytes},{table_name:'personal_memos',bytes:memoBytes}]);
     }else{
       const raw=await rpc('get_capacity_usage',{p_token:state.sessionToken});
       const data=Array.isArray(raw)?raw[0]:raw;
@@ -1383,6 +1418,23 @@ async function loadEmployees(){
   state.employees=(data||[]).map(e=>({...e,id:Number(e.id),sort_order:Number(e.sort_order),is_admin:!!e.is_admin,active_from:e.active_from||'2026-01-01',active_to:e.active_to||null})).sort(employeeDisplayCompare);
   populateTargetEmployees(todayKey(),state.me?.employee_id);
 }
+async function loadMonthMemos(from,to){
+  if(!state.me){ state.memos=[]; return; }
+  if(!configured()){
+    state.memos=normalizeMemoRows(localMemos()).filter(m=>(!from||m.memo_date>=from)&&(!to||m.memo_date<=to));
+    state.memoBackendReady=true;
+    return;
+  }
+  try{
+    const rows=await rpc('list_my_memos',{p_token:state.sessionToken,p_from:from||null,p_to:to||null});
+    state.memos=normalizeMemoRows(rows);
+    state.memoBackendReady=true;
+  }catch(e){
+    state.memos=[];
+    state.memoBackendReady=false;
+  }
+}
+
 async function loadMonthData(silent=false){
   if(state.refreshing) return; state.refreshing=true;
   if(!silent) $('statusLine').textContent='불러오는 중…';
@@ -1395,6 +1447,7 @@ async function loadMonthData(silent=false){
       data=await rpc('list_attendance',{p_token:state.sessionToken,p_from:from,p_to:to});
     }
     state.attendance=(data||[]).map(r=>({...r,id:Number(r.id),employee_id:Number(r.employee_id),attendance_type:normalizeAttendanceType(r.attendance_type)}));
+    await loadMonthMemos(from,to);
     $('statusLine').textContent=configured()?'':'테스트 모드 · 이 기기에만 저장';
   }catch(e){
     $('statusLine').textContent='데이터를 불러오지 못했습니다.';
@@ -1408,6 +1461,7 @@ async function refresh(){
     renderCalendar();
     if(state.selectedDate && $('detailBackdrop').classList.contains('open')) renderDetail(state.selectedDate);
     if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
+    if($('memoListBackdrop')?.classList.contains('open')) await loadMemoList(false);
   }catch(e){
     const msg=String(e?.message||'');
     $('statusLine').textContent='데이터를 새로고침하지 못했습니다.';
@@ -1417,7 +1471,7 @@ async function refresh(){
 async function logout(callServer=true){
   await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
-  localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[];
+  localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.memos=[]; state.memoBackendReady=null;
   closeAll(); $('appView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
 }
 
@@ -1425,6 +1479,7 @@ function render(){ renderTabs(); renderCalendar(); }
 function renderTabs(){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===state.view));
   $('legend').classList.add('hidden');
+  if($('memoListBtn')) $('memoListBtn').classList.toggle('hidden',state.view!=='mine');
 }
 function renderCalendar(){
   $('monthTitle').textContent=`${state.year}년 ${state.month+1}월`;
@@ -1442,7 +1497,8 @@ function renderCalendar(){
     }else{
       const names=availableEmployees(key); body=names.length?`<div class="availability">${names.map(e=>`<span class="name ${availabilityNameClass(e,key)}">${e.category==='팀장'?'★ ':''}${escapeHtml(e.display_name)}</span>`).join('')}</div>`:'<div class="availability empty">-</div>';
     }
-    html+=`<button type="button" class="${cls}" data-date="${key}"><div class="day-head"><span class="day-num">${d}</span>${holiday?`<span class="holiday-mini">${escapeHtml(holiday)}</span>`:''}</div>${body}</button>`;
+    const memoMark=(state.view==='mine'&&memoForDate(key))?'<span class="memo-mark" title="개인 메모 있음" aria-label="개인 메모 있음">✎</span>':'';
+    html+=`<button type="button" class="${cls}" data-date="${key}"><div class="day-head"><span class="day-num">${d}</span>${memoMark}${holiday?`<span class="holiday-mini">${escapeHtml(holiday)}</span>`:''}</div>${body}</button>`;
   }
   $('calendarGrid').innerHTML=html;
   $('calendarGrid').querySelectorAll('[data-date]').forEach(el=>el.addEventListener('click',()=>openDetail(el.dataset.date)));
@@ -1460,8 +1516,11 @@ function closeAll(){ document.querySelectorAll('.backdrop.open').forEach(b=>{b.c
 function openDetail(key){ state.selectedDate=key; renderDetail(key); openBackdrop('detailBackdrop'); }
 function renderDetail(key){
   $('detailTitle').textContent=formatDateKR(key);
+  const mineView=state.view==='mine';
+  $('memoDetailSection').classList.toggle('hidden',!mineView);
+  if(mineView) renderMemoDetail(key);
   // 전체 근무표는 조회 전용: 근태 등록/수정/삭제는 내 근무표에서만 가능
-  $('detailActions').classList.toggle('hidden',state.view!=='mine');
+  $('detailActions').classList.toggle('hidden',!mineView);
   let records=recordsForDate(key);
   // 일반 직원의 내 근무표에서는 본인 근태만 표시한다. 관리자는 전체 직원 근태를 관리할 수 있다.
   if(state.view==='mine' && !state.me.is_admin){
@@ -1477,6 +1536,94 @@ function renderDetail(key){
   $('detailPartial').innerHTML=renderAttendanceRows(partial,key);
   $('detailFull').innerHTML=renderAttendanceRows(full,key);
 }
+function renderMemoDetail(key){
+  const memo=memoForDate(key);
+  $('memoText').value=memo?.memo_text||'';
+  $('memoCharCount').textContent=`${$('memoText').value.length}/1000`;
+  $('deleteMemoBtn').disabled=!memo;
+  $('memoDetailError').textContent=state.memoBackendReady===false&&configured()?'메모 SQL 패치를 먼저 적용해 주세요.':'';
+}
+async function saveSelectedDateMemo(){
+  const key=state.selectedDate; if(!key||state.view!=='mine')return;
+  const text=$('memoText').value.trim(); $('memoDetailError').textContent='';
+  if(!text){ $('memoDetailError').textContent='메모 내용을 입력해 주세요.'; return; }
+  if(text.length>1000){ $('memoDetailError').textContent='메모는 1,000자까지 입력할 수 있습니다.'; return; }
+  showLoading(true);
+  try{
+    if(!configured()){
+      const rows=normalizeMemoRows(localMemos()); const idx=rows.findIndex(m=>m.memo_date===key);
+      const row={id:idx>=0?rows[idx].id:(rows.reduce((mx,r)=>Math.max(mx,Number(r.id)||0),0)+1),memo_date:key,memo_text:text,updated_at:new Date().toISOString()};
+      if(idx>=0) rows[idx]=row; else rows.push(row); saveLocalMemos(rows);
+    }else{
+      await rpc('save_my_memo',{p_token:state.sessionToken,p_date:key,p_text:text});
+    }
+    const {from,to}=monthBounds(state.year,state.month); await loadMonthMemos(from,to);
+    renderCalendar(); renderMemoDetail(key); showToast('✓ 개인 메모를 저장했습니다.','success');
+    if($('memoListBackdrop').classList.contains('open')) await loadMemoList(false);
+  }catch(e){
+    const msg=String(e.message||'');
+    $('memoDetailError').textContent=(msg.includes('save_my_memo')||msg.includes('function')||msg.includes('schema cache'))?'메모 SQL 패치를 먼저 적용해 주세요.':(msg.includes('MEMO_TOO_LONG')?'메모는 1,000자까지 입력할 수 있습니다.':(msg||'메모를 저장하지 못했습니다.'));
+  }finally{ showLoading(false); }
+}
+async function deleteSelectedDateMemo(){
+  const key=state.selectedDate; const memo=key?memoForDate(key):null; if(!memo||state.view!=='mine')return;
+  if(!confirm(`${formatDateKR(key)} 메모를 삭제할까요?`))return;
+  showLoading(true);
+  try{
+    if(!configured()){ saveLocalMemos(normalizeMemoRows(localMemos()).filter(m=>m.memo_date!==key)); }
+    else await rpc('delete_my_memo',{p_token:state.sessionToken,p_date:key});
+    const {from,to}=monthBounds(state.year,state.month); await loadMonthMemos(from,to);
+    renderCalendar(); renderMemoDetail(key); showToast('메모를 삭제했습니다.','success');
+    if($('memoListBackdrop').classList.contains('open')) await loadMemoList(false);
+  }catch(e){ $('memoDetailError').textContent=String(e.message||'메모를 삭제하지 못했습니다.'); }
+  finally{ showLoading(false); }
+}
+function memoSearchHaystack(m){
+  const {m:month,d}=parseDateKey(m.memo_date);
+  return `${m.memo_date} ${m.memo_date.replaceAll('-','.')} ${m.memo_date.replaceAll('-','/')} ${month+1}/${d} ${month+1}월 ${d}일 ${formatDateKR(m.memo_date)} ${m.memo_text}`.toLowerCase();
+}
+function updateMemoDeleteButton(){
+  const n=memoSelectedDates.size; const btn=$('deleteSelectedMemosBtn');
+  btn.disabled=n===0; btn.textContent=n?`선택 삭제 (${n}건)`:'선택 삭제';
+}
+function renderMemoList(){
+  const query=$('memoSearch').value.trim().toLowerCase();
+  const rows=memoListRows.slice().sort((a,b)=>a.memo_date.localeCompare(b.memo_date)||a.id-b.id).filter(m=>!query||memoSearchHaystack(m).includes(query));
+  $('memoListCount').textContent=query?`전체 ${memoListRows.length}건 · 검색 ${rows.length}건`:`총 ${memoListRows.length}건 · 날짜 빠른 순`;
+  if(!rows.length){ $('memoListBody').innerHTML=`<div class="memo-list-empty">${query?'검색 결과가 없습니다.':'아직 저장한 메모가 없습니다.'}</div>`; updateMemoDeleteButton(); return; }
+  $('memoListBody').innerHTML=rows.map(m=>`<label class="memo-list-row"><input class="memo-list-check" type="checkbox" data-memo-check="${m.memo_date}" ${memoSelectedDates.has(m.memo_date)?'checked':''}><div><div class="memo-list-date">${escapeHtml(formatDateKR(m.memo_date))}</div><div class="memo-list-text">${escapeHtml(m.memo_text)}</div></div></label>`).join('');
+  updateMemoDeleteButton();
+}
+async function loadMemoList(resetSelection=true){
+  if(resetSelection) memoSelectedDates.clear();
+  $('memoListBody').innerHTML='<div class="memo-list-empty">불러오는 중…</div>';
+  try{
+    if(!configured()){ memoListRows=normalizeMemoRows(localMemos()); state.memoBackendReady=true; }
+    else{ memoListRows=normalizeMemoRows(await rpc('list_my_memos',{p_token:state.sessionToken,p_from:null,p_to:null})); state.memoBackendReady=true; }
+    renderMemoList();
+  }catch(e){
+    state.memoBackendReady=false; memoListRows=[];
+    $('memoListCount').textContent=''; $('memoListBody').innerHTML='<div class="memo-list-empty">메모 기능을 사용하려면 Supabase에 개인 메모 SQL 패치를 먼저 실행해 주세요.</div>'; updateMemoDeleteButton();
+  }
+}
+async function openMemoList(){
+  if(!state.me||state.view!=='mine')return;
+  $('memoSearch').value=''; memoSelectedDates.clear(); openBackdrop('memoListBackdrop'); await loadMemoList(true);
+}
+async function deleteSelectedMemos(){
+  const dates=[...memoSelectedDates].sort(); if(!dates.length)return;
+  if(!confirm(`선택한 개인 메모 ${dates.length}건을 삭제할까요?`))return;
+  showLoading(true);
+  try{
+    if(!configured()){ const set=new Set(dates); saveLocalMemos(normalizeMemoRows(localMemos()).filter(m=>!set.has(m.memo_date))); }
+    else await rpc('delete_my_memos',{p_token:state.sessionToken,p_dates:dates});
+    memoSelectedDates.clear(); await loadMemoList(false); const {from,to}=monthBounds(state.year,state.month); await loadMonthMemos(from,to); renderCalendar();
+    if(state.selectedDate&&$('detailBackdrop').classList.contains('open')) renderMemoDetail(state.selectedDate);
+    showToast(`메모 ${dates.length}건을 삭제했습니다.`,'success');
+  }catch(e){ alert(String(e.message||'선택한 메모를 삭제하지 못했습니다.')); }
+  finally{ showLoading(false); }
+}
+
 function renderAttendanceRows(list,key){
   if(!list.length) return '<div class="empty-msg">없음</div>';
   return list.map(r=>{
@@ -1961,7 +2108,7 @@ async function resetAllAttendance(){
   $('resetError').textContent='';
   const pin=$('resetAdminPin').value.trim();
   if(!/^\d{4}$/.test(pin)){ $('resetError').textContent='관리자 2차 비밀번호를 입력해 주세요.'; return; }
-  if(!confirm('정말 모든 직원의 근태를 초기화할까요?\n\n초기화 직전에 전체 근태 백업 파일이 자동 저장됩니다.')) return;
+  if(!confirm('정말 모든 직원의 근태를 초기화할까요?\n\n개인 메모는 삭제되지 않고 그대로 유지됩니다.\n초기화 직전에 전체 근태 백업 파일이 자동 저장됩니다.')) return;
   showLoading(true);
   try{
     // 비밀번호를 먼저 확인한 뒤 백업을 저장하고, 백업 성공 후에만 초기화합니다.
@@ -1982,7 +2129,7 @@ async function resetAllAttendance(){
     state.attendance=[]; state.selectedDate=null;
     closeAll(); await loadMonthData(true); renderCalendar();
     $('statusLine').textContent='전체 근태가 초기화되었습니다.';
-    $('resetSuccessMessage').innerHTML=`전체 근태가 초기화되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">초기화 전 백업 파일이 저장되었습니다.<br>${escapeHtml(backupName)}</span>`;
+    $('resetSuccessMessage').innerHTML=`전체 근태가 초기화되었습니다.<br><span style="display:block;margin-top:5px;font-size:.82em;font-weight:800;color:#6d28d9">개인 메모는 그대로 유지되었습니다.</span><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#047857">초기화 전 백업 파일이 저장되었습니다.<br>${escapeHtml(backupName)}</span>`;
     openBackdrop('resetSuccessBackdrop');
   }catch(e){
     const msg=String(e.message||'');
@@ -2021,6 +2168,15 @@ function toggleAdminTools(){
 function wire(){
   populateTypeOptions();
   $('adminToolsToggle').addEventListener('click',toggleAdminTools);
+  $('memoListBtn').addEventListener('click',openMemoList);
+  $('memoSearch').addEventListener('input',renderMemoList);
+  $('memoSearchClearBtn').addEventListener('click',()=>{$('memoSearch').value='';renderMemoList();$('memoSearch').focus()});
+  $('memoListBody').addEventListener('change',e=>{const c=e.target.closest('[data-memo-check]');if(!c)return;const key=c.dataset.memoCheck;if(c.checked)memoSelectedDates.add(key);else memoSelectedDates.delete(key);updateMemoDeleteButton()});
+  $('deleteSelectedMemosBtn').addEventListener('click',deleteSelectedMemos);
+  $('saveMemoBtn').addEventListener('click',saveSelectedDateMemo);
+  $('deleteMemoBtn').addEventListener('click',deleteSelectedDateMemo);
+  $('closeMemoDetailBtn').addEventListener('click',()=>closeBackdrop('detailBackdrop'));
+  $('memoText').addEventListener('input',()=>{$('memoCharCount').textContent=`${$('memoText').value.length}/1000`;$('memoDetailError').textContent=''});
   $('attendanceListBtn').addEventListener('click',openAttendanceList);
   $('refreshAttendanceListBtn').addEventListener('click',()=>loadAttendanceList(true));
   $('attendanceListEmployee').addEventListener('change',renderAttendanceList);
