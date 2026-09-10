@@ -307,7 +307,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260910-1031</div>
+  <div class="version">ver20260910-1130</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -617,7 +617,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260910-1031';
+const APP_VERSION = 'ver20260910-1130';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -1770,9 +1770,30 @@ function shiftMarkup(shift){
   return '<div class="shift-wrap"><span class="shift-off">휴</span></div>';
 }
 
-function openBackdrop(id){ $(id).classList.add('open'); $(id).setAttribute('aria-hidden','false'); document.body.classList.add('modal-open'); }
-function closeBackdrop(id){ $(id).classList.remove('open'); $(id).setAttribute('aria-hidden','true'); if(!document.querySelector('.backdrop.open')) document.body.classList.remove('modal-open'); }
-function closeAll(){ document.querySelectorAll('.backdrop.open').forEach(b=>{b.classList.remove('open');b.setAttribute('aria-hidden','true')}); document.body.classList.remove('modal-open'); }
+function openBackdrop(id){
+  const el=$(id); if(!el)return;
+  // 이미 열린 팝업 위에 새 팝업이 항상 올라오도록 계층을 동적으로 정한다.
+  // 예: 근태 목록 → 수정, 근태 수정 → 날짜/종류 선택.
+  const maxZ=[...document.querySelectorAll('.backdrop.open')].reduce((m,b)=>{
+    const z=Number.parseInt(getComputedStyle(b).zIndex,10);
+    return Math.max(m,Number.isFinite(z)?z:1000);
+  },1000);
+  el.style.zIndex=String(maxZ+10);
+  el.classList.add('open');
+  el.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+function closeBackdrop(id){
+  const el=$(id); if(!el)return;
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden','true');
+  el.style.zIndex='';
+  if(!document.querySelector('.backdrop.open')) document.body.classList.remove('modal-open');
+}
+function closeAll(){
+  document.querySelectorAll('.backdrop.open').forEach(b=>{b.classList.remove('open');b.setAttribute('aria-hidden','true');b.style.zIndex=''});
+  document.body.classList.remove('modal-open');
+}
 function openDetail(key){ state.selectedDate=key; renderDetail(key); openBackdrop('detailBackdrop'); }
 function renderDetail(key){
   $('detailTitle').textContent=formatDateKR(key);
