@@ -304,7 +304,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260909-2323</div>
+  <div class="version">ver20260910-0158</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -346,14 +346,14 @@
       <div class="field"><label id="startDateLabel" for="startDate">날짜</label><input id="startDate" class="attendance-date-input" type="text" inputmode="none" readonly autocomplete="off" placeholder="날짜 선택" aria-haspopup="dialog"></div>
       <div id="endDateField" class="field hidden"><label for="endDate">종료일</label><input id="endDate" class="attendance-date-input" type="text" inputmode="none" readonly autocomplete="off" placeholder="종료일 선택" aria-haspopup="dialog"></div>
     </div>
-    <div class="field"><label>부재 방식</label><div class="mode-toggle"><button type="button" class="mode-btn active" data-mode="all_day">전일</button><button type="button" class="mode-btn" data-mode="time">시간 지정</button></div></div>
+    <div class="field"><label>부재 방식</label><div class="mode-toggle"><button type="button" class="mode-btn active" data-mode="all_day">하루 전체</button><button type="button" class="mode-btn" data-mode="time">시간 지정</button></div></div>
     <div id="timeFields" class="hidden">
       <div class="attendance-time-grid">
         <label class="attendance-time-block"><span>시작시간</span><div class="attendance-time-parts"><input id="startHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="시작 시"><b class="attendance-time-colon">:</b><input id="startMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="시작 분"></div></label>
         <span class="attendance-time-wave">~</span>
         <label class="attendance-time-block"><span>종료시간</span><div class="attendance-time-parts"><input id="endHour" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="종료 시"><b class="attendance-time-colon">:</b><input id="endMinute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" aria-label="종료 분"></div></label>
       </div>
-      <div id="rangeTimeHelp" class="attendance-range-help hidden">기간 + 시간 지정은 첫날 시작시간~18:00, 중간 날짜는 전일, 마지막 날 09:00~종료시간으로 처리합니다. 09:00~18:00 전체를 쉬는 날은 전일부재로 집계됩니다.</div>
+      <div id="rangeTimeHelp" class="attendance-range-help hidden">전체를 쉬는 날은 전일부재로 집계됩니다.</div>
     </div>
     <div id="formError" class="form-error"></div>
     <button id="saveAttendanceBtn" class="primary">저장</button>
@@ -615,7 +615,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260909-2323';
+const APP_VERSION = 'ver20260910-0158';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 
 const MIN_YEAR = 2026;
@@ -2048,6 +2048,8 @@ function setDateMode(mode){
   $('attendanceDateGrid').classList.toggle('range',state.dateMode==='range');
   $('endDateField').classList.toggle('hidden',state.dateMode!=='range');
   $('startDateLabel').textContent=state.dateMode==='range'?'시작일':'날짜';
+  const allDayModeBtn=document.querySelector('.mode-btn[data-mode="all_day"]');
+  if(allDayModeBtn) allDayModeBtn.textContent=state.dateMode==='range'?'기간 전체':'하루 전체';
   $('rangeTimeHelp').classList.toggle('hidden',!(state.dateMode==='range'&&state.mode==='time'));
 }
 function parseDateKeyParts(value){
