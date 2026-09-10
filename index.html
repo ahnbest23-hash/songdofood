@@ -264,7 +264,7 @@
     <div id="adminPinField" class="field hidden"><label for="loginAdminPin">관리자 2차 비밀번호</label><input id="loginAdminPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리"></div>
     <button id="loginBtn" class="primary">로그인</button>
     <div id="loginError" class="error"></div>
-    <div id="setupNote" class="setup-note hidden">운영용 파일입니다. Supabase 연결값을 먼저 입력해 주세요.</div>
+    <div id="setupNote" class="setup-note hidden">서비스를 시작할 수 없습니다. 관리자에게 문의해 주세요.</div>
   </div>
 </section>
 
@@ -315,7 +315,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260910-1619</div>
+  <div class="version">ver20260910-1700</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -625,7 +625,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260910-1619';
+const APP_VERSION = 'ver20260910-1700';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 const SESSION_CHECK_TIMEOUT_MS = 10000; // 새로고침 시 세션 확인이 너무 오래 멈추지 않도록 제한
 const SESSION_RETRY_DELAYS_MS = [3000,5000,8000,15000,30000]; // 일시적 서버 지연 시 로그인 상태를 보존한 채 재확인
@@ -950,6 +950,11 @@ function isTransientRpcError(err){
   if([401,408,425,429,500,502,503,504].includes(status)) return true;
   const msg=errorText(err).toLowerCase();
   return ['failed to fetch','networkerror','network error','load failed','timeout','시간이 초과','gateway','temporarily unavailable','service unavailable','invalid jwt','jwt'].some(v=>msg.includes(v));
+}
+function userSafeServiceError(err,fallback='요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.'){
+  if(isConfirmedSessionExpired(err)) return '로그인 세션이 만료되었습니다. 다시 로그인해 주세요.';
+  if(isTransientRpcError(err)) return '서버 연결이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.';
+  return fallback;
 }
 function clearSessionRestoreRetry(resetAttempt=true){
   if(sessionRestoreTimer){ clearTimeout(sessionRestoreTimer); sessionRestoreTimer=null; }
@@ -1399,7 +1404,7 @@ async function manualBackup(){
     $('backupSuccessMessage').innerHTML=`근태 <b>${count}건</b> · 휴근 <b>${hwCount}건</b> · 최근 변경내역 <b>${auditCount}건</b>의 백업 파일이 저장되었습니다.<br><span style="display:block;margin-top:6px;font-size:.82em;font-weight:700;color:#1d4ed8">${escapeHtml(backupName)}</span><span style="display:block;margin-top:7px;font-size:.78em;font-weight:700;color:#6d28d9">개인 메모는 개인 기록이므로 백업에 포함되지 않습니다.</span>`;
     openBackdrop('backupSuccessBackdrop');
     showToast('✓ 백업 파일이 저장되었습니다.','success');
-  }catch(e){ alert(String(e.message||'백업 파일을 만들지 못했습니다.')); }
+  }catch(e){ alert(userSafeServiceError(e,'백업 파일을 만들지 못했습니다. 잠시 후 다시 시도해 주세요.')); }
   finally{showLoading(false);}
 }
 function openRestoreBackup(){
@@ -1463,7 +1468,7 @@ async function restoreBackupAttendance(){
     const msg=String(e.message||'');
     if(msg.includes('ADMIN_PIN')) $('restoreError').textContent='관리자 2차 비밀번호가 맞지 않습니다.';
     else if(msg.includes('INVALID_AUDIT')) $('restoreError').textContent='백업 파일의 최근 변경내역 정보가 현재 직원 이력과 맞지 않습니다.';
-    else $('restoreError').textContent=msg||'백업을 복원하지 못했습니다.';
+    else $('restoreError').textContent=userSafeServiceError(e,'백업을 복원하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }finally{showLoading(false);}
 }
 
@@ -1524,8 +1529,8 @@ async function loadCapacity(){
     }
     $('capacityCheckedAt').textContent=`마지막 확인: ${new Date().toLocaleString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})}`;
   }catch(e){
-    const msg=String(e.message||'');
-    $('capacityBreakdown').innerHTML=`<div class="employee-empty">${escapeHtml(msg.includes('get_capacity_usage')||msg.includes('function')?'Supabase에 용량 조회 SQL 패치를 먼저 실행해 주세요.':(msg||'용량 정보를 불러오지 못했습니다.'))}</div>`;
+    const msg=userSafeServiceError(e,'용량 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    $('capacityBreakdown').innerHTML=`<div class="employee-empty">${escapeHtml(msg)}</div>`;
     $('dbCapacityValue').textContent='조회 실패'; $('storageCapacityValue').textContent='조회 실패';
   }
 }
@@ -1569,8 +1574,8 @@ async function loadAuditPage(reset=false){
     auditHasMore=fetched.length>AUDIT_PAGE_SIZE && auditOffset<AUDIT_RETENTION_LIMIT;
     renderAudit();
   }catch(e){
-    if(!auditRows.length) $('auditList').innerHTML='<div class="employee-empty">변경 내역을 불러오지 못했습니다.<br>Supabase의 최근 변경 1,000건 SQL 패치를 확인해 주세요.</div>';
-    else showToast('추가 변경 내역을 불러오지 못했습니다.','error');
+    if(!auditRows.length) $('auditList').innerHTML=`<div class="employee-empty">${escapeHtml(userSafeServiceError(e,'변경 내역을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'))}</div>`;
+    else showToast(userSafeServiceError(e,'추가 변경 내역을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'),'error');
   }finally{
     auditLoading=false; updateAuditControls();
   }
@@ -1633,7 +1638,7 @@ async function restoreSession(isRetry=false){
     clearSessionRestoreRetry();
     if(!configured()){
       $('setupNote').classList.remove('hidden');
-      $('setupNote').innerHTML='운영용 파일입니다. Supabase Project URL과 anon/publishable key를 입력한 뒤 사용하세요.';
+      $('setupNote').innerHTML='서비스를 시작할 수 없습니다. 관리자에게 문의해 주세요.';
     }
     return;
   }
@@ -1642,7 +1647,7 @@ async function restoreSession(isRetry=false){
   try{
     if(!configured()){
       $('setupNote').classList.remove('hidden');
-      $('setupNote').innerHTML='Supabase 연결이 필요합니다.';
+      $('setupNote').innerHTML='서비스 연결을 확인할 수 없습니다. 관리자에게 문의해 주세요.';
       const m=/^local:(\d+)$/.exec(state.sessionToken);
       if(!m) throw new Error('local_expired');
       const emp=localEmployees().find(e=>e.id===Number(m[1]) && employeeCanLoginLocal(e,todayKey()));
@@ -1950,7 +1955,7 @@ function renderMemoDetail(key){
   $('deleteMemoBtn').disabled=!memo || !writable;
   $('deleteMemoBtn').classList.toggle('hidden',!writable); $('saveMemoBtn').classList.toggle('hidden',!writable); $('memoDetailActions').classList.toggle('readonly',!writable);
   $('memoPrivateBadge').textContent=ro?'조회 전용':(writable?'나만 보임':'재직기간 외');
-  $('memoDetailError').textContent=ro?'발령 후 조회 전용입니다. 기존 메모는 확인만 가능합니다.':(!writable?'본인의 재직기간에 해당하는 날짜에만 메모를 저장·수정·삭제할 수 있습니다.':(state.memoBackendReady===false&&configured()?'메모 SQL 패치를 먼저 적용해 주세요.':''));
+  $('memoDetailError').textContent=ro?'발령 후 조회 전용입니다. 기존 메모는 확인만 가능합니다.':(!writable?'본인의 재직기간에 해당하는 날짜에만 메모를 저장·수정·삭제할 수 있습니다.':(state.memoBackendReady===false&&configured()?'메모 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.':''));
 }
 async function saveSelectedDateMemo(){
   const key=state.selectedDate; if(!key||state.view!=='mine')return;
@@ -1973,7 +1978,9 @@ async function saveSelectedDateMemo(){
     if($('memoListBackdrop').classList.contains('open')) await loadMemoList(false);
   }catch(e){
     const msg=String(e.message||'');
-    $('memoDetailError').textContent=(msg.includes('save_my_memo')||msg.includes('function')||msg.includes('schema cache'))?'메모 SQL 패치를 먼저 적용해 주세요.':(msg.includes('MEMO_TOO_LONG')?'메모는 1,000자까지 입력할 수 있습니다.':(msg.includes('MEMO_DATE_OUTSIDE_EMPLOYMENT')?'본인의 재직기간에 해당하는 날짜에만 메모를 저장할 수 있습니다.':(msg||'메모를 저장하지 못했습니다.')));
+    if(msg.includes('MEMO_TOO_LONG')) $('memoDetailError').textContent='메모는 1,000자까지 입력할 수 있습니다.';
+    else if(msg.includes('MEMO_DATE_OUTSIDE_EMPLOYMENT')) $('memoDetailError').textContent='본인의 재직기간에 해당하는 날짜에만 메모를 저장할 수 있습니다.';
+    else $('memoDetailError').textContent=userSafeServiceError(e,'메모를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }finally{ showLoading(false); }
 }
 async function deleteSelectedDateMemo(){
@@ -1988,7 +1995,7 @@ async function deleteSelectedDateMemo(){
     const {from,to}=monthBounds(state.year,state.month); await loadMonthMemos(from,to);
     renderCalendar(); renderMemoDetail(key); showToast('메모를 삭제했습니다.','success');
     if($('memoListBackdrop').classList.contains('open')) await loadMemoList(false);
-  }catch(e){ $('memoDetailError').textContent=String(e.message||'메모를 삭제하지 못했습니다.'); }
+  }catch(e){ $('memoDetailError').textContent=userSafeServiceError(e,'메모를 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.'); }
   finally{ showLoading(false); }
 }
 function memoSearchHaystack(m){
@@ -2022,7 +2029,7 @@ async function loadMemoList(resetSelection=true){
     renderMemoList();
   }catch(e){
     state.memoBackendReady=false; memoListRows=[];
-    $('memoListCount').textContent=''; $('memoListBody').innerHTML='<div class="memo-list-empty">메모 기능을 사용하려면 Supabase에 개인 메모 SQL 패치를 먼저 실행해 주세요.</div>'; updateMemoDeleteButton();
+    $('memoListCount').textContent=''; $('memoListBody').innerHTML=`<div class="memo-list-empty">${escapeHtml(userSafeServiceError(e,'메모 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'))}</div>`; updateMemoDeleteButton();
   }
 }
 async function openMemoList(){
@@ -2040,7 +2047,7 @@ async function deleteSelectedMemos(){
     memoSelectedDates.clear(); await loadMemoList(false); const {from,to}=monthBounds(state.year,state.month); await loadMonthMemos(from,to); renderCalendar();
     if(state.selectedDate&&$('detailBackdrop').classList.contains('open')) renderMemoDetail(state.selectedDate);
     showToast(`메모 ${dates.length}건을 삭제했습니다.`,'success');
-  }catch(e){ alert(String(e.message||'선택한 메모를 삭제하지 못했습니다.')); }
+  }catch(e){ alert(userSafeServiceError(e,'선택한 메모를 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.')); }
   finally{ showLoading(false); }
 }
 
@@ -2053,7 +2060,7 @@ function renderHolidayWorkDetail(key){
   $('holidayWorkChecked').disabled=ro||!target;
   $('deleteHolidayWorkBtn').disabled=!row||ro||!target;
   $('deleteHolidayWorkBtn').classList.toggle('hidden',ro); $('saveHolidayWorkBtn').classList.toggle('hidden',ro); $('holidayWorkActions').classList.toggle('readonly',ro);
-  $('holidayWorkError').textContent=!target?'해당 날짜에 재직 중인 일근 직원이 없습니다.':(ro?'발령 후 조회 전용입니다. 기존 휴근은 확인만 가능합니다.':(state.holidayWorkBackendReady===false&&configured()?'휴근 SQL 패치를 먼저 적용해 주세요.':''));
+  $('holidayWorkError').textContent=!target?'해당 날짜에 재직 중인 일근 직원이 없습니다.':(ro?'발령 후 조회 전용입니다. 기존 휴근은 확인만 가능합니다.':(state.holidayWorkBackendReady===false&&configured()?'휴근 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.':''));
   updateHolidayWorkResult();
 }
 function updateHolidayWorkResult(){
@@ -2092,7 +2099,12 @@ async function saveSelectedHolidayWork(){
     else await rpc('save_my_holiday_work',{p_token:state.sessionToken,p_date:key,p_start_time:st,p_end_time:et});
     await loadHolidayWorks();renderCalendar();renderHolidayWorkDetail(key);if($('holidayWorkListBackdrop').classList.contains('open'))await loadHolidayWorkList(false);if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();
     showToast(`✓ ${target.display_name} 휴근 ${formatHolidayHours(net)} 저장 완료`,'success');
-  }catch(e){const msg=String(e.message||'');$('holidayWorkError').textContent=(msg.includes('admin_save_holiday_work')||msg.includes('save_my_holiday_work')||msg.includes('function')||msg.includes('schema cache'))?'최종 구조 SQL 패치를 먼저 적용해 주세요.':(msg.includes('NOT_HOLIDAY')?'토·일요일 또는 공휴일에만 휴근을 등록할 수 있습니다.':(msg.includes('NOT_DAY_EMPLOYEE')?'일근(사무)/일근(현장) 직원만 사용할 수 있습니다.':(msg.includes('READ_ONLY')?'조회 전용 계정에서는 휴근을 변경할 수 없습니다.':msg)));
+  }catch(e){
+    const msg=String(e.message||'');
+    if(msg.includes('NOT_HOLIDAY')) $('holidayWorkError').textContent='토·일요일 또는 공휴일에만 휴근을 등록할 수 있습니다.';
+    else if(msg.includes('NOT_DAY_EMPLOYEE')) $('holidayWorkError').textContent='일근(사무)/일근(현장) 직원만 사용할 수 있습니다.';
+    else if(msg.includes('READ_ONLY')) $('holidayWorkError').textContent='조회 전용 계정에서는 휴근을 변경할 수 없습니다.';
+    else $('holidayWorkError').textContent=userSafeServiceError(e,'휴근을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }finally{showLoading(false);}
 }
 async function deleteSelectedHolidayWork(){
@@ -2105,7 +2117,7 @@ async function deleteSelectedHolidayWork(){
     else if(state.me.is_admin) await rpc('admin_delete_holiday_work',{p_token:state.sessionToken,p_employee_id:target.id,p_date:key});
     else await rpc('delete_my_holiday_work',{p_token:state.sessionToken,p_date:key});
     await loadHolidayWorks();renderCalendar();renderHolidayWorkDetail(key);if($('holidayWorkListBackdrop').classList.contains('open'))await loadHolidayWorkList(false);if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();showToast('휴근 기록을 삭제했습니다.','success');
-  }catch(e){$('holidayWorkError').textContent=String(e.message||'휴근을 삭제하지 못했습니다.');}finally{showLoading(false);}
+  }catch(e){$('holidayWorkError').textContent=userSafeServiceError(e,'휴근을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.');}finally{showLoading(false);}
 }
 function holidayWorkSearchHaystack(r){
   const {m,d}=parseDateKey(r.work_date);return `${r.work_date} ${r.work_date.replaceAll('-','.')} ${r.work_date.replaceAll('-','/')} ${m+1}/${d} ${m+1}월 ${d}일 ${formatDateKR(r.work_date)} ${timeShort(r.start_time)} ${timeShort(r.end_time)} ${formatHolidayHours(r.net_minutes)} 휴근`.toLowerCase();
@@ -2137,7 +2149,7 @@ async function loadHolidayWorkList(showSpinner=true){
     }else if(!configured())holidayWorkListRows=normalizeHolidayWorkRows(localHolidayWorks()).filter(r=>Number(r.employee_id)===Number(state.me.employee_id));
     else{const raw=await rpc('list_my_holiday_work',{p_token:state.sessionToken,p_from:null,p_to:null});holidayWorkListRows=normalizeHolidayWorkRows((raw||[]).map(r=>({...r,employee_id:Number(state.me.employee_id)})));}
     state.holidayWorkBackendReady=true;renderHolidayWorkList();
-  }catch(e){state.holidayWorkBackendReady=false;holidayWorkListRows=[];$('holidayWorkListCount').textContent='';$('holidayWorkListBody').innerHTML='<div class="holiday-work-list-empty">휴근 기능을 사용하려면 Supabase SQL 패치를 확인해 주세요.</div>';}
+  }catch(e){state.holidayWorkBackendReady=false;holidayWorkListRows=[];$('holidayWorkListCount').textContent='';$('holidayWorkListBody').innerHTML=`<div class="holiday-work-list-empty">${escapeHtml(userSafeServiceError(e,'휴근 정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'))}</div>`;}
 }
 async function openHolidayWorkList(){
   if(!state.me||state.view!=='mine'||!(isHolidayWorkEmployee(state.me)||state.me.is_admin))return;
@@ -2171,7 +2183,7 @@ async function deleteHolidayWorkListRow(row){
     if(state.selectedDate&&$('detailBackdrop').classList.contains('open'))renderDetail(state.selectedDate);
     if($('datePickerBackdrop').classList.contains('open'))renderAttendanceDatePicker();
     showToast('휴근 기록을 삭제했습니다.','success');
-  }catch(e){alert(String(e.message||'휴근 기록을 삭제하지 못했습니다.'));}
+  }catch(e){alert(userSafeServiceError(e,'휴근 기록을 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.'));}
   finally{showLoading(false);}
 }
 
@@ -2387,7 +2399,7 @@ async function saveAttendance(){
     }
     closeBackdrop('formBackdrop'); await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate); if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
     showToast(configured()?'✓ 저장 및 서버 동기화 완료':'✓ 이 기기에 저장되었습니다.','success');
-  }catch(e){ $('formError').textContent=e.message || '저장하지 못했습니다.'; }
+  }catch(e){ $('formError').textContent=userSafeServiceError(e,'근태를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.'); }
   finally{ showLoading(false); }
 }
 async function deleteRecord(id){
@@ -2408,7 +2420,7 @@ async function deleteRecord(id){
     await loadMonthData(true); renderCalendar(); if(state.selectedDate) renderDetail(state.selectedDate); if($('attendanceListBackdrop')?.classList.contains('open')) await loadAttendanceList(false);
     showToast(configured()?'✓ 삭제 및 서버 동기화 완료':'✓ 이 기기에서 삭제되었습니다.','success');
   }
-  catch(e){ showToast(e.message||'삭제하지 못했습니다.','error'); }
+  catch(e){ showToast(userSafeServiceError(e,'근태를 삭제하지 못했습니다. 잠시 후 다시 시도해 주세요.'),'error'); }
   finally{ showLoading(false); }
 }
 
@@ -2557,7 +2569,7 @@ async function resetCurrentPins(){
   }catch(e){
     const msg=String(e.message||'');
     if(msg.includes('ADMIN_PIN')) $('resetPinsError').textContent='관리자 2차 비밀번호가 맞지 않습니다.';
-    else $('resetPinsError').textContent=msg||'비밀번호를 초기화하지 못했습니다.';
+    else $('resetPinsError').textContent=userSafeServiceError(e,'비밀번호를 초기화하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }finally{ showLoading(false); }
 }
 async function openEmployeeManager(){ if(!state.me?.is_admin)return; state.pinStatus={}; renderEmployeeManager(); openBackdrop('employeeManageBackdrop'); await loadEmployeePinStatus(); renderEmployeeManager(); }
@@ -2665,14 +2677,16 @@ async function saveEmployeeAction(){
     $('employeeSuccessMessage').textContent=msg; openBackdrop('employeeSuccessBackdrop');
     showToast(configured()?'✓ 변경사항 서버 동기화 완료':'✓ 변경사항이 이 기기에 저장되었습니다.','success');
   }catch(e){
-    $('employeeActionError').textContent=String(e.message||'처리하지 못했습니다.')
+    const raw=String(e.message||'');
+    const known=raw
       .replace('DUPLICATE_ACTIVE_NAME','적용일에 같은 이름의 직원이 이미 재직 중입니다.')
-      .replace('DUPLICATE_NAME','동명이인 자동 구분 기능을 사용하려면 최종 구조 SQL 패치를 먼저 적용해 주세요.')
+      .replace('DUPLICATE_NAME','직원 정보를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.')
       .replace('INVALID_DATE','적용일을 확인해 주세요.')
       .replace('ADMIN_PROTECTED','관리자 계정은 변경할 수 없습니다.')
       .replace('CHANGE_ALREADY_SCHEDULED','이미 교체 또는 제외가 예약된 직원입니다.')
       .replace('ADMIN_PIN_INVALID','관리자 2차 비밀번호가 맞지 않습니다.')
       .replace('INVALID_PIN','새 로그인 비밀번호는 숫자 4자리로 입력해 주세요.');
+    $('employeeActionError').textContent=known!==raw?known:userSafeServiceError(e,'직원 정보를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }
   finally{ showLoading(false); }
 }
@@ -2749,7 +2763,7 @@ async function resetAllAttendance(){
   }catch(e){
     const msg=String(e.message||'');
     if(msg.includes('ADMIN_PIN')) $('resetError').textContent='관리자 2차 비밀번호가 맞지 않습니다.';
-    else $('resetError').textContent=msg || '초기화하지 못했습니다.';
+    else $('resetError').textContent=userSafeServiceError(e,'초기화하지 못했습니다. 잠시 후 다시 시도해 주세요.');
   }finally{ showLoading(false); }
 }
 
