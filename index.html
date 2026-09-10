@@ -37,6 +37,10 @@
   .primary:disabled{opacity:.45;cursor:default}
   .setup-note{margin-top:14px;padding:11px 12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:calc(12px * var(--text-scale,1));line-height:1.55}
   .error{margin-top:10px;color:var(--red);font-size:calc(13px * var(--text-scale,1));line-height:1.45;min-height:19px}
+  .login-persist-wrap{margin:-2px 0 13px;padding:10px 11px;border:1px solid #e5e7eb;border-radius:12px;background:#f8fafc}
+  .login-persist-row{display:flex;align-items:center;gap:8px;color:#374151;font-size:calc(13px * var(--text-scale,1));font-weight:850;cursor:pointer}
+  .login-persist-row input{width:18px;height:18px;margin:0;padding:0;accent-color:#2563eb;flex:0 0 auto}
+  .login-persist-note{margin:5px 0 0 26px;color:#9ca3af;font-size:calc(10px * var(--text-scale,1));font-weight:700;line-height:1.35}
   .admin-tools{display:block;margin:-2px 0 12px}
   .admin-tools-toggle{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:64px;min-height:46px;padding:6px 9px;border:1px solid #fecaca;border-radius:11px;background:#fff7f7;color:#991b1b;font-size:calc(12px * var(--text-scale,1));font-weight:900;line-height:1.05;text-align:center;box-shadow:0 2px 7px rgba(153,27,27,.06)}
   .admin-tools-toggle .admin-toggle-label{white-space:nowrap}
@@ -262,6 +266,10 @@
     <div class="field"><label for="loginName">로그인 이름</label><input id="loginName" autocomplete="username" placeholder="예: 안석근"></div>
     <div class="field"><label for="loginPin">비밀번호</label><input id="loginPin" type="password" inputmode="numeric" maxlength="4" autocomplete="current-password" placeholder="4자리"></div>
     <div id="adminPinField" class="field hidden"><label for="loginAdminPin">관리자 2차 비밀번호</label><input id="loginAdminPin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리"></div>
+    <div id="pcRememberWrap" class="login-persist-wrap hidden">
+      <label class="login-persist-row" for="pcRememberLogin"><input id="pcRememberLogin" type="checkbox"><span>이 컴퓨터에서 로그인 유지</span></label>
+      <div class="login-persist-note">개인 PC에서만 선택하세요.</div>
+    </div>
     <button id="loginBtn" class="primary">로그인</button>
     <div id="loginError" class="error"></div>
     <div id="setupNote" class="setup-note hidden">서비스를 시작할 수 없습니다. 관리자에게 문의해 주세요.</div>
@@ -315,7 +323,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260910-1700</div>
+  <div class="version">ver20260910-2243</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -625,7 +633,7 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260910-1700';
+const APP_VERSION = 'ver20260910-2243';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
 const SESSION_CHECK_TIMEOUT_MS = 10000; // 새로고침 시 세션 확인이 너무 오래 멈추지 않도록 제한
 const SESSION_RETRY_DELAYS_MS = [3000,5000,8000,15000,30000]; // 일시적 서버 지연 시 로그인 상태를 보존한 채 재확인
@@ -634,6 +642,7 @@ const MIN_YEAR = 2026;
 const MAX_YEAR = 2027;
 const SESSION_KEY = 'staffAttendance_session_v1';
 const ADMIN_UNLOCK_KEY = 'staffAttendance_admin2_ok_v1';
+const PC_REMEMBER_KEY = 'staffAttendance_pcRemember_v1';
 const USAGE_GUIDE_HIDE_KEY_PREFIX = 'staffAttendance_usageGuideHide_v1_';
 const USAGE_GUIDE_SESSION_KEY_PREFIX = 'staffAttendance_usageGuideShown_v1_';
 const ADMIN_NAME = '안석근';
@@ -709,8 +718,117 @@ const LOCAL_EMPLOYEES = []; // 운영용: 직원 계정/PIN은 Supabase DB에서
 const CATEGORY_GROUP = {'팀장':'DAY','일근(사무)':'DAY','일근(현장)':'DAY','A조':'A','B조':'B','C조':'C','D조':'D'};
 
 const $ = id => document.getElementById(id);
+
+// 로그인 보관 정책
+// - 휴대폰/태블릿: 개인기기로 보고 localStorage에 장기 보관
+// - PC: 기본 sessionStorage(브라우저 세션 동안만), 사용자가 직접 선택한 경우에만 localStorage에 장기 보관
+function detectMobileSessionDevice(){
+  try{
+    if(navigator.userAgentData?.mobile===true) return true;
+  }catch(e){}
+  const ua=String(navigator.userAgent||'');
+  if(/Android|iPhone|iPad|iPod|Mobile/i.test(ua)) return true;
+  // iPadOS가 데스크톱형 UA를 사용하는 경우
+  if(String(navigator.platform||'')==='MacIntel' && Number(navigator.maxTouchPoints||0)>1) return true;
+  return false;
+}
+const MOBILE_SESSION_DEVICE=detectMobileSessionDevice();
+
+function storageGet(storage,key){ try{ return storage.getItem(key)||''; }catch(e){ return ''; } }
+function storageSet(storage,key,value){ try{ storage.setItem(key,value); }catch(e){} }
+function storageRemove(storage,key){ try{ storage.removeItem(key); }catch(e){} }
+function storedSessionToken(){
+  const localToken=storageGet(localStorage,SESSION_KEY);
+  const temporaryToken=storageGet(sessionStorage,SESSION_KEY);
+  return MOBILE_SESSION_DEVICE ? (localToken||temporaryToken) : (temporaryToken||localToken);
+}
+function sessionIsPersistent(token=storedSessionToken()){
+  return !!token && storageGet(localStorage,SESSION_KEY)===token;
+}
+function adminUnlockMatches(token){
+  return !!token && (storageGet(localStorage,ADMIN_UNLOCK_KEY)===token || storageGet(sessionStorage,ADMIN_UNLOCK_KEY)===token);
+}
+function clearAdminUnlock(){
+  storageRemove(localStorage,ADMIN_UNLOCK_KEY);
+  storageRemove(sessionStorage,ADMIN_UNLOCK_KEY);
+}
+function storeAdminUnlock(token,persistent){
+  clearAdminUnlock();
+  if(!token) return;
+  storageSet(persistent?localStorage:sessionStorage,ADMIN_UNLOCK_KEY,token);
+}
+function clearStoredLoginSession(){
+  storageRemove(localStorage,SESSION_KEY);
+  storageRemove(sessionStorage,SESSION_KEY);
+  storageRemove(localStorage,PC_REMEMBER_KEY);
+  clearAdminUnlock();
+}
+function storeLoginSession(token,persistent){
+  storageRemove(localStorage,SESSION_KEY);
+  storageRemove(sessionStorage,SESSION_KEY);
+  if(token) storageSet(persistent?localStorage:sessionStorage,SESSION_KEY,token);
+  if(MOBILE_SESSION_DEVICE){
+    storageRemove(localStorage,PC_REMEMBER_KEY);
+  }else if(persistent){
+    storageSet(localStorage,PC_REMEMBER_KEY,'1');
+  }else{
+    storageRemove(localStorage,PC_REMEMBER_KEY);
+  }
+}
+function loginShouldPersist(){
+  if(MOBILE_SESSION_DEVICE) return true;
+  return !!$('pcRememberLogin')?.checked;
+}
+function setupLoginPersistenceUI(){
+  const wrap=$('pcRememberWrap');
+  if(!wrap) return;
+  wrap.classList.toggle('hidden',MOBILE_SESSION_DEVICE);
+  if($('pcRememberLogin')) $('pcRememberLogin').checked=!MOBILE_SESSION_DEVICE && storageGet(localStorage,PC_REMEMBER_KEY)==='1';
+}
+function ensureAdminUnlockForRestore(isAdmin,token){
+  if(!isAdmin) return true;
+  if(adminUnlockMatches(token)) return true;
+  // 기존 버전에서 관리자 2차 인증 표시(sessionStorage)만 사라진 모바일 세션을 1회 자연 복구한다.
+  // 서버가 유효한 관리자 세션 토큰임을 get_me로 확인한 뒤에만 실행된다.
+  if(MOBILE_SESSION_DEVICE && sessionIsPersistent(token)){
+    storeAdminUnlock(token,true);
+    return true;
+  }
+  return false;
+}
+function migrateLegacySessionForDevice(){
+  const localToken=storageGet(localStorage,SESSION_KEY);
+  const temporaryToken=storageGet(sessionStorage,SESSION_KEY);
+  const localAdmin=storageGet(localStorage,ADMIN_UNLOCK_KEY);
+  const temporaryAdmin=storageGet(sessionStorage,ADMIN_UNLOCK_KEY);
+
+  if(MOBILE_SESSION_DEVICE){
+    const token=localToken||temporaryToken;
+    if(token){
+      storageSet(localStorage,SESSION_KEY,token);
+      storageRemove(sessionStorage,SESSION_KEY);
+      if(localAdmin===token || temporaryAdmin===token) storeAdminUnlock(token,true);
+    }
+    storageRemove(localStorage,PC_REMEMBER_KEY);
+    return;
+  }
+
+  // 1700까지는 모든 PC 세션이 localStorage에 남아 있었다.
+  // 새 버전 첫 진입 시 기존 PC 세션은 현재 브라우저 세션으로 옮겨, 지금 쓰던 로그인은 유지하되 창을 완전히 닫은 뒤에는 남지 않게 한다.
+  const remembered=storageGet(localStorage,PC_REMEMBER_KEY)==='1';
+  if(!remembered && localToken){
+    const token=temporaryToken||localToken;
+    storageSet(sessionStorage,SESSION_KEY,token);
+    storageRemove(localStorage,SESSION_KEY);
+    storageRemove(localStorage,PC_REMEMBER_KEY);
+    if(localAdmin===localToken || temporaryAdmin===localToken) storeAdminUnlock(token,false);
+    else storageRemove(localStorage,ADMIN_UNLOCK_KEY);
+  }
+}
+migrateLegacySessionForDevice();
+
 const state = {
-  sessionToken: localStorage.getItem(SESSION_KEY) || '',
+  sessionToken: storedSessionToken(),
   me:null, employees:[], attendance:[], holidayWorks:[], holidayWorkBackendReady:null, memos:[], memoBackendReady:null, view:'mine', selectedDate:null,
   year:Math.min(Math.max(parseDateKey(todayKey()).y,MIN_YEAR),MAX_YEAR), month:parseDateKey(todayKey()).m,
   pickerYear:Math.min(Math.max(parseDateKey(todayKey()).y,MIN_YEAR),MAX_YEAR), mode:'all_day', dateMode:'single', refreshing:false, employeeAction:null, pinStatus:{}
@@ -804,11 +922,12 @@ function shouldShowUpdateToast(remote){
 }
 function saveUpdateSessionHandoff(remote){
   try{
-    const token=localStorage.getItem(SESSION_KEY) || state.sessionToken || '';
+    const token=storedSessionToken() || state.sessionToken || '';
     if(!token){ localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); return; }
-    const adminUnlocked=sessionStorage.getItem(ADMIN_UNLOCK_KEY)===token;
+    const adminUnlocked=adminUnlockMatches(token);
+    const persistent=sessionIsPersistent(token);
     localStorage.setItem(UPDATE_SESSION_HANDOFF_KEY,JSON.stringify({
-      version:remote, token, adminUnlocked, at:Date.now()
+      version:remote, token, adminUnlocked, persistent, at:Date.now()
     }));
   }catch(e){}
 }
@@ -817,12 +936,24 @@ function restoreUpdateSessionHandoff(){
     const raw=localStorage.getItem(UPDATE_SESSION_HANDOFF_KEY);
     if(!raw) return;
     const info=JSON.parse(raw);
-    const token=localStorage.getItem(SESSION_KEY) || '';
     const fresh=Date.now()-Number(info?.at||0)<=UPDATE_SESSION_HANDOFF_TTL_MS;
-    const valid=fresh && info?.version===APP_VERSION && info?.token===token && !!token;
+    const sameVersion=info?.version===APP_VERSION;
+    let token=storedSessionToken() || state.sessionToken || '';
+
+    // 같은 탭의 자동 업데이트에서는 기존 저장소가 그대로 유지된다.
+    // 드물게 다른 탭의 PC 임시 세션처럼 새 문서에서 토큰이 비어 있으면, 60초짜리 업데이트 인계 정보로 현재 탭에만 복구한다.
+    if(!token && fresh && sameVersion && info?.token){
+      const persistent=MOBILE_SESSION_DEVICE ? true : info?.persistent===true;
+      storeLoginSession(info.token,persistent);
+      token=info.token;
+      state.sessionToken=token;
+    }
+
+    const valid=fresh && sameVersion && info?.token===token && !!token;
     localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); // 한 번만 사용
     if(valid && info?.adminUnlocked){
-      sessionStorage.setItem(ADMIN_UNLOCK_KEY,token);
+      const persistent=MOBILE_SESSION_DEVICE ? true : info?.persistent===true;
+      storeAdminUnlock(token,persistent);
     }
   }catch(e){
     try{ localStorage.removeItem(UPDATE_SESSION_HANDOFF_KEY); }catch(_){}
@@ -857,8 +988,8 @@ async function checkForAppUpdate(){
     if(!indexHtmlHasVersion(html,remote)) return;
 
     // 자동 업데이트 전 현재 로그인 상태를 짧게 인계한다.
-    // 일반 직원은 localStorage의 세션 토큰이 유지되고,
-    // 관리자는 sessionStorage의 2차 인증 상태도 새 문서에 안전하게 한 번만 넘긴다.
+    // 모바일/로그인 유지 PC의 영구 세션과 일반 PC의 임시 세션 모두 현재 저장 정책 그대로 새 문서에 인계한다.
+    // 관리자 2차 인증 상태도 같은 보관 방식으로 맞춰서 넘긴다.
     saveUpdateSessionHandoff(remote);
     versionReloading=true;
     markUpdateAttempt(remote);
@@ -1590,6 +1721,7 @@ async function login(){
   clearSessionRestoreRetry();
   $('loginError').textContent=''; toggleAdminPinField();
   const name=$('loginName').value.trim(); const pin=$('loginPin').value.trim(); const adminPin=$('loginAdminPin').value.trim();
+  const persistSession=loginShouldPersist();
   if(!name || !/^\d{4}$/.test(pin)){ $('loginError').textContent='로그인 이름과 4자리 비밀번호를 입력해 주세요.'; return; }
   if(name===ADMIN_NAME && !/^\d{4}$/.test(adminPin)){ $('loginError').textContent='관리자 2차 비밀번호를 입력해 주세요.'; return; }
   showLoading(true);
@@ -1598,14 +1730,14 @@ async function login(){
       const emp=localEmployees().filter(e=>employeeCanLoginLocal(e,todayKey()) && employeeLoginName(e).toLocaleLowerCase('ko-KR')===name.toLocaleLowerCase('ko-KR') && e.pin===pin).sort((a,b)=>String(b.active_from||'').localeCompare(String(a.active_from||'')))[0];
       if(!emp) throw new Error('성명 또는 비밀번호를 확인해 주세요.');
       if(emp.is_admin && adminPin!==ADMIN_SECOND_PIN) throw new Error('관리자 2차 비밀번호를 확인해 주세요.');
-      state.sessionToken=`local:${emp.id}`; localStorage.setItem(SESSION_KEY,state.sessionToken);
-      if(emp.is_admin) sessionStorage.setItem(ADMIN_UNLOCK_KEY,state.sessionToken); else sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
+      state.sessionToken=`local:${emp.id}`; storeLoginSession(state.sessionToken,persistSession);
+      if(emp.is_admin) storeAdminUnlock(state.sessionToken,persistSession); else clearAdminUnlock();
       await enterApp({employee_id:emp.id,display_name:emp.display_name,category:emp.category,is_admin:emp.is_admin});
     }else{
       const data=await rpc('login_employee',{p_name:name,p_pin:pin,p_admin_pin:name===ADMIN_NAME?adminPin:null},{timeoutMs:SESSION_CHECK_TIMEOUT_MS});
       if(!Array.isArray(data)||!data.length) throw new Error('INVALID_LOGIN');
-      state.sessionToken=data[0].token; localStorage.setItem(SESSION_KEY,state.sessionToken);
-      if(data[0].is_admin) sessionStorage.setItem(ADMIN_UNLOCK_KEY,state.sessionToken); else sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
+      state.sessionToken=data[0].token; storeLoginSession(state.sessionToken,persistSession);
+      if(data[0].is_admin) storeAdminUnlock(state.sessionToken,persistSession); else clearAdminUnlock();
       await enterApp(data[0]);
     }
     clearSessionRestoreRetry();
@@ -1652,12 +1784,12 @@ async function restoreSession(isRetry=false){
       if(!m) throw new Error('local_expired');
       const emp=localEmployees().find(e=>e.id===Number(m[1]) && employeeCanLoginLocal(e,todayKey()));
       if(!emp) throw new Error('local_expired');
-      if(emp.is_admin && sessionStorage.getItem(ADMIN_UNLOCK_KEY)!==state.sessionToken) throw new Error('admin_locked');
+      if(!ensureAdminUnlockForRestore(emp.is_admin,state.sessionToken)) throw new Error('admin_locked');
       await enterApp({employee_id:emp.id,display_name:emp.display_name,category:emp.category,is_admin:emp.is_admin});
     }else{
       const data=await rpc('get_me',{p_token:state.sessionToken},{timeoutMs:SESSION_CHECK_TIMEOUT_MS});
       if(!Array.isArray(data)||!data.length) throw new Error('SESSION_INVALID_CONFIRMED');
-      if(data[0].is_admin && sessionStorage.getItem(ADMIN_UNLOCK_KEY)!==state.sessionToken) throw new Error('admin_locked');
+      if(!ensureAdminUnlockForRestore(data[0].is_admin,state.sessionToken)) throw new Error('admin_locked');
       await enterApp(data[0]);
     }
     $('loginError').textContent='';
@@ -1672,7 +1804,7 @@ async function restoreSession(isRetry=false){
       }
       clearSessionRestoreRetry();
       await stopRealtime();
-      localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null;
+      clearStoredLoginSession(); state.sessionToken=''; state.me=null;
       $('appView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false);
       if(configured() && isConfirmedSessionExpired(e)) $('loginError').textContent='로그인 세션이 만료되었습니다. 다시 로그인해 주세요.';
     }else{
@@ -1854,8 +1986,8 @@ async function logout(callServer=true){
   const guideShownKey=usageGuideSessionKey(); if(guideShownKey) sessionStorage.removeItem(guideShownKey);
   await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
-  localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.holidayWorks=[]; state.holidayWorkBackendReady=null; state.memos=[]; state.memoBackendReady=null;
-  closeAll(); $('appView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
+  clearStoredLoginSession(); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.holidayWorks=[]; state.holidayWorkBackendReady=null; state.memos=[]; state.memoBackendReady=null;
+  closeAll(); $('appView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value=''; if($('pcRememberLogin')) $('pcRememberLogin').checked=false;
 }
 
 function render(){ renderTabs(); renderCalendar(); }
@@ -2862,7 +2994,7 @@ function wire(){
   setInterval(()=>{if(state.me&&!document.hidden)refresh()},60000);
 }
 
-restoreUpdateSessionHandoff(); cleanupVersionQuery(); restoreTextSizeLevel(); wire(); toggleAdminPinField(); startVersionWatcher(); restoreSession();
+restoreUpdateSessionHandoff(); cleanupVersionQuery(); restoreTextSizeLevel(); setupLoginPersistenceUI(); wire(); toggleAdminPinField(); startVersionWatcher(); restoreSession();
 </script>
 </body>
 </html>
