@@ -268,6 +268,14 @@
   </div>
 </section>
 
+<section id="reconnectView" class="login-wrap hidden" aria-live="polite">
+  <div class="login-card">
+    <h1 class="brand">서버 연결 확인 중</h1>
+    <div class="login-sub">로그인 상태는 그대로 유지되고 있습니다.<br>서버 연결이 복구되면 자동으로 다시 들어갑니다.</div>
+    <button id="reconnectNowBtn" class="primary" type="button">지금 다시 연결</button>
+  </div>
+</section>
+
 <main id="appView" class="wrap hidden">
   <div class="topbar">
     <div class="userbox">
@@ -307,7 +315,7 @@
     <div id="legend" class="legend hidden"><span><i class="dot day"></i>주간</span><span><i class="dot day2"></i>주2</span><span><i class="dot night"></i>야간</span><span><i class="dot off"></i>휴무</span></div>
     <div id="statusLine" class="status-line"></div>
   </section>
-  <div class="version">ver20260910-1130</div>
+  <div class="version">ver20260910-1619</div>
 </main>
 
 <div id="detailBackdrop" class="backdrop" aria-hidden="true">
@@ -617,8 +625,10 @@
 const SUPABASE_URL = 'https://fnzgjidzdazlodmjhmes.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_asmMoFJpUgX7rLcSkjx1PA_3n2Hk-gG';
 
-const APP_VERSION = 'ver20260910-1130';
+const APP_VERSION = 'ver20260910-1619';
 const VERSION_CHECK_INTERVAL_MS = 3000; // 새 배포가 활성화되면 열려 있는 화면도 약 3초 이내 감지
+const SESSION_CHECK_TIMEOUT_MS = 10000; // 새로고침 시 세션 확인이 너무 오래 멈추지 않도록 제한
+const SESSION_RETRY_DELAYS_MS = [3000,5000,8000,15000,30000]; // 일시적 서버 지연 시 로그인 상태를 보존한 채 재확인
 
 const MIN_YEAR = 2026;
 const MAX_YEAR = 2027;
@@ -718,6 +728,9 @@ let auditLoading=false;
 let attendanceDatePickerTarget='startDate';
 let attendanceDatePickerYear=state.year;
 let attendanceDatePickerMonth=state.month;
+let sessionRestoreTimer=null;
+let sessionRestoreAttempt=0;
+let sessionRestoreInFlight=false;
 
 function normalizeTextSizeLevel(value){
   const level=Number(value);
@@ -887,16 +900,79 @@ function formatDateKR(key){ const {y,m,d}=parseDateKey(key); const w=['일','월
 function escapeHtml(s=''){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function timeShort(v){ return v ? String(v).slice(0,5) : ''; }
 
-async function rpc(name, payload={}){
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
-    method:'POST',
-    headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  });
-  const text = await res.text();
-  let data=null; try{ data=text?JSON.parse(text):null; }catch{ data=text; }
-  if(!res.ok){ throw new Error(data?.message || data?.hint || data?.details || `요청 실패 (${res.status})`); }
-  return data;
+async function rpc(name, payload={}, options={}){
+  const timeoutMs=Number(options?.timeoutMs)||0;
+  const controller=timeoutMs>0 ? new AbortController() : null;
+  let timeoutId=null;
+  if(controller) timeoutId=setTimeout(()=>controller.abort(),timeoutMs);
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+      method:'POST',
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+      signal:controller?.signal
+    });
+    const text = await res.text();
+    let data=null; try{ data=text?JSON.parse(text):null; }catch{ data=text; }
+    if(!res.ok){
+      const err=new Error(data?.message || data?.hint || data?.details || `요청 실패 (${res.status})`);
+      err.httpStatus=res.status;
+      err.rpcCode=data?.code||'';
+      throw err;
+    }
+    return data;
+  }catch(err){
+    if(err?.name==='AbortError'){
+      const timeoutError=new Error('요청 시간이 초과되었습니다.');
+      timeoutError.isNetworkError=true;
+      timeoutError.rpcErrorType='timeout';
+      throw timeoutError;
+    }
+    if(err?.httpStatus) throw err;
+    try{ err.isNetworkError=true; }catch(_){}
+    throw err;
+  }finally{
+    if(timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+function errorText(err){ return String(err?.message||err||''); }
+function isConfirmedSessionExpired(err){
+  const msg=errorText(err).toUpperCase();
+  return msg.includes('SESSION_EXPIRED') || msg.includes('SESSION_INVALID_CONFIRMED');
+}
+function isAdminSessionLocked(err){ return errorText(err).toLowerCase()==='admin_locked'; }
+function isInvalidLoginError(err){ return errorText(err).toUpperCase().includes('INVALID_LOGIN'); }
+function isAdminPinInvalidError(err){ return errorText(err).toUpperCase().includes('ADMIN_PIN_INVALID'); }
+function isTransientRpcError(err){
+  if(err?.isNetworkError) return true;
+  const status=Number(err?.httpStatus)||0;
+  if([401,408,425,429,500,502,503,504].includes(status)) return true;
+  const msg=errorText(err).toLowerCase();
+  return ['failed to fetch','networkerror','network error','load failed','timeout','시간이 초과','gateway','temporarily unavailable','service unavailable','invalid jwt','jwt'].some(v=>msg.includes(v));
+}
+function clearSessionRestoreRetry(resetAttempt=true){
+  if(sessionRestoreTimer){ clearTimeout(sessionRestoreTimer); sessionRestoreTimer=null; }
+  if(resetAttempt) sessionRestoreAttempt=0;
+}
+function scheduleSessionRestoreRetry(){
+  if(!configured() || !state.sessionToken || state.me || sessionRestoreTimer) return;
+  const delay=SESSION_RETRY_DELAYS_MS[Math.min(sessionRestoreAttempt,SESSION_RETRY_DELAYS_MS.length-1)];
+  sessionRestoreAttempt+=1;
+  sessionRestoreTimer=setTimeout(()=>{
+    sessionRestoreTimer=null;
+    if(!state.sessionToken || state.me) return;
+    if(document.hidden){ scheduleSessionRestoreRetry(); return; }
+    restoreSession(true);
+  },delay);
+}
+function showSessionReconnectNotice(){
+  $('appView').classList.add('hidden');
+  $('loginView').classList.add('hidden');
+  $('reconnectView').classList.remove('hidden');
+  $('adminTools').classList.add('hidden');
+  setAdminToolsExpanded(false);
+  $('loginError').textContent='';
 }
 
 
@@ -1506,6 +1582,7 @@ async function openAudit(){
 }
 
 async function login(){
+  clearSessionRestoreRetry();
   $('loginError').textContent=''; toggleAdminPinField();
   const name=$('loginName').value.trim(); const pin=$('loginPin').value.trim(); const adminPin=$('loginAdminPin').value.trim();
   if(!name || !/^\d{4}$/.test(pin)){ $('loginError').textContent='로그인 이름과 4자리 비밀번호를 입력해 주세요.'; return; }
@@ -1520,51 +1597,91 @@ async function login(){
       if(emp.is_admin) sessionStorage.setItem(ADMIN_UNLOCK_KEY,state.sessionToken); else sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
       await enterApp({employee_id:emp.id,display_name:emp.display_name,category:emp.category,is_admin:emp.is_admin});
     }else{
-      const data=await rpc('login_employee',{p_name:name,p_pin:pin,p_admin_pin:name===ADMIN_NAME?adminPin:null});
-      if(!Array.isArray(data)||!data.length) throw new Error('성명 또는 비밀번호를 확인해 주세요.');
+      const data=await rpc('login_employee',{p_name:name,p_pin:pin,p_admin_pin:name===ADMIN_NAME?adminPin:null},{timeoutMs:SESSION_CHECK_TIMEOUT_MS});
+      if(!Array.isArray(data)||!data.length) throw new Error('INVALID_LOGIN');
       state.sessionToken=data[0].token; localStorage.setItem(SESSION_KEY,state.sessionToken);
       if(data[0].is_admin) sessionStorage.setItem(ADMIN_UNLOCK_KEY,state.sessionToken); else sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
       await enterApp(data[0]);
     }
+    clearSessionRestoreRetry();
   }catch(e){
-    const msg=String(e.message||'');
-    if(msg.includes('ADMIN_PIN')) $('loginError').textContent='관리자 2차 비밀번호를 확인해 주세요.';
-    else if(msg.includes('성명 또는') || msg.includes('관리자 2차')) $('loginError').textContent=msg;
-    else $('loginError').textContent='로그인 정보를 확인해 주세요.';
+    const msg=errorText(e);
+    if(isAdminPinInvalidError(e) || msg.includes('관리자 2차')) $('loginError').textContent='관리자 2차 비밀번호를 확인해 주세요.';
+    else if(isInvalidLoginError(e) || msg.includes('성명 또는')) $('loginError').textContent='성명 또는 비밀번호를 확인해 주세요.';
+    else if(isConfirmedSessionExpired(e)){
+      await logout(false);
+      $('loginError').textContent='로그인 세션이 만료되었습니다. 다시 로그인해 주세요.';
+    }else{
+      // 서버/API가 잠깐 불안정한 경우 실제 비밀번호 오류로 오해시키지 않는다.
+      // 로그인 RPC는 성공했지만 이후 직원/근태 조회에서 실패한 경우에도 새 세션 토큰은 지우지 않고 자동 복구한다.
+      if(state.sessionToken){
+        await stopRealtime();
+        state.me=null;
+        showSessionReconnectNotice();
+        scheduleSessionRestoreRetry();
+      }else{
+        $('loginError').textContent=isTransientRpcError(e)?'서버 연결이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.':'로그인 서버 응답을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.';
+      }
+    }
   }
   finally{ showLoading(false); }
 }
 
-async function restoreSession(){
+async function restoreSession(isRetry=false){
+  if(sessionRestoreInFlight) return;
   if(!state.sessionToken){
+    clearSessionRestoreRetry();
     if(!configured()){
       $('setupNote').classList.remove('hidden');
       $('setupNote').innerHTML='운영용 파일입니다. Supabase Project URL과 anon/publishable key를 입력한 뒤 사용하세요.';
     }
     return;
   }
+  sessionRestoreInFlight=true;
   showLoading(true);
   try{
     if(!configured()){
       $('setupNote').classList.remove('hidden');
       $('setupNote').innerHTML='Supabase 연결이 필요합니다.';
       const m=/^local:(\d+)$/.exec(state.sessionToken);
-      if(!m) throw new Error('expired');
+      if(!m) throw new Error('local_expired');
       const emp=localEmployees().find(e=>e.id===Number(m[1]) && employeeCanLoginLocal(e,todayKey()));
-      if(!emp) throw new Error('expired');
+      if(!emp) throw new Error('local_expired');
       if(emp.is_admin && sessionStorage.getItem(ADMIN_UNLOCK_KEY)!==state.sessionToken) throw new Error('admin_locked');
       await enterApp({employee_id:emp.id,display_name:emp.display_name,category:emp.category,is_admin:emp.is_admin});
     }else{
-      const data=await rpc('get_me',{p_token:state.sessionToken});
-      if(!Array.isArray(data)||!data.length) throw new Error('expired');
+      const data=await rpc('get_me',{p_token:state.sessionToken},{timeoutMs:SESSION_CHECK_TIMEOUT_MS});
+      if(!Array.isArray(data)||!data.length) throw new Error('SESSION_INVALID_CONFIRMED');
       if(data[0].is_admin && sessionStorage.getItem(ADMIN_UNLOCK_KEY)!==state.sessionToken) throw new Error('admin_locked');
       await enterApp(data[0]);
     }
-  }catch{
-    // 특히 관리자 브라우저를 다시 연 경우(sessionStorage의 2차 인증 해제)에는 서버 세션도 함께 폐기합니다.
-    if(configured() && state.sessionToken){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
-    localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken='';
-  }finally{ showLoading(false); }
+    $('loginError').textContent='';
+    clearSessionRestoreRetry();
+  }catch(e){
+    const localInvalid=!configured() && (errorText(e)==='local_expired' || isAdminSessionLocked(e));
+    const confirmedInvalid=configured() && (isConfirmedSessionExpired(e) || isAdminSessionLocked(e));
+    if(localInvalid || confirmedInvalid){
+      // 명확한 세션 만료/차단 또는 관리자 2차 인증 해제일 때만 저장된 로그인 정보를 지운다.
+      if(configured() && isAdminSessionLocked(e) && state.sessionToken){
+        try{ await rpc('logout_employee',{p_token:state.sessionToken},{timeoutMs:SESSION_CHECK_TIMEOUT_MS}); }catch(_){}
+      }
+      clearSessionRestoreRetry();
+      await stopRealtime();
+      localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null;
+      $('appView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false);
+      if(configured() && isConfirmedSessionExpired(e)) $('loginError').textContent='로그인 세션이 만료되었습니다. 다시 로그인해 주세요.';
+    }else{
+      // 네트워크/API Gateway/일시적 서버 오류는 로그인 실패로 간주하지 않는다.
+      // 토큰을 그대로 보존하고, 사용자가 다시 비밀번호를 입력하지 않아도 자동으로 재확인한다.
+      await stopRealtime();
+      state.me=null;
+      showSessionReconnectNotice();
+      scheduleSessionRestoreRetry();
+    }
+  }finally{
+    sessionRestoreInFlight=false;
+    showLoading(false);
+  }
 }
 
 function usageGuideStorageKey(){ return state.me ? `${USAGE_GUIDE_HIDE_KEY_PREFIX}${state.me.employee_id}` : ''; }
@@ -1644,12 +1761,14 @@ function applyAccountModeUI(){
 }
 async function enterApp(me){
   state.me={...me,employee_id:Number(me.employee_id),is_admin:!!me.is_admin,is_read_only:false};
-  $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
+  $('loginView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('appView').classList.remove('hidden');
   await loadAccountStatus(); applyAccountModeUI();
   $('adminTools').classList.toggle('hidden',!state.me.is_admin);
   if(!state.me.is_admin) setAdminToolsExpanded(false);
   await loadEmployees(); await loadMonthData(); applyAccountModeUI(); setRealtimeStatus(configured()?'connecting':'fallback'); startRealtime(); render();
   if(!maybeShowUsageGuide()) maybeShowInitialPinNotice();
+  clearSessionRestoreRetry();
+  $('loginError').textContent='';
 }
 async function loadEmployees(){
   let data;
@@ -1705,7 +1824,7 @@ async function loadMonthData(silent=false){
     $('statusLine').textContent=configured()?'':'테스트 모드 · 이 기기에만 저장';
   }catch(e){
     $('statusLine').textContent='데이터를 불러오지 못했습니다.';
-    if(String(e.message).toLowerCase().includes('session')) logout(false);
+    if(isConfirmedSessionExpired(e)) logout(false);
   }finally{ state.refreshing=false; }
 }
 async function refresh(){
@@ -1722,15 +1841,16 @@ async function refresh(){
   }catch(e){
     const msg=String(e?.message||'');
     $('statusLine').textContent='데이터를 새로고침하지 못했습니다.';
-    if(msg.toLowerCase().includes('session')) await logout(false);
+    if(isConfirmedSessionExpired(e)) await logout(false);
   }
 }
 async function logout(callServer=true){
+  clearSessionRestoreRetry();
   const guideShownKey=usageGuideSessionKey(); if(guideShownKey) sessionStorage.removeItem(guideShownKey);
   await stopRealtime();
   if(callServer && state.sessionToken && configured()){ try{ await rpc('logout_employee',{p_token:state.sessionToken}); }catch{} }
   localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(ADMIN_UNLOCK_KEY); state.sessionToken=''; state.me=null; state.employees=[]; state.attendance=[]; state.holidayWorks=[]; state.holidayWorkBackendReady=null; state.memos=[]; state.memoBackendReady=null;
-  closeAll(); $('appView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
+  closeAll(); $('appView').classList.add('hidden'); $('reconnectView').classList.add('hidden'); $('loginView').classList.remove('hidden'); $('adminTools').classList.add('hidden'); setAdminToolsExpanded(false); $('loginPin').value=''; $('loginAdminPin').value='';
 }
 
 function render(){ renderTabs(); renderCalendar(); }
@@ -2702,6 +2822,7 @@ function wire(){
   document.querySelectorAll('.text-size-level').forEach(btn=>btn.addEventListener('click',()=>applyTextSizeLevel(btn.dataset.level)));
   $('attendanceTypeBtn').addEventListener('click',openTypePicker);
   $('typeGrid').addEventListener('click',e=>{const b=e.target.closest('[data-type]');if(b)chooseAttendanceType(b.dataset.type)});
+  $('reconnectNowBtn').addEventListener('click',()=>{clearSessionRestoreRetry(false);restoreSession(true)});
   $('loginBtn').addEventListener('click',login); $('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter'){if($('loginName').value.trim()===ADMIN_NAME)$('loginAdminPin').focus();else login()}}); $('loginAdminPin').addEventListener('keydown',e=>{if(e.key==='Enter')login()}); $('loginName').addEventListener('input',toggleAdminPinField); $('loginName').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPin').focus()});
   $('logoutBtn').addEventListener('click',()=>logout(true)); $('refreshBtn').addEventListener('click',refresh); $('employeeManageBtn').addEventListener('click',openEmployeeManager); $('auditBtn').addEventListener('click',openAudit); $('refreshAuditBtn').addEventListener('click',()=>loadAuditPage(true)); $('auditMoreBtn').addEventListener('click',()=>loadAuditPage(false)); $('capacityBtn').addEventListener('click',openCapacity); $('refreshCapacityBtn').addEventListener('click',loadCapacity); $('backupBtn').addEventListener('click',manualBackup); $('backupSuccessOkBtn').addEventListener('click',()=>closeBackdrop('backupSuccessBackdrop')); $('restoreBackupBtn').addEventListener('click',openRestoreBackup); $('restoreFile').addEventListener('change',e=>prepareRestoreFile(e.target.files?.[0])); $('confirmRestoreBtn').addEventListener('click',restoreBackupAttendance); $('restoreSuccessOkBtn').addEventListener('click',()=>closeBackdrop('restoreSuccessBackdrop')); $('addEmployeeBtn').addEventListener('click',()=>openEmployeeAction('add')); $('resetCurrentPinsBtn').addEventListener('click',openResetCurrentPins); $('confirmResetPinsBtn').addEventListener('click',resetCurrentPins); $('resetPinsSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetPinsSuccessBackdrop')); $('saveEmployeeActionBtn').addEventListener('click',saveEmployeeAction); $('employeeSuccessOkBtn').addEventListener('click',()=>closeBackdrop('employeeSuccessBackdrop')); $('resetAllBtn').addEventListener('click',openResetAll); $('confirmResetBtn').addEventListener('click',resetAllAttendance); $('resetSuccessOkBtn').addEventListener('click',()=>closeBackdrop('resetSuccessBackdrop'));
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;renderTabs();renderCalendar()}));
@@ -2721,8 +2842,8 @@ function wire(){
   bindAttendanceListActions();
   $('employeeManageBackdrop').addEventListener('click',e=>{ const p=e.target.closest('[data-emp-pin]'); const r=e.target.closest('[data-emp-replace]'); const x=e.target.closest('[data-emp-exclude]'); if(p) openEmployeeAction('password',p.dataset.empPin); else if(r) openEmployeeAction('replace',r.dataset.empReplace); else if(x) openEmployeeAction('exclude',x.dataset.empExclude); });
   $('startDate').addEventListener('change',()=>{ if(state.me?.is_admin) populateTargetEmployees($('startDate').value,$('targetEmployee').value); });
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.me){refresh(); if(!realtimeChannel) startRealtime();}});
-  window.addEventListener('online',()=>{if(state.me){setRealtimeStatus('connecting');scheduleRealtimeReconnect(150)}});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(state.me){refresh(); if(!realtimeChannel) startRealtime();}else if(state.sessionToken){clearSessionRestoreRetry(false); restoreSession(true);}}});
+  window.addEventListener('online',()=>{if(state.me){setRealtimeStatus('connecting');scheduleRealtimeReconnect(150)}else if(state.sessionToken){clearSessionRestoreRetry(false);restoreSession(true)}});
   window.addEventListener('offline',()=>{if(state.me)setRealtimeStatus('offline')});
   setInterval(()=>{if(state.me&&!document.hidden)refresh()},60000);
 }
